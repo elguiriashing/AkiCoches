@@ -62,4 +62,5 @@ export function redirectAutos(request, env = {}) {
   });
 }
 
-export default { fetch: redirectAutos };
+const worker = { fetch: redirectAutos };
+export default worker;
