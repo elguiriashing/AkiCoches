@@ -5,6 +5,31 @@ import {
   conduzcoHostMethodAllowed,
   conduzcoHostRoute,
 } from "@/lib/akiconduzco-routing";
+const credentialQueryKeys = new Set([
+  "code",
+  "token",
+  "token_hash",
+  "access_token",
+  "refresh_token",
+  "id_token",
+  "provider_token",
+  "provider_refresh_token",
+  "client_secret",
+  "password",
+  "state",
+  "error_description",
+]);
+function crossProductRedirect(destination: URL) {
+  for (const key of [...destination.searchParams.keys()])
+    if (credentialQueryKeys.has(key.toLowerCase()))
+      destination.searchParams.delete(key);
+  // Explicitly replace any source fragment, which the server cannot inspect.
+  destination.hash = "redirected";
+  const response = NextResponse.redirect(destination, 307);
+  response.headers.set("Referrer-Policy", "no-referrer");
+  response.headers.set("Cache-Control", "no-store");
+  return response;
+}
 export async function middleware(request: NextRequest) {
   const host = request.headers.get("host") || "";
   const origin = `${/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host) ? "http" : "https"}://${host}`;
@@ -36,7 +61,7 @@ export async function middleware(request: NextRequest) {
       "https://akipasa.com",
     );
     url.searchParams.set("from", "akicoches");
-    return NextResponse.redirect(url, 307);
+    return crossProductRedirect(url);
   }
   if (pathname === "/api/health")
     return request.method === "GET" || request.method === "HEAD"
@@ -56,7 +81,7 @@ export async function middleware(request: NextRequest) {
     );
     destination.pathname = pathname;
     destination.search = request.nextUrl.search;
-    return NextResponse.redirect(destination, 307);
+    return crossProductRedirect(destination);
   }
   if (route.kind === "reject") return new NextResponse(null, { status: 404 });
   const session = await refreshSession(request);

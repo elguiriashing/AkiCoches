@@ -40,10 +40,47 @@ describe("independent canonical route middleware", () => {
       request("/en/business/mobility?tab=fleet"),
     );
     expect(response.headers.get("location")).toBe(
-      "https://akibusiness.com/en/business/mobility?tab=fleet",
+      "https://akibusiness.com/en/business/mobility?tab=fleet#redirected",
     );
     expect(
       (await middleware(request("/account"))).headers.get("x-robots-tag"),
     ).toBe("noindex, nofollow");
+  });
+});
+
+describe("cross-product credential transfer prevention", () => {
+  it("scrubs credential keys case-insensitively while preserving safe search filters", async () => {
+    const response = await middleware(
+      request(
+        "/unknown?q=malaga&ACCESS_TOKEN=private&Code=private&token_hash=private&refresh_token=private&provider_token=private&id_token=private&client_secret=private&password=private&STATE=private&error_description=private",
+      ),
+    );
+    const target = new URL(response.headers.get("location")!);
+    expect(target.origin).toBe("https://akipasa.com");
+    expect([...target.searchParams]).toEqual([["q", "malaga"]]);
+    expect(target.hash).toBe("#redirected");
+    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+  });
+  it("does not inherit fragments or credentials on membership redirects", async () => {
+    const response = await middleware(
+      request("/en/membership?access_token=private"),
+    );
+    expect(response.headers.get("location")).toBe(
+      "https://akipasa.com/en/account/subscription?from=akicoches#redirected",
+    );
+  });
+  it("keeps callback code and state on local auth route instead of a cross-product redirect", async () => {
+    const response = await middleware(
+      request("/en/auth/callback?code=pkce-code&state=provider-state"),
+    );
+    expect(response.status).toBe(200);
+    expect(response.headers.has("location")).toBe(false);
+  });
+  it("rejects non-read methods before any cross-domain redirect", async () => {
+    for (const path of [
+      "/unknown?token=private",
+      "/en/membership?token=private",
+    ])
+      expect((await middleware(request(path, "POST"))).status).toBe(404);
   });
 });

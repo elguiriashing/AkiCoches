@@ -49,3 +49,8 @@ heading tokens made rental headings dark on the product's fixed dark surface.
 The rental `.app` now defines its own light ink token, scoped to that product.
 The browser regression checks real computed heading color in both saved theme
 preferences, ES/EN and mobile/desktop. It fails against the original source style.
+
+Cross-product fallback and membership redirects scrub authentication/secret query
+keys case-insensitively, explicitly replace browser fragments and send no-referrer.
+Safe discovery query fields survive; non-read requests never cross domains. Local
+PKCE callbacks retain their local code/state for the existing exchange handler.
