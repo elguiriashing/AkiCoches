@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { signOut } from "@/app/[locale]/auth/actions";
 import { headers } from "next/headers";
 import { requireUser } from "@/lib/auth";
 import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
@@ -77,6 +78,12 @@ export default async function RenterAccountPage() {
             {es ? "Buscar coches →" : "Find a car →"}
           </Link>
         </div>
+        <form action={signOut}>
+          <input type="hidden" name="locale" value={locale} />
+          <button className="button secondary" type="submit">
+            {es ? "Cerrar sesión" : "Sign out"}
+          </button>
+        </form>
         {error ? (
           <p className={styles.error} role="alert">
             {es

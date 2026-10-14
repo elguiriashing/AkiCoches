@@ -16,7 +16,7 @@ try {
         route.fulfill({ json: { rows: [], total: 0 } }),
       );
       const response = await page.goto(`${base}/?lang=${locale}`, {
-        waitUntil: "networkidle",
+        waitUntil: "domcontentloaded",
       });
       if (response?.status() !== 200)
         throw new Error(`home ${response?.status()}`);
@@ -49,7 +49,7 @@ try {
         fullPage: true,
       });
       await page.goto(`${base}/account?lang=${locale}`, {
-        waitUntil: "networkidle",
+        waitUntil: "domcontentloaded",
       });
       if (!new URL(page.url()).pathname.endsWith(`/${locale}/auth`))
         throw new Error(`account auth return ${page.url()}`);

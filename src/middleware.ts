@@ -51,20 +51,16 @@ export async function middleware(request: NextRequest) {
     if (!["GET", "HEAD"].includes(request.method))
       return new NextResponse(null, { status: 404 });
     const business = /^\/(en|es)\/business(?:\/|$)/.test(pathname);
-    return NextResponse.redirect(
-      new URL(
-        pathname + request.nextUrl.search,
-        business ? "https://akibusiness.com" : "https://akipasa.com",
-      ),
-      307,
+    const destination = new URL(
+      business ? "https://akibusiness.com" : "https://akipasa.com",
     );
+    destination.pathname = pathname;
+    destination.search = request.nextUrl.search;
+    return NextResponse.redirect(destination, 307);
   }
   if (route.kind === "reject") return new NextResponse(null, { status: 404 });
   const session = await refreshSession(request);
-  const response =
-    route.kind === "rewrite"
-      ? NextResponse.rewrite(target, { request: { headers: request.headers } })
-      : NextResponse.next({ request: { headers: request.headers } });
+  const response = NextResponse.next({ request: { headers: request.headers } });
   session.cookies
     .getAll()
     .forEach(({ name, value, ...options }) =>

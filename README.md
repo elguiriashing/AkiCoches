@@ -53,3 +53,7 @@ rental host; no database rollback or identity reset is required.
 
 Shared copied library maintenance is recorded in `docs/EXTRACTION.md`. Update security
 patches from the pinned upstream source deliberately and run this app's regression suite.
+
+The separately gated AkiAutos redirect Worker lives in `deployment/akiautos-redirect`.
+It has its own Wrangler config, no production routes and cutover disabled by default.
+Its redirect tests run in this repository CI.

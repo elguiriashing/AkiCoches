@@ -15,17 +15,17 @@ import {
 describe("AkiConduzco host and booking boundaries", () => {
   it("keeps public pages on the rental origin and rejects non-product paths", () => {
     expect(conduzcoHostRoute("/")).toEqual({
-      kind: "rewrite",
-      path: "/akiconduzco",
+      kind: "public",
+      path: "/",
     });
     expect(conduzcoHostRoute("/map")).toEqual({
-      kind: "rewrite",
-      path: "/akiconduzco/map",
+      kind: "public",
+      path: "/map",
     });
-    expect(conduzcoHostRoute("/rentals/example-car").kind).toBe("rewrite");
+    expect(conduzcoHostRoute("/rentals/example-car").kind).toBe("public");
     expect(conduzcoHostRoute("/bookings")).toEqual({
-      kind: "rewrite",
-      path: "/akiconduzco/bookings",
+      kind: "public",
+      path: "/bookings",
     });
     expect(conduzcoHostRoute("/admin").kind).toBe("primary");
     expect(conduzcoHostRoute("/api/private").kind).toBe("reject");

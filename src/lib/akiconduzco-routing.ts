@@ -18,15 +18,16 @@ export function safeConduzcoDestination(requested?: string) {
 }
 
 export function conduzcoHostRoute(pathname: string) {
-  if (pathname === "/" || pathname === "/akiconduzco")
-    return { kind: "rewrite" as const, path: "/akiconduzco" };
+  if (pathname === "/akiconduzco")
+    return { kind: "canonical" as const, path: "/" };
+  if (pathname === "/") return { kind: "public" as const, path: "/" };
   if (
     pathname === "/map" ||
     pathname === "/account" ||
     pathname === "/bookings" ||
     /^\/rentals\/[a-z0-9-]+\/?$/.test(pathname)
   )
-    return { kind: "rewrite" as const, path: `/akiconduzco${pathname}` };
+    return { kind: "public" as const, path: pathname };
   if (pathname.startsWith("/akiconduzco/"))
     return {
       kind: "canonical" as const,
@@ -52,7 +53,6 @@ export function conduzcoHostRoute(pathname: string) {
     pathname === "/icon.svg" ||
     pathname === "/favicon.ico" ||
     ["/api/car-rentals", "/api/car-rentals/bookings"].includes(pathname) ||
-    pathname === "/api/bookings/release" ||
     pathname === "/api/v1/personalisation/consent"
   )
     return { kind: "public" as const, path: pathname };
@@ -65,9 +65,10 @@ export function conduzcoHostMethodAllowed(pathname: string, method: string) {
   return (
     ["GET", "HEAD"].includes(method) ||
     (method === "POST" &&
-      (pathname === "/api/car-rentals/bookings" ||
+      (pathname === "/account" ||
+        pathname === "/api/car-rentals/bookings" ||
         pathname === "/api/v1/personalisation/consent" ||
         /^\/(en|es)\/auth(?:\/|$)/.test(pathname) ||
-        /^\/(en|es)\/(terms|privacy)(?:\/accept)?\/?$/.test(pathname)))
+        /^\/(en|es)\/terms\/accept\/?$/.test(pathname)))
   );
 }

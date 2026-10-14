@@ -38,3 +38,8 @@ Cross-app origin configuration, Supabase callbacks, legal acceptance and passwor
 recovery remain coupled to the shared identity project. No schema or provider mutation.
 Failure/rollback: retain the existing live rental host until all new-host checks pass;
 revert extraction/deployment routing without touching customer records or old code.
+
+Canonical rental routes are real Next routes at `/`, `/map`, `/account`, `/bookings`
+and `/rentals/[slug]`; legacy `/akiconduzco/...` paths redirect locally. Independent
+apps do not need virtual-host proxy rewrites, avoiding recursive localhost routing.
+The renter account includes the retained shared sign-out server action.

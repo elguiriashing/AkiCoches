@@ -277,17 +277,21 @@ export default async function AuthPage({
                   ? es
                     ? "Restablece tu contraseña"
                     : "Reset your password"
-                  : isStayHost
+                  : isConduzcoHost
                     ? es
-                      ? "Entra en AkiDuermo"
-                      : "Sign in to AkiDuermo"
-                    : isBusinessHost
+                      ? "Entra en AkiCoches"
+                      : "Sign in to AkiCoches"
+                    : isStayHost
                       ? es
-                        ? "Entra en AkiBusiness"
-                        : "Sign in to AkiBusiness"
-                      : es
-                        ? "Entra en AkiPasa"
-                        : "Sign in to AkiPasa"}
+                        ? "Entra en AkiDuermo"
+                        : "Sign in to AkiDuermo"
+                      : isBusinessHost
+                        ? es
+                          ? "Entra en AkiBusiness"
+                          : "Sign in to AkiBusiness"
+                        : es
+                          ? "Entra en AkiPasa"
+                          : "Sign in to AkiPasa"}
           </h2>
         </div>
         {config.googleAuthEnabled && mode !== "recover" && mode !== "magic" && (
