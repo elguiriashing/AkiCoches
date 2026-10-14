@@ -43,3 +43,9 @@ Canonical rental routes are real Next routes at `/`, `/map`, `/account`, `/booki
 and `/rentals/[slug]`; legacy `/akiconduzco/...` paths redirect locally. Independent
 apps do not need virtual-host proxy rewrites, avoiding recursive localhost routing.
 The renter account includes the retained shared sign-out server action.
+
+The independent mobile browser review found that inherited light-theme global
+heading tokens made rental headings dark on the product's fixed dark surface.
+The rental `.app` now defines its own light ink token, scoped to that product.
+The browser regression checks real computed heading color in both saved theme
+preferences, ES/EN and mobile/desktop. It fails against the original source style.

@@ -1,4 +1,5 @@
 .app {
+  --ink: #f6f4f1;
   min-height: 100dvh;
   background: #08090b;
   color: #f6f4f1;
