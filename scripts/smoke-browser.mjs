@@ -46,10 +46,17 @@ try {
           Boolean(document.documentElement.dataset.theme),
         );
         const closeConsent = page.getByRole("button", {
-          name: locale === "es" ? "Cerrar" : "Close",
+          name:
+            locale === "es"
+              ? "Cerrar opciones de privacidad"
+              : "Close privacy choices",
           exact: true,
         });
-        if (await closeConsent.isVisible()) await closeConsent.click();
+        // Each case has a fresh browser context and no stored consent decision.
+        // Wait for consent hydration before dismissing it, then capture actual product layout.
+        await closeConsent.waitFor({ state: "visible" });
+        await closeConsent.click();
+        await closeConsent.waitFor({ state: "hidden" });
         const headingColor = await page
           .locator("h1")
           .evaluate((el) => getComputedStyle(el).color);
