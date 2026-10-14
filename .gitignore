@@ -22,3 +22,13 @@ supabase/.temp
 .dev.vars
 .dev.vars.*
 *.log
+
+.vercel/
+dist/
+.env
+.env.*
+!.dev.vars.example
+*.pem
+*.p12
+*.key
+.DS_Store
