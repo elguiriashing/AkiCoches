@@ -18,8 +18,11 @@ jobs:
       NEXT_PUBLIC_PRODUCT_NAME: AkiCoches
       NEXT_PUBLIC_SITE_URL: https://akicoches.com
       NEXT_PUBLIC_BUSINESS_URL: https://akibusiness.com
-      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      # Next inlines NEXT_PUBLIC_* at build time. The smoke workflow must use
+      # disposable configuration during both build and start, independent of
+      # optional production repository variables.
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:3997
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: coches-local-disposable
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,9 +39,13 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Browser smoke with explicit empty inventory fixture
         run: |
-          NEXT_PUBLIC_SUPABASE_URL=https://fixture.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=local-fixture-not-production npm run start -- --hostname 127.0.0.1 --port 3103 > /tmp/coches-server.log 2>&1 &
+          mkdir -p test-results/coches
+          node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3103 > test-results/coches/server.log 2>&1 &
+          coches_server_pid=$!
+          trap 'kill "$coches_server_pid" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 30); do curl --fail --silent http://127.0.0.1:3103/api/health && break; sleep 1; done
-          node scripts/smoke-browser.mjs
+          curl --fail --silent http://127.0.0.1:3103/api/health > test-results/coches/health.json
+          node scripts/smoke-browser.mjs || { cat test-results/coches/server.log; exit 1; }
       - uses: actions/upload-artifact@v4
         if: always()
         with:

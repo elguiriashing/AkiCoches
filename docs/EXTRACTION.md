@@ -54,3 +54,16 @@ Cross-product fallback and membership redirects scrub authentication/secret quer
 keys case-insensitively, explicitly replace browser fragments and send no-referrer.
 Safe discovery query fields survive; non-read requests never cross domains. Local
 PKCE callbacks retain their local code/state for the existing exchange handler.
+
+## Deterministic CI public configuration
+
+Hosted CI passed compilation but failed its anonymous account browser journey:
+the job built with optional repository Supabase variables, then supplied fake
+public settings only when starting Next. A local reproduction with empty build
+settings returns home/health200 but account500, because Next had already inlined
+the missing public values. The verification job now uses explicit loopback,
+disposable public settings at both build and runtime; it never relies on or
+contacts production provider configuration. The existing eight browser cases
+and authorization checks remain required. Server logs are retained on failure,
+health must succeed, and the owned smoke server stops before Cloudflare rebuild.
+Deployment remains separately gated on verified real build-time public settings.
