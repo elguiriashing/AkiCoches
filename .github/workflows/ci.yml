@@ -1,0 +1,48 @@
+name: AkiCoches CI
+on:
+  push:
+    branches: [main, migration/five-product-coches]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: coches-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_PRODUCT_NAME: AkiCoches
+      NEXT_PUBLIC_SITE_URL: https://akicoches.com
+      NEXT_PUBLIC_BUSINESS_URL: https://akibusiness.com
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: coches-next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: coches-next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+      - run: npm run lint && npm run typecheck && npm test && npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Browser smoke with explicit empty inventory fixture
+        run: |
+          NEXT_PUBLIC_SUPABASE_URL=https://fixture.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=local-fixture-not-production npm run start -- --hostname 127.0.0.1 --port 3103 > /tmp/coches-server.log 2>&1 &
+          for attempt in $(seq 1 30); do curl --fail --silent http://127.0.0.1:3103/api/health && break; sleep 1; done
+          node scripts/smoke-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coches-browser
+          path: test-results/coches
+      - run: npm run build:cloudflare
+      - run: npx wrangler deploy --dry-run

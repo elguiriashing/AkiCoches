@@ -1,0 +1,84 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { trustedProductOrigin } from "@/lib/public-request-origin";
+import { refreshSession } from "@/lib/supabase/middleware";
+import {
+  conduzcoHostMethodAllowed,
+  conduzcoHostRoute,
+} from "@/lib/akiconduzco-routing";
+export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
+  const origin = `${/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host) ? "http" : "https"}://${host}`;
+  if (!trustedProductOrigin(origin))
+    return new NextResponse(null, { status: 421 });
+  request.headers.delete("x-akipasa-membership-next");
+  request.headers.set("x-akipasa-product", "akiconduzco");
+  const pathname = request.nextUrl.pathname;
+  const lang =
+    request.nextUrl.searchParams.get("lang") ||
+    request.cookies.get("akiconduzco_locale")?.value;
+  const locale = /^\/en(?:\/|$)/.test(pathname) || lang === "en" ? "en" : "es";
+  request.headers.set("x-akipasa-locale", locale);
+  const target = request.nextUrl.clone();
+  if (/^\/(en|es)\/?$/.test(pathname)) {
+    target.pathname = "/";
+    target.searchParams.set("lang", locale);
+    return NextResponse.redirect(target, 308);
+  }
+  if (
+    /^\/(?:(en|es)\/)?(?:membership|memberships|account\/(?:membership|memberships|subscription))\/?$/.test(
+      pathname,
+    )
+  ) {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    const url = new URL(
+      `/${locale}/account/subscription`,
+      "https://akipasa.com",
+    );
+    url.searchParams.set("from", "akicoches");
+    return NextResponse.redirect(url, 307);
+  }
+  if (pathname === "/api/health")
+    return request.method === "GET" || request.method === "HEAD"
+      ? NextResponse.next()
+      : new NextResponse(null, { status: 404 });
+  if (!conduzcoHostMethodAllowed(pathname, request.method))
+    return new NextResponse(null, { status: 404 });
+  const route = conduzcoHostRoute(pathname);
+  target.pathname = route.path;
+  if (route.kind === "canonical") return NextResponse.redirect(target, 308);
+  if (route.kind === "primary") {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    const business = /^\/(en|es)\/business(?:\/|$)/.test(pathname);
+    return NextResponse.redirect(
+      new URL(
+        pathname + request.nextUrl.search,
+        business ? "https://akibusiness.com" : "https://akipasa.com",
+      ),
+      307,
+    );
+  }
+  if (route.kind === "reject") return new NextResponse(null, { status: 404 });
+  const session = await refreshSession(request);
+  const response =
+    route.kind === "rewrite"
+      ? NextResponse.rewrite(target, { request: { headers: request.headers } })
+      : NextResponse.next({ request: { headers: request.headers } });
+  session.cookies
+    .getAll()
+    .forEach(({ name, value, ...options }) =>
+      response.cookies.set(name, value, options),
+    );
+  if (
+    /^\/(account|bookings|en|es)(?:\/|$)/.test(pathname) ||
+    process.env.AKICOCHES_INDEXING_ENABLED !== "true"
+  )
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return response;
+}
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
