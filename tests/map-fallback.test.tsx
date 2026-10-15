@@ -15,14 +15,46 @@ vi.mock("maplibre-gl", () => ({
 }));
 
 describe("rental map initialization failure", () => {
-  beforeEach(() => vi.stubGlobal("React", React));
+  beforeEach(() => {
+    vi.stubGlobal("React", React);
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(private callback: (entries: unknown[]) => void) {}
+        observe() {
+          this.callback([{ contentRect: { width: 800, height: 600 } }]);
+        }
+        disconnect() {}
+      },
+    );
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          rows: [
+            {
+              company_id: "company-1",
+              company_name: "Local Cars",
+              company_slug: "local-cars",
+              vehicle_id: "car-1",
+              vehicle_name: "Small car",
+              daily_price_cents: 4500,
+              latitude: 36.72,
+              longitude: -4.42,
+            },
+          ],
+        }),
+      }),
+    );
+  });
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
   });
 
   for (const locale of ["en", "es"] as const) {
-    it(`offers an accessible same-origin catalogue fallback in ${locale}`, async () => {
+    it(`keeps a raster map, pin and same-origin catalogue in ${locale}`, async () => {
       render(
         React.createElement(ConduzcoMap, {
           locale,
@@ -30,16 +62,27 @@ describe("rental map initialization failure", () => {
           initialQuery: "Fuengirola & coast",
         }),
       );
-      await screen.findByRole("alert");
-      const link = screen.getByRole("link", {
-        name:
-          locale === "en"
-            ? "Browse rental catalogue"
-            : "Ver catálogo de coches",
+      expect(
+        await screen.findByRole("region", {
+          name:
+            locale === "en" ? "Rental car map" : "Mapa de coches de alquiler",
+        }),
+      ).toBeTruthy();
+      const pin = await screen.findByRole("link", {
+        name: "Local Cars, 1 vehicles, from €45 per day",
       });
-      expect(link.getAttribute("href")).toBe(
-        `/?lang=${locale}&q=Fuengirola+%26+coast`,
+      expect(pin.getAttribute("href")).toBe(
+        `/rentals/local-cars?lang=${locale}`,
       );
+      expect(
+        screen.getByRole("button", {
+          name: locale === "en" ? "Zoom in" : "Acercar",
+        }),
+      ).toBeTruthy();
+      expect(
+        screen.getByRole("link", { name: "© OpenStreetMap contributors" }),
+      ).toBeTruthy();
+      expect(screen.queryByRole("alert")).toBeNull();
       expect(
         screen.getByRole("textbox", {
           name:
@@ -52,12 +95,10 @@ describe("rental map initialization failure", () => {
   }
 
   it("retains the fallback search in the normal catalogue request", async () => {
-    const fetcher = vi
-      .fn()
-      .mockResolvedValue({
-        ok: true,
-        json: async () => ({ rows: [], total: 0 }),
-      });
+    const fetcher = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ rows: [], total: 0 }),
+    });
     vi.stubGlobal("fetch", fetcher);
     render(
       React.createElement(AkiConduzco, {

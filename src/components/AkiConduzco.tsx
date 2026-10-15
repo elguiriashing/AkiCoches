@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
+import { RasterRentalMap } from "./RasterRentalMap";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
 import {
   rentalCategories,
@@ -722,6 +723,7 @@ export function ConduzcoMap({
   const [end, setEnd] = useState(initialEnd);
   const [rows, setRows] = useState<RentalListing[]>([]);
   const [error, setError] = useState(false);
+  const [rasterFallback, setRasterFallback] = useState(false);
   const qRef = useRef(q);
   const categoryRef = useRef(category);
   const datesRef = useRef({ start, end });
@@ -850,9 +852,11 @@ export function ConduzcoMap({
         map.on("moveend", load);
       })
       .catch(() => {
-        // Unsupported WebGL and failed dynamic imports must not strand renters on
-        // an empty map. Keep the ordinary catalogue available on this origin.
-        if (!cancelled) setError(true);
+        // Keep location search and pins available without WebGL.
+        if (!cancelled) {
+          mapRef.current = null;
+          setRasterFallback(true);
+        }
       });
     return () => {
       cancelled = true;
@@ -867,13 +871,27 @@ export function ConduzcoMap({
     <div className={styles.app}>
       <ConduzcoHeader locale={locale} />
       <main className={styles.mapLayout}>
-        <div
-          ref={setContainer}
-          className={styles.mapCanvas}
-          aria-label={
-            locale === "es" ? "Mapa de coches de alquiler" : "Rental car map"
-          }
-        />
+        {rasterFallback ? (
+          <div className={styles.mapCanvas}>
+            <RasterRentalMap
+              locale={locale}
+              query={q}
+              category={category}
+              start={start}
+              end={end}
+              onRows={setRows}
+              onError={setError}
+            />
+          </div>
+        ) : (
+          <div
+            ref={setContainer}
+            className={styles.mapCanvas}
+            aria-label={
+              locale === "es" ? "Mapa de coches de alquiler" : "Rental car map"
+            }
+          />
+        )}
         <section className={styles.mapPanel}>
           <h1>
             {locale === "es" ? "Coches cerca de ti" : "Rental cars near you"}
