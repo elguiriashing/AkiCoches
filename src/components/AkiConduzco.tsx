@@ -724,10 +724,43 @@ export function ConduzcoMap({
   const [rows, setRows] = useState<RentalListing[]>([]);
   const [error, setError] = useState(false);
   const [rasterFallback, setRasterFallback] = useState(false);
+  const [pinPositions, setPinPositions] = useState<
+    Record<string, { x: number; y: number }>
+  >({});
+  const [activePin, setActivePin] = useState<string | null>(null);
   const qRef = useRef(q);
   const categoryRef = useRef(category);
   const datesRef = useRef({ start, end });
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
+  const companies = useMemo(() => {
+    const grouped = new Map<string, RentalListing[]>();
+    for (const row of rows)
+      grouped.set(row.company_id, [
+        ...(grouped.get(row.company_id) || []),
+        row,
+      ]);
+    return grouped;
+  }, [rows]);
+  useEffect(() => {
+    if (rasterFallback || !mapRef.current) return;
+    const map = mapRef.current;
+    const update = () => {
+      const next: Record<string, { x: number; y: number }> = {};
+      for (const [id, items] of companies) {
+        const point = map.project([items[0].longitude, items[0].latitude]);
+        if (Number.isFinite(point.x) && Number.isFinite(point.y))
+          next[id] = { x: point.x, y: point.y };
+      }
+      setPinPositions(next);
+    };
+    map.on("move", update);
+    map.on("resize", update);
+    update();
+    return () => {
+      map.off("move", update);
+      map.off("resize", update);
+    };
+  }, [companies, rasterFallback]);
   useEffect(() => {
     qRef.current = q;
     mapRef.current?.fire("moveend");
@@ -746,7 +779,6 @@ export function ConduzcoMap({
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let abort: AbortController | undefined;
-    const markers: import("maplibre-gl").Marker[] = [];
     void import("maplibre-gl")
       .then(({ default: maplibre }) => {
         if (cancelled) return;
@@ -788,61 +820,6 @@ export function ConduzcoMap({
               if (cancelled) return;
               setRows(data.rows || []);
               setError(false);
-              markers.forEach((marker) => marker.remove());
-              markers.length = 0;
-              const companies = new Map<string, RentalListing[]>();
-              for (const item of (data.rows || []) as RentalListing[]) {
-                companies.set(item.company_id, [
-                  ...(companies.get(item.company_id) || []),
-                  item,
-                ]);
-              }
-              for (const items of companies.values()) {
-                const item = items[0];
-                const lowest = Math.min(
-                  ...items.map((row) => row.daily_price_cents),
-                );
-                const el = document.createElement("button");
-                el.type = "button";
-                el.setAttribute(
-                  "aria-label",
-                  `${item.company_name}, ${items.length} vehicles, from €${Math.round(lowest / 100)} per day`,
-                );
-                el.className = "conduzco-map-marker";
-                el.textContent = `${items.length} · €${Math.round(lowest / 100)}`;
-                const popup = new maplibre.Popup({ offset: 20 });
-                const detail = document.createElement("div");
-                const title = document.createElement("strong");
-                title.textContent = item.company_name;
-                detail.append(title, document.createElement("br"));
-                detail.append(
-                  document.createTextNode(
-                    `${items.length} vehicles · from €${Math.round(lowest / 100)}/day`,
-                  ),
-                );
-                detail.append(document.createElement("br"));
-                const fleetLink = document.createElement("a");
-                fleetLink.href = `/rentals/${encodeURIComponent(item.company_slug)}?lang=${locale}`;
-                fleetLink.textContent =
-                  locale === "es" ? "Ver flota →" : "View fleet →";
-                const directions = document.createElement("a");
-                directions.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${item.latitude},${item.longitude}`)}`;
-                directions.target = "_blank";
-                directions.rel = "noopener noreferrer";
-                directions.textContent =
-                  locale === "es" ? "Cómo llegar ↗" : "Directions ↗";
-                detail.append(
-                  fleetLink,
-                  document.createTextNode(" · "),
-                  directions,
-                );
-                popup.setDOMContent(detail);
-                const marker = new maplibre.Marker({ element: el })
-                  .setLngLat([item.longitude, item.latitude])
-                  .setPopup(popup)
-                  .addTo(map!);
-                markers.push(marker);
-              }
             } catch {
               if (!abort?.signal.aborted && !cancelled) setError(true);
             }
@@ -862,7 +839,6 @@ export function ConduzcoMap({
       cancelled = true;
       if (timer) clearTimeout(timer);
       abort?.abort();
-      markers.forEach((marker) => marker.remove());
       mapRef.current = null;
       map?.remove();
     };
@@ -891,6 +867,61 @@ export function ConduzcoMap({
               locale === "es" ? "Mapa de coches de alquiler" : "Rental car map"
             }
           />
+        )}
+        {!rasterFallback && (
+          <div
+            className={styles.mapPins}
+            aria-label={
+              locale === "es" ? "Puntos de alquiler" : "Rental locations"
+            }
+          >
+            {[...companies].map(([id, items]) => {
+              const item = items[0];
+              const position = pinPositions[id];
+              if (!position) return null;
+              const price = Math.round(
+                Math.min(...items.map((row) => row.daily_price_cents)) / 100,
+              );
+              return (
+                <div
+                  className={styles.mapPin}
+                  key={id}
+                  style={{ left: position.x, top: position.y }}
+                >
+                  <button
+                    type="button"
+                    className="conduzco-map-marker"
+                    aria-label={`${item.company_name}, ${items.length} vehicles, from €${price} per day`}
+                    aria-expanded={activePin === id}
+                    onClick={() => setActivePin(activePin === id ? null : id)}
+                  >
+                    {items.length} · €{price}
+                  </button>
+                  {activePin === id && (
+                    <div className={styles.mapPinPopup}>
+                      <strong>{item.company_name}</strong>
+                      <span>
+                        {items.length} {locale === "es" ? "coches" : "cars"} · €
+                        {price}/{locale === "es" ? "día" : "day"}
+                      </span>
+                      <Link
+                        href={`/rentals/${encodeURIComponent(item.company_slug)}?lang=${locale}`}
+                      >
+                        {locale === "es" ? "Ver flota →" : "View fleet →"}
+                      </Link>
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${item.latitude},${item.longitude}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {locale === "es" ? "Cómo llegar ↗" : "Directions ↗"}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
         <section className={styles.mapPanel}>
           <h1>
