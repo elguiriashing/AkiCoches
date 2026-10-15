@@ -1,28 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { trustedProductOrigin } from "@/lib/public-request-origin";
 import { refreshSession } from "@/lib/supabase/middleware";
+import { stripCrossProductCredentials } from "@/lib/cross-product-query";
 import {
   conduzcoHostMethodAllowed,
   conduzcoHostRoute,
 } from "@/lib/akiconduzco-routing";
-const credentialQueryKeys = new Set([
-  "code",
-  "token",
-  "token_hash",
-  "access_token",
-  "refresh_token",
-  "id_token",
-  "provider_token",
-  "provider_refresh_token",
-  "client_secret",
-  "password",
-  "state",
-  "error_description",
-]);
 function crossProductRedirect(destination: URL) {
-  for (const key of [...destination.searchParams.keys()])
-    if (credentialQueryKeys.has(key.toLowerCase()))
-      destination.searchParams.delete(key);
+  stripCrossProductCredentials(destination);
   // Explicitly replace any source fragment, which the server cannot inspect.
   destination.hash = "redirected";
   const response = NextResponse.redirect(destination, 307);

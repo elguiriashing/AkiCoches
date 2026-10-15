@@ -1,5 +1,13 @@
 # Extraction contract
 
+Normal rental logout now requests Supabase's `local` scope, avoiding unintended
+global revocation in this shared identity project. A successful password change
+retains explicit `global` revocation as a security response; it is never tested
+against the owner's real account. Three server-action tests verify the distinct
+scopes, verified recovery ordering and expired-link refusal. These tests establish
+the requested provider contract; real cross-product refresh-token retention is
+not claimed without a provider-backed refresh check. Original AkiPasa is unchanged.
+
 The anonymous auth-page sweep also found dark inherited auth text on the rental
 product's fixed dark canvas, and a language switch that retained an old localized
 pathname. Scoped rental auth tokens now keep sign-in/recovery text readable under
@@ -75,10 +83,18 @@ The rental `.app` now defines its own light ink token, scoped to that product.
 The browser regression checks real computed heading color in both saved theme
 preferences, ES/EN and mobile/desktop. It fails against the original source style.
 
-Cross-product fallback and membership redirects scrub authentication/secret query
-keys case-insensitively, explicitly replace browser fragments and send no-referrer.
-Safe discovery query fields survive; non-read requests never cross domains. Local
-PKCE callbacks retain their local code/state for the existing exchange handler.
+Cross-product fallback and membership redirects remove authentication/secret keys
+and opaque navigation wrappers (`next`, redirect/return/callback variants). A real
+canonical GET with a dummy nested callback code previously forwarded it to
+AkiBusiness. The query-only helper now inspects bounded nested URI/form encoding,
+JSON keys/strings (including Unicode escapes), userinfo URLs and bracket/dot keys;
+malformed, over-deep or oversized input fails closed. Limits are 8 KiB of query,
+64 fields, four decode rounds, JSON depth four and 128 parts per inspected value.
+Ordinary discovery/date/language/page/tab fields survive. External responses
+explicitly replace browser fragments and send no-referrer/no-store; non-read
+requests never cross domains. Same-origin PKCE callbacks and their local code,
+state and next context retain the existing exchange behavior. The helper and
+middleware regressions exercise dummy values only; no live credentials are used.
 
 ## Deterministic CI public configuration
 

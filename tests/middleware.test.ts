@@ -49,6 +49,24 @@ describe("independent canonical route middleware", () => {
 });
 
 describe("cross-product credential transfer prevention", () => {
+  it("strips nested authentication material from Business and primary fallback handoffs", async () => {
+    for (const path of ["/en/business", "/unknown"]) {
+      const response = await middleware(
+        request(
+          `${path}?tab=fleet&next=%2Fen%2Fauth%2Fcallback%3Fcode%3Dqa-dummy&q=Malaga`,
+        ),
+      );
+      expect(response.status).toBe(307);
+      const target = new URL(response.headers.get("location")!);
+      expect([...target.searchParams]).toEqual([
+        ["tab", "fleet"],
+        ["q", "Malaga"],
+      ]);
+      expect(target.hash).toBe("#redirected");
+      expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+      expect(response.headers.get("cache-control")).toBe("no-store");
+    }
+  });
   it("scrubs credential keys case-insensitively while preserving safe search filters", async () => {
     const response = await middleware(
       request(

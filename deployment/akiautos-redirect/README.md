@@ -13,6 +13,17 @@ Mutations and credential-bearing auth URLs are rejected; no cross-domain form
 or PKCE-token replay is attempted. Redirects use no-store during migration so
 the Worker response does not encourage intermediary caching that impedes rollback.
 
+Credential checks cover nested URL/query values, bracket/dotted keys, JSON and
+Unicode-escaped JSON keys/strings, encoded paths/fragments and URL userinfo.
+Opaque navigation wrappers such as next/return/redirect/callback are rejected even
+when their values look harmless. Inspection uses at most four URI decoding rounds,
+four JSON levels and 128 inspection parts; malformed or unresolved encoding fails
+closed with no Location. Requests over 8192 URL characters or 64 query fields also
+fail closed. Accepted links retain their original safe path/query, including
+EN/ES, search, date ranges, ordinary JSON filters and UTM attribution. The reviewed
+query helper is copied inline so this Worker has no application-source dependency.
+These rules apply before the separate cutover flag and do not activate the alias.
+
 Deployment preparation uses a pinned Wrangler outside source checkouts:
 `/workspace/.cloud-setup/tools/node_modules/.bin/wrangler deploy --dry-run`.
 Actual upload and custom-domain attachment require usable Cloudflare access and
