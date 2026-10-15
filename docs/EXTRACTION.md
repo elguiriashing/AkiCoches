@@ -187,3 +187,12 @@ CI, clean Cloudflare packaging and authenticated preview acceptance are required
 before release. Rollback: revert app code; keep the compatible additive RPC, or
 revoke/drop that function in a reviewed forward migration. Never unlink records
 or drop customer data as rollback.
+
+## 2026-10-15 | Fullscreen privacy control integration
+
+Live rental acceptance found the root privacy control adding a footer below the
+customer viewport; the fixed operator desk also covered that global control.
+Scoped rental styles now keep privacy access in a reserved bottom strip, above
+the desk, without document scrolling. The existing consent panel and choices
+remain unchanged. Responsive browser fixtures now include the shared footer and
+assert that its control remains within the viewport. No data or auth changes.
