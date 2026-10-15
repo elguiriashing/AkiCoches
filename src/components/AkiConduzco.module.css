@@ -393,6 +393,38 @@
   position: absolute;
   inset: 0;
 }
+.mapPins {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mapPin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+}
+.mapPinPopup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 230px;
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: #182236;
+  box-shadow: 0 8px 28px #0005;
+  font: 13px system-ui;
+}
+.mapPinPopup a {
+  color: #b8233d;
+  font-weight: 750;
+}
 .mapPanel {
   position: absolute;
   left: 18px;

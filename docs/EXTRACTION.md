@@ -1,5 +1,14 @@
 # Extraction contract
 
+## 2026-10-15 | Visible WebGL rental pins
+
+Rental location buttons are projected into a dedicated page overlay above the
+WebGL map, kept in sync with map movement and resize. A button opens fleet and
+directions links; the canvas-free tile fallback remains for browsers without
+WebGL. The public listing API and rental coordinates are unchanged. An isolated
+map test covers a real projected company pin and its links; live WebGL acceptance
+on a GPU-enabled browser remains distinct from the canvas-free browser check.
+
 ## AkiSuite rental UI and venue handoff (2026-10-15)
 
 The customer app now exposes a saved-theme control, category/date-aware map,
