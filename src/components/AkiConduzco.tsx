@@ -568,7 +568,7 @@ export function ConduzcoMap({
         // Show the first set of rental locations as soon as the map is ready.
         // Keep the short debounce for later pans/filters to avoid excess requests.
         map.on("load", () => load(true));
-        map.on("moveend", load);
+        map.on("moveend", () => load(false));
       })
       .catch(() => {
         // Keep location search and pins available without WebGL.
