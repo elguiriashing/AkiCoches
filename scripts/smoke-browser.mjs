@@ -63,7 +63,9 @@ try {
         const channels = headingColor.match(/\d+/g)?.map(Number) || [];
         if (
           channels.length < 3 ||
-          channels.slice(0, 3).some((value) => value < 200)
+          (theme === "light"
+            ? channels.slice(0, 3).some((value) => value > 80)
+            : channels.slice(0, 3).some((value) => value < 200))
         )
           throw new Error(
             `unreadable rental heading ${headingColor} ${locale} ${theme}`,
