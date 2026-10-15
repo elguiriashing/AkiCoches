@@ -530,7 +530,7 @@ export function ConduzcoMap({
         });
         mapRef.current = map;
         map.addControl(new maplibre.NavigationControl(), "bottom-right");
-        const load = () => {
+        const load = (initial = false) => {
           if (!map) return;
           if (timer) clearTimeout(timer);
           timer = setTimeout(async () => {
@@ -563,9 +563,11 @@ export function ConduzcoMap({
             } catch {
               if (!abort?.signal.aborted && !cancelled) setError(true);
             }
-          }, 220);
+          }, initial ? 0 : 220);
         };
-        map.on("load", load);
+        // Show the first set of rental locations as soon as the map is ready.
+        // Keep the short debounce for later pans/filters to avoid excess requests.
+        map.on("load", () => load(true));
         map.on("moveend", load);
       })
       .catch(() => {
