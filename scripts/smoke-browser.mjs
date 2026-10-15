@@ -96,6 +96,21 @@ try {
                 : "Your AkiCoches account",
           })
           .waitFor();
+        const authHeadingColor = await page
+          .locator("h1")
+          .evaluate((element) => getComputedStyle(element).color);
+        const authChannels = authHeadingColor.match(/\d+/g)?.map(Number) || [];
+        if (
+          authChannels.length < 3 ||
+          authChannels.slice(0, 3).some((value) => value < 200)
+        )
+          throw new Error(
+            `unreadable rental auth heading ${authHeadingColor} ${locale} ${theme}`,
+          );
+        await page.screenshot({
+          path: `test-results/coches/auth-${locale}-${width}-${theme}.png`,
+          fullPage: true,
+        });
         const map = await page.goto(`${base}/map?lang=${locale}`, {
           waitUntil: "domcontentloaded",
         });

@@ -72,3 +72,11 @@ export function conduzcoHostMethodAllowed(pathname: string, method: string) {
         /^\/(en|es)\/terms\/accept\/?$/.test(pathname)))
   );
 }
+export function conduzcoLanguageUrl(href: string, locale: "en" | "es") {
+  const url = new URL(href);
+  // Auth/legal pages use a localized pathname; its locale takes precedence over
+  // the query used by unprefixed rental pages.
+  url.pathname = url.pathname.replace(/^\/(?:en|es)(?=\/|$)/, `/${locale}`);
+  url.searchParams.set("lang", locale);
+  return url.toString();
+}

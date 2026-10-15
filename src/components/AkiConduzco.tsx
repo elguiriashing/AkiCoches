@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AkiConduzco.module.css";
+import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
 import {
   rentalCategories,
   rentalCategoryLabels,
@@ -102,9 +103,7 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
   function switchLocale() {
     const next = locale === "en" ? "es" : "en";
     document.cookie = `akiconduzco_locale=${next}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
-    const url = new URL(location.href);
-    url.searchParams.set("lang", next);
-    location.assign(url.toString());
+    location.assign(conduzcoLanguageUrl(location.href, next));
   }
   return (
     <header className={styles.header}>

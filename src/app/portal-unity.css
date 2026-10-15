@@ -214,3 +214,26 @@ html[data-theme="dark"] body[data-product="akibusiness"] {
   display: inline-flex;
   line-height: 1;
 }
+
+/* The rental product has a fixed dark canvas even when the saved suite theme is light. */
+body[data-product="akiconduzco"] .auth-page {
+  --auth-ink: #f6f4f1;
+  --ink: #f6f4f1;
+  --muted: #b7bdc7;
+  --line: #ffffff30;
+  --surface: #15171d;
+  --surface-alt: #101116;
+  --primary-strong: #ff9ca7;
+  --auth-brand: #f04455;
+  --auth-brand-ink: #08090b;
+  color: #f6f4f1;
+  color-scheme: dark;
+}
+body[data-product="akiconduzco"] .auth-page input:not([type="checkbox"]) {
+  background: #15171d;
+  color: #f6f4f1;
+}
+body[data-product="akiconduzco"] .auth-page .consent-row,
+body[data-product="akiconduzco"] .auth-page .auth-intro a {
+  color: #f6f4f1;
+}

@@ -1,5 +1,13 @@
 # Extraction contract
 
+The anonymous auth-page sweep also found dark inherited auth text on the rental
+product's fixed dark canvas, and a language switch that retained an old localized
+pathname. Scoped rental auth tokens now keep sign-in/recovery text readable under
+both saved suite brightness preferences; the browser suite checks computed auth
+heading color. Language changes replace localized pathname prefixes while retaining
+the origin, recovery mode and local account return. No credential or OAuth flow
+was changed, and no recovery email or booking was submitted during the sweep.
+
 Deployed preview acceptance at `745cf8c` confirmed the real shared catalogue,
 company details, EN/ES and same-origin navigation. The cloud browser reports
 WebGL disabled, so that browser cannot certify visible tiles. Its rejected map

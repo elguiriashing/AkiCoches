@@ -5,6 +5,7 @@ import {
   conduzcoHostMethodAllowed,
   conduzcoHostRoute,
   safeConduzcoDestination,
+  conduzcoLanguageUrl,
 } from "../src/lib/akiconduzco-routing";
 import {
   formatRentalPrice,
@@ -13,6 +14,24 @@ import {
 } from "../src/lib/akiconduzco";
 
 describe("AkiConduzco host and booking boundaries", () => {
+  it("switches localized auth pages without losing mode, return path or origin", () => {
+    const url = new URL(
+      conduzcoLanguageUrl(
+        "https://akicoches.example/en/auth?mode=recover&next=%2Faccount",
+        "es",
+      ),
+    );
+    expect(url.origin).toBe("https://akicoches.example");
+    expect(url.pathname).toBe("/es/auth");
+    expect(url.searchParams.get("mode")).toBe("recover");
+    expect(url.searchParams.get("next")).toBe("/account");
+    expect(url.searchParams.get("lang")).toBe("es");
+    expect(
+      new URL(
+        conduzcoLanguageUrl("https://akicoches.example/map?q=Fuengirola", "en"),
+      ).pathname,
+    ).toBe("/map");
+  });
   it("keeps public pages on the rental origin and rejects non-product paths", () => {
     expect(conduzcoHostRoute("/")).toEqual({
       kind: "public",
