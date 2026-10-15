@@ -9,7 +9,8 @@ const valid = {
   start: "2099-01-01",
   end: "2099-01-03",
   name: "Local test",
-  phone: "",
+  phone: "+34 600 123 456",
+  email: "fixture@example.invalid",
   note: "",
   idempotencyKey: "22222222-2222-4222-8222-222222222222",
 };
@@ -105,4 +106,16 @@ describe("rental request authorization and authoritative quote", () => {
     );
     expect(createClient).not.toHaveBeenCalled();
   });
+});
+
+it("rejects absent or invalid email and phone before mutation", async () => {
+  for (const details of [
+    { email: "" },
+    { phone: "" },
+    { phone: "abc123" },
+    { email: "wrong" },
+  ]) {
+    expect((await POST(request({ ...valid, ...details }))).status).toBe(400);
+  }
+  expect(createClient).not.toHaveBeenCalled();
 });

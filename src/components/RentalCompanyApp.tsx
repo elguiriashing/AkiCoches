@@ -18,7 +18,19 @@ import {
 import shell from "./AkiConduzco.module.css";
 import s from "./RentalCompanyApp.module.css";
 
-type Company = { name: string; city: string; address?: string };
+type Company = {
+  name: string;
+  city: string;
+  address?: string;
+  description_es?: string;
+  description_en?: string | null;
+  phone?: string | null;
+  website_url?: string | null;
+  latitude?: number;
+  longitude?: number;
+  logo_url?: string;
+  hero_url?: string;
+};
 type Props = {
   locale: "en" | "es";
   slug: string;
@@ -30,6 +42,7 @@ type Props = {
   initialEnd?: string;
   blocks?: RentalBlock[];
   calendarReady?: boolean;
+  accountEmail?: string;
 };
 
 export function RentalCompanyApp({
@@ -43,6 +56,7 @@ export function RentalCompanyApp({
   initialEnd = "",
   blocks = [],
   calendarReady = false,
+  accountEmail = "",
 }: Props) {
   const es = locale === "es";
   const today = new Date().toISOString().slice(0, 10);
@@ -51,7 +65,7 @@ export function RentalCompanyApp({
   );
   const selected =
     listings.find((v) => v.vehicle_id === selectedId) || listings[0];
-  const company = companyInfo || {
+  const company: Company = companyInfo || {
     name: listings[0]?.company_name || "AkiCoches",
     city: listings[0]?.city || "",
     address: listings[0]?.address || "",
@@ -67,6 +81,7 @@ export function RentalCompanyApp({
   const [filter, setFilter] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState(accountEmail);
   const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -178,6 +193,8 @@ export function RentalCompanyApp({
           end,
           name,
           phone,
+          email,
+          locale,
           note,
           idempotencyKey: token,
         }),
@@ -212,8 +229,8 @@ export function RentalCompanyApp({
             : "Dates no longer available. Choose another range."
           : reason === "email"
             ? es
-              ? "Verifica tu email para enviar la solicitud."
-              : "Verify your email before sending a request."
+              ? "Usa y verifica el email de tu cuenta para enviar la solicitud."
+              : "Use your verified account email before sending a request."
             : es
               ? "No se pudo enviar. Vuelve a intentarlo."
               : "Could not send. Please try again.",
@@ -263,7 +280,19 @@ export function RentalCompanyApp({
           >
             ←
           </Link>
-          <div className={s.avatar}>{company.name.slice(0, 1)}</div>
+          <div className={s.avatar}>
+            {company.logo_url ? (
+              <Image
+                src={company.logo_url}
+                alt={company.name}
+                width={52}
+                height={52}
+                unoptimized
+              />
+            ) : (
+              company.name.slice(0, 1)
+            )}
+          </div>
           <div className={s.companyIdentity}>
             <span className={s.eyebrow}>{company.city} · AKIFAMILY</span>
             <h1>{company.name}</h1>
@@ -681,9 +710,27 @@ export function RentalCompanyApp({
                         />
                       </label>
                       <label>
-                        {es ? "Teléfono (opcional)" : "Phone (optional)"}
+                        Email
+                        <input
+                          type="email"
+                          required
+                          maxLength={254}
+                          autoComplete="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <small className={s.fine}>
+                          {es
+                            ? "Usa el email verificado de tu cuenta. Recibirás las actualizaciones de tu reserva aquí."
+                            : "Use your verified account email. Booking updates will arrive here."}
+                        </small>
+                      </label>
+                      <label>
+                        {es ? "Teléfono" : "Phone"}
                         <input
                           type="tel"
+                          required
+                          minLength={7}
                           maxLength={40}
                           autoComplete="tel"
                           value={phone}
@@ -747,11 +794,39 @@ export function RentalCompanyApp({
                     <h3>{company.city}</h3>
                     <p>{company.address}</p>
                   </div>
+                  {company.hero_url && (
+                    <div className={s.branchHero}>
+                      <Image
+                        src={company.hero_url}
+                        alt={company.name}
+                        fill
+                        unoptimized
+                      />
+                    </div>
+                  )}
                   <p className={s.fine}>
-                    {es
-                      ? "Explora la flota de esta empresa, compara sus coches y solicita tus fechas directamente."
-                      : "Explore this company's fleet, compare cars and request your dates directly."}
+                    {(es
+                      ? company.description_es
+                      : company.description_en || company.description_es) ||
+                      (es
+                        ? "Explora la flota de esta sucursal y solicita tus fechas directamente."
+                        : "Explore this branch's fleet and request your dates directly.")}
                   </p>
+                  {company.phone && (
+                    <a className={s.secondary} href={`tel:${company.phone}`}>
+                      {company.phone}
+                    </a>
+                  )}
+                  {company.website_url && (
+                    <a
+                      className={s.secondary}
+                      href={company.website_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {es ? "Web de la sucursal" : "Branch website"} ↗
+                    </a>
+                  )}
                   <Link className={s.primary} href={`/map?lang=${locale}`}>
                     {es ? "Ver zona de recogida" : "View pick-up area"}
                   </Link>

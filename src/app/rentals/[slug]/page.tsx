@@ -1,3 +1,4 @@
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
@@ -37,7 +38,9 @@ export default async function RentalCompanyPage({
   const supabase = createSupabasePublicClient();
   const { data: company } = await supabase
     .from("car_rental_companies")
-    .select("id,name,city,address")
+    .select(
+      "id,name,city,address,description_es,description_en,phone,website_url,latitude,longitude,logo_media_id,hero_media_id",
+    )
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
@@ -75,9 +78,33 @@ export default async function RentalCompanyPage({
         .order("start_date")
         .limit(1000)
     : { data: [], error: null, count: 0 };
+  const authClient = await createSupabaseServerClient();
+  const { data: auth } = await authClient.auth.getUser();
+  const branchMedia: Record<string, string> = {};
+  for (const id of [company.logo_media_id, company.hero_media_id].filter(
+    Boolean,
+  )) {
+    const { data: row } = await supabase
+      .from("car_rental_media")
+      .select("storage_path,storage_bucket")
+      .eq("id", id)
+      .eq("company_id", company.id)
+      .maybeSingle();
+    if (row) {
+      const { data: signed } = await supabase.storage
+        .from(row.storage_bucket)
+        .createSignedUrl(row.storage_path, 3600);
+      if (signed?.signedUrl) branchMedia[id] = signed.signedUrl;
+    }
+  }
   return (
     <RentalDetail
-      company={company}
+      accountEmail={auth.user?.email || ""}
+      company={{
+        ...company,
+        logo_url: branchMedia[company.logo_media_id],
+        hero_url: branchMedia[company.hero_media_id],
+      }}
       blocks={blocks || []}
       calendarReady={
         !calendarError && count !== null && count <= (blocks?.length || 0)
