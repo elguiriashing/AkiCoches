@@ -34,6 +34,7 @@ for (const path of [
     assert.equal(target.search, source.search);
     assert.equal(target.hash, "#redirected");
     assert.equal(result.headers.get("cache-control"), "no-store");
+    assert.equal(result.headers.get("referrer-policy"), "no-referrer");
   });
 }
 
@@ -73,6 +74,13 @@ for (const suffix of [
   "/?code=private",
   "/?password=private",
   "/?state=private",
+  "/?provider_token=private",
+  "/?PROVIDER_REFRESH_TOKEN=private",
+  "/?oauth_token=private",
+  "/?oauth_token_secret=private",
+  "/?authorization=private",
+  "/?api_key=private",
+  "/?ApiKey=private",
 ]) {
   test(`does not migrate credential-bearing authentication URL: ${suffix.split("?")[0]}`, () => {
     const response = redirectAutos(

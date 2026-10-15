@@ -67,3 +67,25 @@ contacts production provider configuration. The existing eight browser cases
 and authorization checks remain required. Server logs are retained on failure,
 health must succeed, and the owned smoke server stops before Cloudflare rebuild.
 Deployment remains separately gated on verified real build-time public settings.
+
+## Manually dispatched preview releases (2026-10-15)
+
+`.github/workflows/preview-release.yml` builds an explicitly selected full source
+SHA only after this repository's product CI succeeds for that exact commit. It
+validates the confirmed shared Supabase endpoint/public key, supplies matching
+build/runtime configuration, and retains the compiled OpenNext bundle, assets
+and checksum. Build-only is the default. Optional deployment uses a scoped
+`CLOUDFLARE_API_TOKEN` from the `preview` environment and is fixed to account
+`501bc9434d8ae555a6ac984a26dd2725` and Worker `akicoches`. The environment must
+provide `NEXT_PUBLIC_SUPABASE_ANON_KEY` as a variable or secret. No service key
+is accepted in browser builds.
+
+The workflow rejects source configurations with routes, alternate environments,
+schedules or open billing-readiness flags. It also rejects a remote Worker
+already attached to a custom domain or scheduled job before deployment. The
+result must expose its exact SHA over HTTPS at the allowlisted
+`https://akicoches.alexashing1.workers.dev` origin. Existing production domains,
+AkiAutos activation and shared jobs remain under the coordinated release gate.
+Workflow parsing and shell syntax checks pass locally; hosted invocation,
+provider deployment and authenticated acceptance are separate pending checks.
+The workflow can be reverted without changing application records or routing.

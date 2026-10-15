@@ -7,6 +7,13 @@ const credentialNames = new Set([
   "access_token",
   "refresh_token",
   "id_token",
+  "provider_token",
+  "provider_refresh_token",
+  "oauth_token",
+  "oauth_token_secret",
+  "authorization",
+  "api_key",
+  "apikey",
   "client_secret",
   "password",
   "state",
@@ -18,6 +25,7 @@ export function redirectAutos(request, env = {}) {
   const headers = {
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
   };
   if (url.hostname !== SOURCE_HOST) {
     return new Response("Unknown hostname", { status: 404, headers });
