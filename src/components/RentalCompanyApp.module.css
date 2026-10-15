@@ -234,7 +234,9 @@
   min-height: 44px;
   padding: 12px 18px;
   border-radius: 12px;
-  font: 750 13px inherit;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
