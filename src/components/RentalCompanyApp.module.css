@@ -748,3 +748,24 @@
     padding: 7px 12px;
   }
 }
+
+/* Keep the shared privacy control inside the fullscreen app's viewport. */
+:global(body):has(.app) {
+  overflow: hidden;
+}
+:global(body):has(.app) > :global(.privacy-preferences) {
+  position: fixed;
+  right: 8px;
+  bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  z-index: 110;
+  padding: 0;
+}
+:global(body):has(.app) > :global(.privacy-preferences) :global(.button) {
+  min-height: 32px;
+  padding: 5px 10px;
+  font-size: 10px;
+}
+
+.workspace {
+  padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px));
+}
