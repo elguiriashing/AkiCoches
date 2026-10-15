@@ -9,7 +9,18 @@ const bookingSchema = z
     start: validDate,
     end: validDate,
     name: z.string().trim().min(2).max(120),
-    phone: z.string().trim().max(40).optional().default(""),
+    email: z.string().trim().email().max(254),
+    locale: z.enum(["en", "es"]).default("es"),
+    phone: z
+      .string()
+      .trim()
+      .min(7)
+      .max(40)
+      .regex(/^\+?[\d ().-]+$/)
+      .refine(
+        (v) =>
+          v.replace(/\D/g, "").length >= 7 && v.replace(/\D/g, "").length <= 15,
+      ),
     note: z.string().trim().max(1000).optional().default(""),
     idempotencyKey: z.string().uuid(),
   })
@@ -35,7 +46,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("car_rental_bookings")
     .select(
-      "id,start_date,end_date,contact_name,quoted_total_cents,currency,status,created_at,vehicle:car_rental_vehicles(name,category,company:car_rental_companies(name,city))",
+      "id,start_date,end_date,contact_name,contact_email,contact_phone,note,quoted_total_cents,currency,status,created_at,vehicle:car_rental_vehicles(name,category,company:car_rental_companies(name,city))",
     )
     .eq("renter_id", auth.user.id)
     .order("created_at", { ascending: false })
@@ -63,13 +74,19 @@ export async function POST(request: Request) {
     return Response.json({ error: "sign_in_required" }, { status: 401 });
   if (!auth.user.email || !auth.user.email_confirmed_at)
     return Response.json({ error: "verified_email_required" }, { status: 403 });
+  if (input.data.email.toLowerCase() !== auth.user.email.toLowerCase())
+    return Response.json(
+      { error: "use_verified_account_email" },
+      { status: 403 },
+    );
   const { data, error } = await supabase.rpc("request_car_rental_booking", {
     p_vehicle: input.data.vehicleId,
     p_start: input.data.start,
     p_end: input.data.end,
     p_contact_name: input.data.name,
     p_contact_email: auth.user.email,
-    p_contact_phone: input.data.phone || null,
+    p_contact_phone: input.data.phone,
+    p_locale: input.data.locale,
     p_note: input.data.note || null,
     p_idempotency_key: input.data.idempotencyKey,
   });

@@ -24,7 +24,7 @@ const listing: RentalListing = {
 };
 
 describe("public rental cover selection", () => {
-  it("signs only the selected cover returned by venue and Storage RLS", async () => {
+  it("signs only the selected cover returned by branch and Storage RLS", async () => {
     const signed = vi.fn().mockResolvedValue({
       data: [
         {
@@ -39,8 +39,14 @@ describe("public rental cover selection", () => {
           in: async () => ({
             data:
               table === "car_rental_vehicles"
-                ? [{ id: "vehicle-1", cover_media_id: "cover-1" }]
-                : [{ id: "cover-1", storage_path: "venue/cover.webp" }],
+                ? [{ id: "vehicle-1", rental_media_id: "cover-1" }]
+                : [
+                    {
+                      id: "cover-1",
+                      storage_path: "venue/cover.webp",
+                      storage_bucket: "rental-media",
+                    },
+                  ],
             error: null,
           }),
         }),
@@ -59,7 +65,7 @@ describe("public rental cover selection", () => {
           in: async () => ({
             data:
               table === "car_rental_vehicles"
-                ? [{ id: "vehicle-1", cover_media_id: "cover-1" }]
+                ? [{ id: "vehicle-1", rental_media_id: "cover-1" }]
                 : [],
             error: null,
           }),

@@ -769,3 +769,17 @@
 .workspace {
   padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px));
 }
+
+.branchHero {
+  position: relative;
+  min-height: 140px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.branchHero img {
+  object-fit: cover;
+}
+.avatar img {
+  border-radius: inherit;
+  object-fit: cover;
+}
