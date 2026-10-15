@@ -4,15 +4,18 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { ConduzcoMap } from "../src/components/AkiConduzco";
 
+const mapHarness = vi.hoisted(() => ({ fire: null as null | ((name: string) => void) }));
+
 vi.mock("maplibre-gl", () => ({
   default: {
     Map: class {
-      private events = new Map<string, () => void>();
+      private events = new Map<string, (event?: unknown) => void>();
       constructor() {
+        mapHarness.fire = (name) => this.events.get(name)?.({ type: name });
         queueMicrotask(() => this.events.get("load")?.());
       }
       addControl() {}
-      on(name: string, callback: () => void) {
+      on(name: string, callback: (event?: unknown) => void) {
         this.events.set(name, callback);
       }
       off(name: string) {
@@ -42,6 +45,7 @@ describe("rental pins on the WebGL map", () => {
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
+    mapHarness.fire = null;
   });
 
   it("shows a location pin above the map and opens fleet and directions", async () => {
@@ -84,5 +88,11 @@ describe("rental pins on the WebGL map", () => {
     expect(
       screen.getByRole("link", { name: "Cómo llegar ↗" }).getAttribute("href"),
     ).toContain("36.5368%2C-4.6251");
+
+    const timerSpy = vi.spyOn(globalThis, "setTimeout");
+    timerSpy.mockClear();
+    mapHarness.fire?.("moveend");
+    expect(timerSpy).toHaveBeenCalledWith(expect.any(Function), 220);
+    timerSpy.mockRestore();
   });
 });
