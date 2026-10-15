@@ -1,15 +1,17 @@
-# Codex migration instructions — AkiCoches
+# AkiCoches engineering contract
 
-This repository is being extracted from `elguiriashing/akipasa` at its latest `master`. The existing main production repo and Worker MUST remain functional and unchanged by this extraction.
+This checkout is an independent app; use it directly. Do not create another worktree
+unless explicitly requested. Read README.md and docs/EXTRACTION.md before changes.
+Preserve the historical `car_rental_*` schema and akiconduzco machine identifiers.
+Never mutate production data, weaken RLS or invent successful bookings/payments.
+Business fleet operations belong in AkiBusiness. Shared scheduled jobs and Stripe
+webhooks belong solely in AkiPasa. Preserve host-only cookies across separate domains.
+Run npm run lint, npm run typecheck, npm test and npm run build for changes; package
+Cloudflare from committed clean source. Never attach production routes or redirects
+before preview, auth, role/RLS, SSL and booking acceptance are verified. Report all
+blocked/unperformed checks explicitly.
 
-Canonical domain: `https://akicoches.com`. Legacy host: `https://akiconduzco.akipasa.com`.
-
-- Read `README.md` first. Treat it as the product-specific extraction contract.
-- Copy the actual application and all necessary transitive dependencies. Do not fabricate replacement functionality or ship placeholders.
-- Implement **independent** Next.js/OpenNext Cloudflare build scripts, Wrangler configuration and CI.
-- Preserve Supabase user identities, tenancy/RLS protections and business/booking identifiers. Shared project ref: `vhpbvcfkcteswlsdjrfl`.
-- Keep real credentials in Cloudflare secrets. No private keys in Git or PRs.
-- Cross-domain logins require explicit OAuth redirect allowlists and robust sessions; do not rely on cross-site cookies.
-- Build/test and preview before attaching new production hostnames. Do not modify legacy redirects until the new system is verified.
-- Write down skipped functionality and risks in the PR; no silent regressions.
-- Coordinate with ongoing Codex work to avoid overlapping branches or forced pushes.
+The original AkiPasa repository, master history and live Worker must remain intact.
+Shared backend project reference: `vhpbvcfkcteswlsdjrfl`; verify its configured endpoint
+and deployment role before release. Preserve the destination bootstrap contract in
+`docs/INITIAL_MIGRATION_CONTRACT.md`; never overwrite remote work or force-push.

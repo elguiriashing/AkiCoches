@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "akicoches",
+  "main": "custom-worker.ts",
+  "account_id": "501bc9434d8ae555a6ac984a26dd2725",
+  "compatibility_date": "2026-07-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "workers_dev": true,
+  "vars": {
+    "NEXT_PUBLIC_PRODUCT_NAME": "AkiCoches",
+    "NEXT_PUBLIC_SITE_URL": "https://akicoches.com",
+    "NEXT_PUBLIC_BUSINESS_URL": "https://akibusiness.com",
+    "NEXT_PUBLIC_CRM_URL": "https://akihq.app",
+    "NEXT_PUBLIC_DATA_PROVIDER": "hybrid",
+    "AKICOCHES_INDEXING_ENABLED": "false",
+  },
+  "limits": {
+    "cpu_ms": 1000,
+    "subrequests": 100,
+  },
+  "observability": {
+    "enabled": true,
+  },
+}
