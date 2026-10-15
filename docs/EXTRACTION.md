@@ -258,3 +258,8 @@ apps, exact Supabase callbacks, provider configuration and authenticated preview
 acceptance. Default production behavior remains compatible until that release.
 Rollback disables the flag and rebuilds with the prior verified origin values;
 no record, subscription or entitlement migration is involved.
+
+Visual inspection of the enabled-mode mobile screenshot found inherited pale text
+on the light management card and footer links. These now use the product's theme
+text token; the light card heading uses a darker red. The eight browser cases
+assert computed handoff/navigation text colors in both themes and languages.

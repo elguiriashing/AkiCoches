@@ -81,6 +81,33 @@ try {
           throw new Error(
             `unreadable rental heading ${headingColor} ${locale} ${theme}`,
           );
+        const managementLink = page.getByRole("link", {
+          name:
+            locale === "es"
+              ? `Abrir ${managementName}`
+              : `Open ${managementName}`,
+        });
+        const handoffSection = page
+          .locator("section")
+          .filter({ has: managementLink });
+        for (const textElement of [
+          handoffSection.locator("p"),
+          page.locator("footer a").first(),
+        ]) {
+          const color = await textElement.evaluate(
+            (el) => getComputedStyle(el).color,
+          );
+          const channels = color.match(/\d+/g)?.map(Number) || [];
+          if (
+            channels.length < 3 ||
+            (theme === "light"
+              ? channels.slice(0, 3).some((value) => value > 120)
+              : channels.slice(0, 3).some((value) => value < 140))
+          )
+            throw new Error(
+              `unreadable management handoff/navigation ${color} ${theme}`,
+            );
+        }
         const text = await page.locator("body").innerText();
         if (text.includes("AkiConduzco")) throw new Error("old visible brand");
         if (
