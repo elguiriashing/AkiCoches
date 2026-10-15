@@ -70,6 +70,10 @@ export function RentalCompanyApp({
     city: listings[0]?.city || "",
     address: listings[0]?.address || "",
   };
+  const pickupQuery =
+    Number.isFinite(company.latitude) && Number.isFinite(company.longitude)
+      ? `${company.latitude},${company.longitude}`
+      : [company.address, company.city].filter(Boolean).join(", ");
   const [tab, setTab] = useState<"fleet" | "dates" | "request" | "company">(
     "fleet",
   );
@@ -827,9 +831,14 @@ export function RentalCompanyApp({
                       {es ? "Web de la sucursal" : "Branch website"} ↗
                     </a>
                   )}
-                  <Link className={s.primary} href={`/map?lang=${locale}`}>
+                  <a
+                    className={s.primary}
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pickupQuery)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {es ? "Ver zona de recogida" : "View pick-up area"}
-                  </Link>
+                  </a>
                   <p className={s.fine}>
                     AkiCoches ·{" "}
                     {es
