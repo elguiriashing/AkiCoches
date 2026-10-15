@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { RentalDetail } from "@/components/AkiConduzco";
 import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
-import type { RentalListing } from "@/lib/akiconduzco";
+import { validDate, type RentalListing } from "@/lib/akiconduzco";
 import { withRentalCovers } from "@/lib/rental-covers";
 
 export async function generateMetadata({
@@ -37,7 +37,7 @@ export default async function RentalCompanyPage({
   const supabase = createSupabasePublicClient();
   const { data: company } = await supabase
     .from("car_rental_companies")
-    .select("id,name,city")
+    .select("id,name,city,address")
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
@@ -46,8 +46,8 @@ export default async function RentalCompanyPage({
     p_q: company.name,
     p_city: company.city,
     p_category: null,
-    p_start: query.start || null,
-    p_end: query.end || null,
+    p_start: null,
+    p_end: null,
     p_min_price: null,
     p_max_price: null,
     p_bounds: null,
@@ -58,15 +58,37 @@ export default async function RentalCompanyPage({
     (row) => row.company_id === company.id,
   );
   const picturedListings = await withRentalCovers(supabase, listings);
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    data: blocks,
+    error: calendarError,
+    count,
+  } = listings.length
+    ? await supabase
+        .from("car_rental_calendar_blocks")
+        .select("vehicle_id,start_date,end_date", { count: "exact" })
+        .in(
+          "vehicle_id",
+          listings.map((row) => row.vehicle_id),
+        )
+        .gte("end_date", today)
+        .order("start_date")
+        .limit(1000)
+    : { data: [], error: null, count: 0 };
   return (
     <RentalDetail
+      company={company}
+      blocks={blocks || []}
+      calendarReady={
+        !calendarError && count !== null && count <= (blocks?.length || 0)
+      }
       locale={conduzcoLocale(requestHeaders.get("x-akipasa-locale"))}
       slug={slug}
       listings={picturedListings}
       error={Boolean(error)}
       requestedVehicle={query.vehicle}
-      initialStart={query.start || ""}
-      initialEnd={query.end || ""}
+      initialStart={validDate.safeParse(query.start).success ? query.start : ""}
+      initialEnd={validDate.safeParse(query.end).success ? query.end : ""}
     />
   );
 }
