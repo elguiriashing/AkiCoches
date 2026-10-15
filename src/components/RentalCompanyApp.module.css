@@ -699,3 +699,50 @@
     display: none;
   }
 }
+
+@media (max-width: 760px) {
+  .showcase {
+    height: 240px;
+  }
+  .showcase .specs {
+    display: grid;
+    padding: 9px 10px;
+    flex-shrink: 0;
+  }
+  .showcase .priceBar {
+    display: flex;
+    padding: 9px 14px;
+    flex-shrink: 0;
+  }
+  .priceBar strong {
+    font-size: 23px;
+  }
+  .priceBar .primary {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  .photoCaption h2 {
+    font-size: 21px;
+  }
+  .photoCaption {
+    bottom: 12px;
+  }
+}
+@media (max-width: 760px) and (max-height: 740px) {
+  .showcase {
+    height: 190px;
+  }
+  .photoCaption {
+    bottom: 9px;
+  }
+  .photoCaption h2 {
+    font-size: 18px;
+  }
+  .showcase .specs {
+    padding: 7px;
+  }
+  .showcase .priceBar {
+    padding: 7px 12px;
+  }
+}
