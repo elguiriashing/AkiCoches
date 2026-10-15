@@ -69,7 +69,18 @@ await build({
   bundle: true,
   jsx: "automatic",
   minify: true,
-  define: { "process.env.NODE_ENV": '"production"' },
+  define: {
+    "process.env.NODE_ENV": '"production"',
+    "process.env.NEXT_PUBLIC_AKISUITE_ROLE_SWAP": JSON.stringify(
+      process.env.NEXT_PUBLIC_AKISUITE_ROLE_SWAP || "false",
+    ),
+    "process.env.NEXT_PUBLIC_BUSINESS_URL": JSON.stringify(
+      process.env.NEXT_PUBLIC_BUSINESS_URL || "",
+    ),
+    "process.env.NEXT_PUBLIC_CRM_URL": JSON.stringify(
+      process.env.NEXT_PUBLIC_CRM_URL || "",
+    ),
+  },
   plugins: [
     {
       name: "next-test-boundary",

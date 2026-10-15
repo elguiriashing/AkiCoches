@@ -1,6 +1,12 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 const base = process.env.SMOKE_BASE_URL || "http://127.0.0.1:3103";
+// Assert the requested release mode against the actual compiled browser output.
+const roleSwap = process.env.NEXT_PUBLIC_AKISUITE_ROLE_SWAP === "true";
+const managementName = roleSwap ? "AkiHQ" : "AkiBusiness";
+const managementOrigin =
+  process.env.SMOKE_MANAGEMENT_ORIGIN ||
+  (roleSwap ? "https://akihq.app" : "https://akibusiness.com");
 const browser = await chromium.launch({
   executablePath:
     process.env.CHROMIUM_PATH ||
@@ -30,16 +36,21 @@ try {
         await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
         await page
           .getByRole("link", {
-            name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
+            name:
+              locale === "es"
+                ? `Abrir ${managementName}`
+                : `Open ${managementName}`,
           })
           .waitFor();
         if (
           (await page
             .getByRole("link", {
-              name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
+              name:
+                locale === "es"
+                  ? `Abrir ${managementName}`
+                  : `Open ${managementName}`,
             })
-            .getAttribute("href")) !==
-          `https://akibusiness.com/${locale}/business`
+            .getAttribute("href")) !== `${managementOrigin}/${locale}/business`
         )
           throw new Error("fleet handoff changed");
         await page.waitForFunction(() =>

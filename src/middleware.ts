@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { productRoles } from "@/lib/product-roles";
 import { trustedProductOrigin } from "@/lib/public-request-origin";
 import { refreshSession } from "@/lib/supabase/middleware";
 import { stripCrossProductCredentials } from "@/lib/cross-product-query";
@@ -62,7 +63,7 @@ export async function middleware(request: NextRequest) {
       return new NextResponse(null, { status: 404 });
     const business = /^\/(en|es)\/business(?:\/|$)/.test(pathname);
     const destination = new URL(
-      business ? "https://akibusiness.com" : "https://akipasa.com",
+      business ? productRoles.managementUrl : "https://akipasa.com",
     );
     destination.pathname = pathname;
     destination.search = request.nextUrl.search;
