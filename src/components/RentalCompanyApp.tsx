@@ -63,6 +63,7 @@ export function RentalCompanyApp({
   const [end, setEnd] = useState(initialEnd);
   const [month, setMonth] = useState((initialStart || today).slice(0, 7));
   const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(4);
   const [filter, setFilter] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -92,11 +93,23 @@ export function RentalCompanyApp({
       .toLowerCase()
       .includes(filter.toLowerCase()),
   );
-  const pages = Math.max(1, Math.ceil(filtered.length / 4));
+  const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const visible = filtered.slice(
-    Math.min(page, pages - 1) * 4,
-    (Math.min(page, pages - 1) + 1) * 4,
+    Math.min(page, pages - 1) * pageSize,
+    (Math.min(page, pages - 1) + 1) * pageSize,
   );
+
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const media = window.matchMedia("(max-width: 760px)");
+    const update = () => {
+      setPageSize(media.matches ? 2 : 4);
+      setPage(0);
+    };
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     if (!validRange || !selected) return;
