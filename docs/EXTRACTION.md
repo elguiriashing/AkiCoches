@@ -1,5 +1,11 @@
 # Extraction contract
 
+Release packaging now removes only the generated `.open-next` output before each
+full build. A repeated local OpenNext build appended duplicate environment exports
+when previous output survived, causing Wrangler packaging to fail. Next's `.next`
+cache is retained. The manual preview workflow masks configured public keys and
+limits Wrangler logging so provider binding diagnostics do not print key values.
+
 Baseline: AkiPasa `080ea0ffb2dd6612436acd04c25b4daf8ff71129`, tracked Git archive
 only. No history, credentials, local config, build outputs or user records were copied.
 
