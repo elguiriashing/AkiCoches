@@ -25,10 +25,18 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function AkiConduzcoPage() {
+export default async function AkiConduzcoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string | string[] }>;
+}) {
+  const query = await searchParams;
   return (
     <AkiConduzco
       locale={conduzcoLocale((await headers()).get("x-akipasa-locale"))}
+      initialQuery={
+        typeof query.q === "string" ? query.q.trim().slice(0, 100) : ""
+      }
     />
   );
 }

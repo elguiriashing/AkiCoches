@@ -214,9 +214,15 @@ export function RentalCard({
   );
 }
 
-export function AkiConduzco({ locale }: { locale: Locale }) {
+export function AkiConduzco({
+  locale,
+  initialQuery = "",
+}: {
+  locale: Locale;
+  initialQuery?: string;
+}) {
   const t = copy[locale];
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(initialQuery);
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("all");
   const [start, setStart] = useState("");
@@ -714,67 +720,73 @@ export function ConduzcoMap({
     let timer: ReturnType<typeof setTimeout> | undefined;
     let abort: AbortController | undefined;
     const markers: import("maplibre-gl").Marker[] = [];
-    void import("maplibre-gl").then(({ default: maplibre }) => {
-      if (cancelled) return;
-      map = new maplibre.Map({
-        container,
-        style: styleUrl,
-        center: [-4.42, 36.72],
-        zoom: 8,
-      });
-      mapRef.current = map;
-      map.addControl(new maplibre.NavigationControl(), "bottom-right");
-      const load = () => {
-        if (!map) return;
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(async () => {
-          const b = map!.getBounds();
-          abort?.abort();
-          abort = new AbortController();
-          const bounds = [
-            b.getSouth(),
-            b.getWest(),
-            b.getNorth(),
-            b.getEast(),
-          ].join(",");
-          try {
-            const response = await fetch(
-              `/api/car-rentals?${new URLSearchParams({ q: qRef.current, bounds })}`,
-              { signal: abort.signal },
-            );
-            if (!response.ok) throw new Error("unavailable");
-            const data = await response.json();
-            if (cancelled) return;
-            setRows(data.rows || []);
-            setError(false);
-            markers.forEach((marker) => marker.remove());
-            markers.length = 0;
-            for (const item of (data.rows || []) as RentalListing[]) {
-              const el = document.createElement("button");
-              el.type = "button";
-              el.setAttribute(
-                "aria-label",
-                `${item.vehicle_name}, €${Math.round(item.daily_price_cents / 100)} per day`,
+    void import("maplibre-gl")
+      .then(({ default: maplibre }) => {
+        if (cancelled) return;
+        map = new maplibre.Map({
+          container,
+          style: styleUrl,
+          center: [-4.42, 36.72],
+          zoom: 8,
+        });
+        mapRef.current = map;
+        map.addControl(new maplibre.NavigationControl(), "bottom-right");
+        const load = () => {
+          if (!map) return;
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(async () => {
+            const b = map!.getBounds();
+            abort?.abort();
+            abort = new AbortController();
+            const bounds = [
+              b.getSouth(),
+              b.getWest(),
+              b.getNorth(),
+              b.getEast(),
+            ].join(",");
+            try {
+              const response = await fetch(
+                `/api/car-rentals?${new URLSearchParams({ q: qRef.current, bounds })}`,
+                { signal: abort.signal },
               );
-              el.className = "conduzco-map-marker";
-              el.textContent = `€${Math.round(item.daily_price_cents / 100)}`;
-              const popup = new maplibre.Popup({ offset: 20 }).setText(
-                `${item.vehicle_name} · ${item.company_name} · €${Math.round(item.daily_price_cents / 100)}/day`,
-              );
-              const marker = new maplibre.Marker({ element: el })
-                .setLngLat([item.longitude, item.latitude])
-                .setPopup(popup)
-                .addTo(map!);
-              markers.push(marker);
+              if (!response.ok) throw new Error("unavailable");
+              const data = await response.json();
+              if (cancelled) return;
+              setRows(data.rows || []);
+              setError(false);
+              markers.forEach((marker) => marker.remove());
+              markers.length = 0;
+              for (const item of (data.rows || []) as RentalListing[]) {
+                const el = document.createElement("button");
+                el.type = "button";
+                el.setAttribute(
+                  "aria-label",
+                  `${item.vehicle_name}, €${Math.round(item.daily_price_cents / 100)} per day`,
+                );
+                el.className = "conduzco-map-marker";
+                el.textContent = `€${Math.round(item.daily_price_cents / 100)}`;
+                const popup = new maplibre.Popup({ offset: 20 }).setText(
+                  `${item.vehicle_name} · ${item.company_name} · €${Math.round(item.daily_price_cents / 100)}/day`,
+                );
+                const marker = new maplibre.Marker({ element: el })
+                  .setLngLat([item.longitude, item.latitude])
+                  .setPopup(popup)
+                  .addTo(map!);
+                markers.push(marker);
+              }
+            } catch {
+              if (!abort?.signal.aborted && !cancelled) setError(true);
             }
-          } catch {
-            if (!abort?.signal.aborted && !cancelled) setError(true);
-          }
-        }, 220);
-      };
-      map.on("load", load);
-      map.on("moveend", load);
-    });
+          }, 220);
+        };
+        map.on("load", load);
+        map.on("moveend", load);
+      })
+      .catch(() => {
+        // Unsupported WebGL and failed dynamic imports must not strand renters on
+        // an empty map. Keep the ordinary catalogue available on this origin.
+        if (!cancelled) setError(true);
+      });
     return () => {
       cancelled = true;
       if (timer) clearTimeout(timer);
@@ -803,6 +815,12 @@ export function ConduzcoMap({
           <form onSubmit={(event) => event.preventDefault()}>
             <input
               value={q}
+              maxLength={100}
+              aria-label={
+                locale === "es"
+                  ? "Busca ciudad o empresa"
+                  : "Search city or company"
+              }
               onChange={(event) => setQ(event.target.value)}
               placeholder={
                 locale === "es"
@@ -812,11 +830,20 @@ export function ConduzcoMap({
             />
           </form>
           {error && (
-            <p role="alert">
-              {locale === "es"
-                ? "Mapa no disponible. Inténtalo de nuevo."
-                : "Map listings unavailable. Try again."}
-            </p>
+            <div role="alert">
+              <p>
+                {locale === "es"
+                  ? "Mapa no disponible. Puedes seguir buscando en el catálogo."
+                  : "Map unavailable. You can continue searching the catalogue."}
+              </p>
+              <Link
+                href={`/?${new URLSearchParams({ lang: locale, ...(q ? { q } : {}) })}`}
+              >
+                {locale === "es"
+                  ? "Ver catálogo de coches"
+                  : "Browse rental catalogue"}
+              </Link>
+            </div>
           )}
           <div className={styles.mapResults}>
             {rows.map((row) => (

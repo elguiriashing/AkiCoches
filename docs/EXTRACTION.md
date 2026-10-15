@@ -1,5 +1,16 @@
 # Extraction contract
 
+Deployed preview acceptance at `745cf8c` confirmed the real shared catalogue,
+company details, EN/ES and same-origin navigation. The cloud browser reports
+WebGL disabled, so that browser cannot certify visible tiles. Its rejected map
+initialization exposed a missing error boundary: the map now catches rejected
+initialization and offers an accessible same-origin catalogue link in EN/ES.
+Only the current search and locale are carried to that fallback; the catalogue
+initializes from the bounded search query. Three isolated regression tests cover
+WebGL constructor failure and retained catalogue searches. Booking handlers,
+availability, map controls and provider jobs are unchanged. Tile and authenticated
+acceptance remain separate checks; a fallback does not certify WebGL rendering.
+
 Release packaging now removes only the generated `.open-next` output before each
 full build. A repeated local OpenNext build appended duplicate environment exports
 when previous output survived, causing Wrangler packaging to fail. Next's `.next`
