@@ -181,7 +181,7 @@ try {
             .waitFor();
         } else {
           await page
-            .getByRole("button", { name: /02.*(Dates|Fechas)/ })
+            .getByRole("button", { name: /^(?:02\s*)?(Dates|Fechas)$/ })
             .click();
           const pickup = page.getByLabel(
             locale === "es" ? "Recogida" : "Pick-up",
