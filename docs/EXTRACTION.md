@@ -234,3 +234,32 @@ selected legacy cover imported, the existing booking count preserved, the old
 authenticated link RPC disabled and anonymous email activation denied. Security
 advisors flag the intentional deny-all legacy audit and explicitly guarded
 definer RPCs; no new public booking/contact access is granted.
+
+## Coordinated management/operations role cutover
+
+The consumer rental application resolves public management and operations roles
+separately from historical machine, permission and billing identifiers.
+`NEXT_PUBLIC_AKISUITE_ROLE_SWAP=true` switches management links/labels to AkiHQ
+at akihq.app and operations links/labels to AkiBusiness at akibusiness.com.
+The default preserves current production roles. Explicit preview origins remain
+available; known legacy canonical environment defaults switch with the flag.
+Build-time and runtime public configuration must match across all products.
+
+The rental operator CTA describes independent branch management and no longer
+requires a venue. Existing /business paths and authenticated branch authorization
+remain intact. Middleware fallback redirects use the same role destination and
+retain query credential scrubbing, fragment suppression and read-only methods;
+local OAuth callbacks never move to the management domain. No whole-domain
+redirect or billing/permission grant follows from this presentation flag.
+
+Affected consumers: rental landing EN/ES, inherited auth portal labels,
+configuration and legacy management handoff. Activation requires both destination
+apps, exact Supabase callbacks, provider configuration and authenticated preview
+acceptance. Default production behavior remains compatible until that release.
+Rollback disables the flag and rebuilds with the prior verified origin values;
+no record, subscription or entitlement migration is involved.
+
+Visual inspection of the enabled-mode mobile screenshot found inherited pale text
+on the light management card and footer links. These now use the product's theme
+text token; the light card heading uses a darker red. The eight browser cases
+assert computed handoff/navigation text colors in both themes and languages.

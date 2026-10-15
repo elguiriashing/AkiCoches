@@ -102,3 +102,30 @@ describe("cross-product credential transfer prevention", () => {
       expect((await middleware(request(path, "POST"))).status).toBe(404);
   });
 });
+
+it("uses the target management role after cutover without transferring auth or changing callbacks", async () => {
+  vi.stubEnv("NEXT_PUBLIC_AKISUITE_ROLE_SWAP", "true");
+  vi.stubEnv("NEXT_PUBLIC_BUSINESS_URL", "https://akibusiness.com");
+  vi.resetModules();
+  try {
+    const { middleware: swappedMiddleware } = await import("../src/middleware");
+    const response = await swappedMiddleware(
+      request("/es/business/mobility?tab=fleet&code=private"),
+    );
+    expect(response.headers.get("location")).toBe(
+      "https://akihq.app/es/business/mobility?tab=fleet#redirected",
+    );
+    expect(
+      (await swappedMiddleware(request("/es/business/mobility", "POST")))
+        .status,
+    ).toBe(404);
+    expect(
+      (
+        await swappedMiddleware(request("/es/auth/callback?code=local"))
+      ).headers.has("location"),
+    ).toBe(false);
+  } finally {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  }
+});

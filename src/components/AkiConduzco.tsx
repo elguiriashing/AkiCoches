@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { productRoles } from "@/lib/product-roles";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AkiConduzco.module.css";
@@ -48,8 +49,8 @@ const copy = {
     at: "in",
     operator: "Run a rental company?",
     operatorNote:
-      "Manage your rental fleet inside its AkiBusiness venue workspace.",
-    operatorLink: "Open AkiBusiness",
+      "Manage your rental branch and fleet in your management workspace.",
+    operatorLink: `Open ${productRoles.managementName}`,
     family: "PART OF THE AKIPASA FAMILY",
     go: "Find events",
     stays: "Find a stay",
@@ -89,8 +90,8 @@ const copy = {
     fuel: "combustible",
     at: "en",
     operator: "¿Gestionas una empresa de alquiler?",
-    operatorNote: "Gestiona tu flota desde el espacio AkiBusiness de tu local.",
-    operatorLink: "Abrir AkiBusiness",
+    operatorNote: "Gestiona tu sucursal y flota desde tu espacio de gestión.",
+    operatorLink: `Abrir ${productRoles.managementName}`,
     family: "PARTE DE LA FAMILIA AKIPASA",
     go: "Descubrir eventos",
     stays: "Buscar alojamiento",
@@ -408,7 +409,7 @@ export function AkiConduzco({
           <p>{t.operatorNote}</p>
           <Link
             className={styles.button}
-            href={`https://akibusiness.com/${locale}/business`}
+            href={`${productRoles.managementUrl}/${locale}/business`}
           >
             {t.operatorLink}
           </Link>
@@ -533,37 +534,40 @@ export function ConduzcoMap({
         const load = (initial = false) => {
           if (!map) return;
           if (timer) clearTimeout(timer);
-          timer = setTimeout(async () => {
-            const b = map!.getBounds();
-            abort?.abort();
-            abort = new AbortController();
-            const bounds = [
-              b.getSouth(),
-              b.getWest(),
-              b.getNorth(),
-              b.getEast(),
-            ].join(",");
-            try {
-              const response = await fetch(
-                `/api/car-rentals?${new URLSearchParams({
-                  q: qRef.current,
-                  category: categoryRef.current,
-                  bounds,
-                  ...(datesRef.current.start && datesRef.current.end
-                    ? datesRef.current
-                    : {}),
-                })}`,
-                { signal: abort.signal },
-              );
-              if (!response.ok) throw new Error("unavailable");
-              const data = await response.json();
-              if (cancelled) return;
-              setRows(data.rows || []);
-              setError(false);
-            } catch {
-              if (!abort?.signal.aborted && !cancelled) setError(true);
-            }
-          }, initial ? 0 : 220);
+          timer = setTimeout(
+            async () => {
+              const b = map!.getBounds();
+              abort?.abort();
+              abort = new AbortController();
+              const bounds = [
+                b.getSouth(),
+                b.getWest(),
+                b.getNorth(),
+                b.getEast(),
+              ].join(",");
+              try {
+                const response = await fetch(
+                  `/api/car-rentals?${new URLSearchParams({
+                    q: qRef.current,
+                    category: categoryRef.current,
+                    bounds,
+                    ...(datesRef.current.start && datesRef.current.end
+                      ? datesRef.current
+                      : {}),
+                  })}`,
+                  { signal: abort.signal },
+                );
+                if (!response.ok) throw new Error("unavailable");
+                const data = await response.json();
+                if (cancelled) return;
+                setRows(data.rows || []);
+                setError(false);
+              } catch {
+                if (!abort?.signal.aborted && !cancelled) setError(true);
+              }
+            },
+            initial ? 0 : 220,
+          );
         };
         // Show the first set of rental locations as soon as the map is ready.
         // Keep the short debounce for later pans/filters to avoid excess requests.
