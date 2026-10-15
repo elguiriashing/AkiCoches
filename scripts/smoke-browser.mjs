@@ -39,7 +39,7 @@ try {
               name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
             })
             .getAttribute("href")) !==
-          `https://akibusiness.com/${locale}/business/mobility`
+          `https://akibusiness.com/${locale}/business`
         )
           throw new Error("fleet handoff changed");
         await page.waitForFunction(() =>
