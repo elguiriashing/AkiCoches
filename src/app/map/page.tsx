@@ -12,7 +12,12 @@ export const metadata = {
 export default async function MapPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    start?: string;
+    end?: string;
+  }>;
 }) {
   const [requestHeaders, query] = await Promise.all([headers(), searchParams]);
   return (
@@ -20,6 +25,9 @@ export default async function MapPage({
       locale={conduzcoLocale(requestHeaders.get("x-akipasa-locale"))}
       styleUrl={config.mapStyleUrl}
       initialQuery={query.q || ""}
+      initialCategory={query.category || "all"}
+      initialStart={query.start || ""}
+      initialEnd={query.end || ""}
     />
   );
 }

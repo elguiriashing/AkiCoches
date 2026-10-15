@@ -14,7 +14,9 @@ All runtime dependencies retain the source lock and verified MapLibre sanitizer 
 catalogue, availability, pricing and customer requests. `/en/auth`, `/es/auth`, callback,
 password recovery and Terms retain the shared Supabase identities and per-domain cookies.
 Fleet/company/rates/operator booking management is delegated to the authorized
-`https://akibusiness.com/{locale}/business/mobility` workspace. Membership subscriptions
+`https://akibusiness.com/{locale}/business/venue/{id}?section=fleet` workspace
+inside each linked venue. Legacy unlinked operators retain the mobility route.
+Membership subscriptions
 remain at the AkiPasa account hub. This product does not collect payments or guarantee
 instant confirmed bookings. Historical `akiconduzco` cookie, module and database identifiers
 remain stable; customer-facing branding is AkiCoches.

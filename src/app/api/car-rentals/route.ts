@@ -1,5 +1,6 @@
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { rentalSearchSchema, type RentalListing } from "@/lib/akiconduzco";
+import { withRentalCovers } from "@/lib/rental-covers";
 
 export const dynamic = "force-dynamic";
 
@@ -49,9 +50,10 @@ export async function GET(request: Request) {
       },
     );
   const rows = (data || []) as RentalListing[];
+  const picturedRows = await withRentalCovers(supabase, rows);
   return Response.json(
     {
-      rows,
+      rows: picturedRows,
       total: Number(rows[0]?.total || 0),
       page: input.page,
       availabilityChecked: Boolean(input.start && input.end),

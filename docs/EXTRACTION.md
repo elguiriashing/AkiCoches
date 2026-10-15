@@ -1,5 +1,17 @@
 # Extraction contract
 
+## AkiSuite rental UI and venue handoff (2026-10-15)
+
+The customer app now exposes a saved-theme control, category/date-aware map,
+one location pin per rental company, fleet and directions links, and public
+cover signing for linked venue media that existing anonymous venue and Storage
+policies permit. Renter account/request semantics are unchanged; an incomplete
+date pair is not sent as an availability search. Public covers fall back to
+previous images or placeholders if permission or signing fails. The operator
+CTA goes to the AkiBusiness venue workspace rather than a separate mobility
+tab. Shared venue/cover fields and manager RLS are owned by the mirrored
+AkiPasa migration, not this deployment.
+
 Normal rental logout now requests Supabase's `local` scope, avoiding unintended
 global revocation in this shared identity project. A successful password change
 retains explicit `global` revocation as a security response; it is never tested

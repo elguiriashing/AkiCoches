@@ -5,6 +5,7 @@ import { RentalDetail } from "@/components/AkiConduzco";
 import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import type { RentalListing } from "@/lib/akiconduzco";
+import { withRentalCovers } from "@/lib/rental-covers";
 
 export async function generateMetadata({
   params,
@@ -56,11 +57,12 @@ export default async function RentalCompanyPage({
   const listings = ((data || []) as RentalListing[]).filter(
     (row) => row.company_id === company.id,
   );
+  const picturedListings = await withRentalCovers(supabase, listings);
   return (
     <RentalDetail
       locale={conduzcoLocale(requestHeaders.get("x-akipasa-locale"))}
       slug={slug}
-      listings={listings}
+      listings={picturedListings}
       error={Boolean(error)}
       requestedVehicle={query.vehicle}
       initialStart={query.start || ""}

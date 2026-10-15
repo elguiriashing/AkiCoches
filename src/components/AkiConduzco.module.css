@@ -1,9 +1,20 @@
 .app {
   --ink: #f6f4f1;
+  --coches-bg: #08090b;
+  --coches-surface: #141518;
+  --coches-ink: #f6f4f1;
+  --coches-muted: #b8b7b6;
   min-height: 100dvh;
-  background: #08090b;
-  color: #f6f4f1;
+  background: var(--coches-bg);
+  color: var(--coches-ink);
   padding-bottom: 30px;
+}
+:global(html[data-theme="light"]) .app {
+  --ink: #17181c;
+  --coches-bg: #f7f7f8;
+  --coches-surface: #ffffff;
+  --coches-ink: #17181c;
+  --coches-muted: #62646b;
 }
 .header {
   height: 72px;
@@ -16,14 +27,14 @@
   top: 0;
   z-index: 40;
   border-bottom: 1px solid #ffffff17;
-  background: #08090bf2;
+  background: color-mix(in srgb, var(--coches-bg) 94%, transparent);
   backdrop-filter: blur(16px);
 }
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #fff;
+  color: var(--coches-ink);
   text-decoration: none;
   font-weight: 850;
   letter-spacing: -0.06em;
@@ -52,8 +63,8 @@
   border: 1px solid #ffffff20;
   border-radius: 999px;
   padding: 0 15px;
-  color: #f3f2f0;
-  background: #ffffff09;
+  color: var(--coches-ink);
+  background: color-mix(in srgb, var(--coches-surface) 80%, transparent);
   text-decoration: none;
   font: inherit;
   font-size: 13px;
@@ -131,7 +142,7 @@
   font-style: normal;
 }
 .hero p {
-  color: #b8b7b6;
+  color: var(--coches-muted);
   max-width: 550px;
   font-size: clamp(16px, 2vw, 19px);
   line-height: 1.65;
@@ -159,7 +170,7 @@
   padding: 18px;
   border: 1px solid #ffffff20;
   border-radius: 20px;
-  background: #141518;
+  background: var(--coches-surface);
   box-shadow: 0 24px 70px #0008;
 }
 .searchGrid {
@@ -186,8 +197,8 @@
   border: 1px solid #ffffff20;
   border-radius: 11px;
   padding: 0 12px;
-  background: #0c0d0f;
-  color: #f6f4f1;
+  background: var(--coches-bg);
+  color: var(--coches-ink);
   font: 500 14px inherit;
 }
 .button {
@@ -239,8 +250,8 @@
   overflow: hidden;
   border: 1px solid #ffffff1c;
   border-radius: 18px;
-  background: #141518;
-  color: #f6f4f1;
+  background: var(--coches-surface);
+  color: var(--coches-ink);
   text-decoration: none;
   transition:
     transform 0.18s,
@@ -352,8 +363,8 @@
   padding: 26px;
   border: 1px solid #ffffff1b;
   border-radius: 16px;
-  background: #111215;
-  color: #dedbd9;
+  background: var(--coches-surface);
+  color: var(--coches-ink);
 }
 .error {
   border-color: #f0445570;
@@ -413,6 +424,67 @@
   display: grid;
   gap: 8px;
   margin-top: 12px;
+}
+.mapFilter {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  color: #aaa;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.mapFilter select {
+  min-height: 40px;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  padding: 0 10px;
+  background: #08090b;
+  color: #fff;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.mapDates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.mapDates label {
+  display: grid;
+  gap: 4px;
+  color: #aaa;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.mapDates input {
+  min-width: 0;
+  height: 38px !important;
+  font-size: 12px;
+}
+:global(html[data-theme="light"]) .app .detailPanel,
+:global(html[data-theme="light"]) .app .mapPanel,
+:global(html[data-theme="light"]) .app .businessCard,
+:global(html[data-theme="light"]) .app .businessIntro {
+  background: var(--coches-surface);
+  color: var(--coches-ink);
+  border-color: #d9dbe1;
+}
+:global(html[data-theme="light"]) .app .detailPanel p,
+:global(html[data-theme="light"]) .app .company,
+:global(html[data-theme="light"]) .app .mapResults small {
+  color: var(--coches-muted);
+}
+:global(html[data-theme="light"]) .app .form input,
+:global(html[data-theme="light"]) .app .form textarea,
+:global(html[data-theme="light"]) .app .mapPanel input,
+:global(html[data-theme="light"]) .app .mapFilter select {
+  background: #fff;
+  color: #17181c;
+  border-color: #cdd0d7;
 }
 .mapResults a {
   color: #fff;

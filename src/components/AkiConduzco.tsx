@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./AkiConduzco.module.css";
+import { ThemeToggle } from "./ThemeModeControls";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
 import {
   rentalCategories,
@@ -45,7 +46,8 @@ const copy = {
     fuel: "fuel",
     at: "in",
     operator: "Run a rental company?",
-    operatorNote: "Set up your fleet on AkiBusiness. No venue claim needed.",
+    operatorNote:
+      "Manage your rental fleet inside its AkiBusiness venue workspace.",
     operatorLink: "Open AkiBusiness",
     family: "PART OF THE AKIPASA FAMILY",
     go: "Find events",
@@ -86,8 +88,7 @@ const copy = {
     fuel: "combustible",
     at: "en",
     operator: "¿Gestionas una empresa de alquiler?",
-    operatorNote:
-      "Configura tu flota en AkiBusiness. Sin reclamar ningún local.",
+    operatorNote: "Gestiona tu flota desde el espacio AkiBusiness de tu local.",
     operatorLink: "Abrir AkiBusiness",
     family: "PARTE DE LA FAMILIA AKIPASA",
     go: "Descubrir eventos",
@@ -130,6 +131,7 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         <Link className={styles.navlink} href={`/account?lang=${locale}`}>
           {t.account}
         </Link>
+        <ThemeToggle locale={locale} />
         <button
           type="button"
           onClick={switchLocale}
@@ -237,8 +239,7 @@ export function AkiConduzco({
         q,
         city,
         category,
-        ...(start ? { start } : {}),
-        ...(end ? { end } : {}),
+        ...(start && end ? { start, end } : {}),
       }).toString(),
     [q, city, category, start, end],
   );
@@ -364,7 +365,7 @@ export function AkiConduzco({
             </p>
           </div>
           <Link
-            href={`/map?lang=${locale}${city ? `&q=${encodeURIComponent(city)}` : ""}`}
+            href={`/map?${new URLSearchParams({ lang: locale, ...(city ? { q: city } : {}), ...(category !== "all" ? { category } : {}), ...(start && end ? { start, end } : {}) })}`}
           >
             {t.mapLink} →
           </Link>
@@ -406,7 +407,7 @@ export function AkiConduzco({
           <p>{t.operatorNote}</p>
           <Link
             className={styles.button}
-            href={`https://akibusiness.com/${locale}/business/mobility`}
+            href={`https://akibusiness.com/${locale}/business`}
           >
             {t.operatorLink}
           </Link>
@@ -697,21 +698,46 @@ export function ConduzcoMap({
   locale,
   styleUrl,
   initialQuery = "",
+  initialCategory = "all",
+  initialStart = "",
+  initialEnd = "",
 }: {
   locale: Locale;
   styleUrl: string;
   initialQuery?: string;
+  initialCategory?: string;
+  initialStart?: string;
+  initialEnd?: string;
 }) {
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [q, setQ] = useState(initialQuery);
+  const [category, setCategory] = useState(
+    rentalCategories.includes(
+      initialCategory as (typeof rentalCategories)[number],
+    )
+      ? initialCategory
+      : "all",
+  );
+  const [start, setStart] = useState(initialStart);
+  const [end, setEnd] = useState(initialEnd);
   const [rows, setRows] = useState<RentalListing[]>([]);
   const [error, setError] = useState(false);
   const qRef = useRef(q);
+  const categoryRef = useRef(category);
+  const datesRef = useRef({ start, end });
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
   useEffect(() => {
     qRef.current = q;
     mapRef.current?.fire("moveend");
   }, [q]);
+  useEffect(() => {
+    categoryRef.current = category;
+    mapRef.current?.fire("moveend");
+  }, [category]);
+  useEffect(() => {
+    datesRef.current = { start, end };
+    mapRef.current?.fire("moveend");
+  }, [start, end]);
   useEffect(() => {
     if (!container) return;
     let map: import("maplibre-gl").Map | undefined;
@@ -745,7 +771,14 @@ export function ConduzcoMap({
             ].join(",");
             try {
               const response = await fetch(
-                `/api/car-rentals?${new URLSearchParams({ q: qRef.current, bounds })}`,
+                `/api/car-rentals?${new URLSearchParams({
+                  q: qRef.current,
+                  category: categoryRef.current,
+                  bounds,
+                  ...(datesRef.current.start && datesRef.current.end
+                    ? datesRef.current
+                    : {}),
+                })}`,
                 { signal: abort.signal },
               );
               if (!response.ok) throw new Error("unavailable");
@@ -755,18 +788,53 @@ export function ConduzcoMap({
               setError(false);
               markers.forEach((marker) => marker.remove());
               markers.length = 0;
+              const companies = new Map<string, RentalListing[]>();
               for (const item of (data.rows || []) as RentalListing[]) {
+                companies.set(item.company_id, [
+                  ...(companies.get(item.company_id) || []),
+                  item,
+                ]);
+              }
+              for (const items of companies.values()) {
+                const item = items[0];
+                const lowest = Math.min(
+                  ...items.map((row) => row.daily_price_cents),
+                );
                 const el = document.createElement("button");
                 el.type = "button";
                 el.setAttribute(
                   "aria-label",
-                  `${item.vehicle_name}, €${Math.round(item.daily_price_cents / 100)} per day`,
+                  `${item.company_name}, ${items.length} vehicles, from €${Math.round(lowest / 100)} per day`,
                 );
                 el.className = "conduzco-map-marker";
-                el.textContent = `€${Math.round(item.daily_price_cents / 100)}`;
-                const popup = new maplibre.Popup({ offset: 20 }).setText(
-                  `${item.vehicle_name} · ${item.company_name} · €${Math.round(item.daily_price_cents / 100)}/day`,
+                el.textContent = `${items.length} · €${Math.round(lowest / 100)}`;
+                const popup = new maplibre.Popup({ offset: 20 });
+                const detail = document.createElement("div");
+                const title = document.createElement("strong");
+                title.textContent = item.company_name;
+                detail.append(title, document.createElement("br"));
+                detail.append(
+                  document.createTextNode(
+                    `${items.length} vehicles · from €${Math.round(lowest / 100)}/day`,
+                  ),
                 );
+                detail.append(document.createElement("br"));
+                const fleetLink = document.createElement("a");
+                fleetLink.href = `/rentals/${encodeURIComponent(item.company_slug)}?lang=${locale}`;
+                fleetLink.textContent =
+                  locale === "es" ? "Ver flota →" : "View fleet →";
+                const directions = document.createElement("a");
+                directions.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${item.latitude},${item.longitude}`)}`;
+                directions.target = "_blank";
+                directions.rel = "noopener noreferrer";
+                directions.textContent =
+                  locale === "es" ? "Cómo llegar ↗" : "Directions ↗";
+                detail.append(
+                  fleetLink,
+                  document.createTextNode(" · "),
+                  directions,
+                );
+                popup.setDOMContent(detail);
                 const marker = new maplibre.Marker({ element: el })
                   .setLngLat([item.longitude, item.latitude])
                   .setPopup(popup)
@@ -794,7 +862,7 @@ export function ConduzcoMap({
       mapRef.current = null;
       map?.remove();
     };
-  }, [container, styleUrl]);
+  }, [container, styleUrl, locale]);
   return (
     <div className={styles.app}>
       <ConduzcoHeader locale={locale} />
@@ -828,6 +896,41 @@ export function ConduzcoMap({
               }
             />
           </form>
+          <label className={styles.mapFilter}>
+            {locale === "es" ? "Tipo de vehículo" : "Vehicle type"}
+            <select
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+            >
+              <option value="all">
+                {locale === "es" ? "Todos" : "All types"}
+              </option>
+              {rentalCategories.map((value) => (
+                <option key={value} value={value}>
+                  {rentalCategoryLabels[value][locale]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className={styles.mapDates}>
+            <label>
+              {locale === "es" ? "Recogida" : "Pick-up"}
+              <input
+                type="date"
+                value={start}
+                onChange={(event) => setStart(event.target.value)}
+              />
+            </label>
+            <label>
+              {locale === "es" ? "Devolución" : "Drop-off"}
+              <input
+                type="date"
+                min={start || undefined}
+                value={end}
+                onChange={(event) => setEnd(event.target.value)}
+              />
+            </label>
+          </div>
           {error && (
             <div role="alert">
               <p>
@@ -836,7 +939,7 @@ export function ConduzcoMap({
                   : "Map unavailable. You can continue searching the catalogue."}
               </p>
               <Link
-                href={`/?${new URLSearchParams({ lang: locale, ...(q ? { q } : {}) })}`}
+                href={`/?${new URLSearchParams({ lang: locale, ...(q ? { q } : {}), ...(category !== "all" ? { category } : {}), ...(start && end ? { start, end } : {}) })}`}
               >
                 {locale === "es"
                   ? "Ver catálogo de coches"
