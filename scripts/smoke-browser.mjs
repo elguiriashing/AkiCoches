@@ -30,16 +30,16 @@ try {
         await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
         await page
           .getByRole("link", {
-            name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
+            name: locale === "es" ? "Abrir AkiHQ" : "Open AkiHQ",
           })
           .waitFor();
         if (
           (await page
             .getByRole("link", {
-              name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
+              name: locale === "es" ? "Abrir AkiHQ" : "Open AkiHQ",
             })
             .getAttribute("href")) !==
-          `https://akibusiness.com/${locale}/business`
+          `https://akihq.app/${locale}/business`
         )
           throw new Error("fleet handoff changed");
         await page.waitForFunction(() =>
