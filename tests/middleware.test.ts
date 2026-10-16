@@ -40,7 +40,7 @@ describe("independent canonical route middleware", () => {
       request("/en/business/mobility?tab=fleet"),
     );
     expect(response.headers.get("location")).toBe(
-      "https://akibusiness.com/en/business/mobility?tab=fleet#redirected",
+      "https://akihq.app/en/business/mobility?tab=fleet#redirected",
     );
     expect(
       (await middleware(request("/account"))).headers.get("x-robots-tag"),
