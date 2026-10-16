@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
       return new NextResponse(null, { status: 404 });
     const business = /^\/(en|es)\/business(?:\/|$)/.test(pathname);
     const destination = new URL(
-      business ? "https://akibusiness.com" : "https://akipasa.com",
+      business ? "https://akihq.app" : "https://akipasa.com",
     );
     destination.pathname = pathname;
     destination.search = request.nextUrl.search;

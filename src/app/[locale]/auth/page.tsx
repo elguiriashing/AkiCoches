@@ -165,7 +165,7 @@ export default async function AuthPage({
                 aria-hidden="true"
               />
               <span>
-                <strong>AkiBusiness</strong>
+                <strong>AkiHQ</strong>
               </span>
             </a>
             <a className="auth-product-card" href={config.crmUrl}>
@@ -174,7 +174,7 @@ export default async function AuthPage({
                 aria-hidden="true"
               />
               <span>
-                <strong>AkiHQ</strong>
+                <strong>AkiBusiness</strong>
               </span>
             </a>
           </aside>
