@@ -7,6 +7,7 @@ import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
 import { RasterRentalMap } from "./RasterRentalMap";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
+import { config } from "@/lib/config";
 import {
   rentalCategories,
   rentalCategoryLabels,
@@ -48,8 +49,8 @@ const copy = {
     at: "in",
     operator: "Run a rental company?",
     operatorNote:
-      "Manage your rental fleet inside its AkiBusiness venue workspace.",
-    operatorLink: "Open AkiBusiness",
+      "Manage your rental fleet in AkiHQ. A venue listing is not required.",
+    operatorLink: "Open AkiHQ",
     family: "PART OF THE AKIPASA FAMILY",
     go: "Find events",
     stays: "Find a stay",
@@ -89,8 +90,8 @@ const copy = {
     fuel: "combustible",
     at: "en",
     operator: "¿Gestionas una empresa de alquiler?",
-    operatorNote: "Gestiona tu flota desde el espacio AkiBusiness de tu local.",
-    operatorLink: "Abrir AkiBusiness",
+    operatorNote: "Gestiona tu flota desde AkiHQ. No necesitas un local publicado.",
+    operatorLink: "Abrir AkiHQ",
     family: "PARTE DE LA FAMILIA AKIPASA",
     go: "Descubrir eventos",
     stays: "Buscar alojamiento",
@@ -408,7 +409,7 @@ export function AkiConduzco({
           <p>{t.operatorNote}</p>
           <Link
             className={styles.button}
-            href={`https://akibusiness.com/${locale}/business`}
+            href={`${config.businessUrl}/${locale}/business`}
           >
             {t.operatorLink}
           </Link>
