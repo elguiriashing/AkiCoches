@@ -7,7 +7,6 @@ import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
 import { RasterRentalMap } from "./RasterRentalMap";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
-import { config } from "@/lib/config";
 import {
   rentalCategories,
   rentalCategoryLabels,
@@ -409,7 +408,7 @@ export function AkiConduzco({
           <p>{t.operatorNote}</p>
           <Link
             className={styles.button}
-            href={`${config.businessUrl}/${locale}/business`}
+            href={`https://akihq.app/${locale}/business`}
           >
             {t.operatorLink}
           </Link>
