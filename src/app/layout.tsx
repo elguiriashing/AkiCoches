@@ -4,13 +4,14 @@ import "./brand.css";
 import "./appearance.css";
 import "./tablet-responsive.css";
 import "./portal-unity.css";
+import "./product-brand.css";
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { ConsentAnalytics } from "@/components/ConsentAnalytics";
 import { PersonalisationConsent } from "@/components/PersonalisationConsent";
 import { PwaRegistration } from "@/components/PwaRegistration";
 import { ThemeManager } from "@/components/ThemeModeControls";
-export const viewport: Viewport = { themeColor: "#ed3345" };
+export const viewport: Viewport = { themeColor: "#ff5148" };
 export const metadata: Metadata = {
   metadataBase: new URL("https://akicoches.com"),
   title: {
