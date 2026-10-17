@@ -1,14 +1,17 @@
 import { spainLocations } from "./locations";
 
+const mgmt=process.env.NEXT_PUBLIC_BUSINESS_URL;
+const ops=process.env.NEXT_PUBLIC_CRM_URL;
+const managementUrl=!mgmt||mgmt.replace(/\/$/,"")==="https://akibusiness.com"?"https://akihq.app":mgmt;
+const operationsUrl=!ops||ops.replace(/\/$/,"")==="https://akihq.app"?"https://akibusiness.com":ops;
 export const config = {
   productName: process.env.NEXT_PUBLIC_PRODUCT_NAME || "AkiCoches",
   wordmark: "AkiCoches",
   handle: "akicoches",
   domain: "akicoches.com",
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://akicoches.com",
-  crmUrl: process.env.NEXT_PUBLIC_CRM_URL || "https://akihq.app",
-  businessUrl:
-    process.env.NEXT_PUBLIC_BUSINESS_URL || "https://akibusiness.com",
+  crmUrl: operationsUrl,
+  businessUrl: managementUrl,
   tagline: { es: "Sal. Explora. Disfruta.", en: "Go out. Explore. Enjoy." },
   dataProvider: process.env.NEXT_PUBLIC_DATA_PROVIDER || "fixtures",
   mapStyleUrl:
