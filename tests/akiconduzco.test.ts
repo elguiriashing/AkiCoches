@@ -122,3 +122,43 @@ describe("AkiConduzco host and booking boundaries", () => {
     expect(rentalSchema).not.toContain("discovery_vertical");
   });
 });
+
+describe("AkiSuite app switcher branding", () => {
+  it("serves all five icons from the AkiCoches origin without remote image dependencies", () => {
+    const root = process.cwd();
+    const component = readFileSync(
+      join(root, "src/components/AkiConduzco.tsx"),
+      "utf8",
+    );
+    const icons = {
+      pasa: "pasa-mark.svg",
+      duermo: "duermo-mark.svg",
+      coches: "conduzco-icon.svg",
+      hq: "hq-mark.svg",
+      business: "business-mark.svg",
+    };
+    for (const [product, filename] of Object.entries(icons)) {
+      expect(component).toContain(`id: "${product}"`);
+      expect(component).toContain(`icon: "/brand/${filename}"`);
+      const svg = readFileSync(join(root, "public/brand", filename), "utf8");
+      expect(svg).toContain('viewBox="0 0 128 128"');
+      expect(svg).toContain('rx="29"');
+    }
+    expect(component).not.toMatch(/icon:\s*["']https?:\/\//);
+    const car = readFileSync(
+      join(root, "public/brand/conduzco-icon.svg"),
+      "utf8",
+    );
+    expect(car).toContain("#FF3047");
+    expect(car).toContain("#111111");
+    const hq = readFileSync(join(root, "public/brand/hq-mark.svg"), "utf8");
+    expect(hq).toContain("#111111");
+    expect(hq).toContain("#FFC533");
+    const business = readFileSync(
+      join(root, "public/brand/business-mark.svg"),
+      "utf8",
+    );
+    expect(business).toContain("ab-indigo");
+    expect(business).toContain("ab-violet");
+  });
+});
