@@ -1,0 +1,31 @@
+name: Rasterize AkiCoches brand icons
+on:
+  push:
+    branches: [brand/akicoches-coral-20261017]
+    paths:
+      - 'public/brand/conduzco-icon.svg'
+      - 'public/brand/conduzco-maskable.svg'
+      - 'scripts/render-brand-assets.mjs'
+      - '.github/workflows/brand-assets.yml'
+permissions:
+  contents: write
+jobs:
+  raster:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix "$RUNNER_TEMP/brand-render" --no-save --no-audit --no-fund @resvg/resvg-js@2.6.2
+      - run: node scripts/render-brand-assets.mjs
+      - name: Commit PNG icon assets to the feature branch
+        run: |
+          git add public/brand/conduzco-180.png public/brand/conduzco-192.png public/brand/conduzco-512.png public/brand/conduzco-maskable-192.png public/brand/conduzco-maskable-512.png src/app/apple-icon.png
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Render AkiCoches coral car-pin app icons'
+          git push origin HEAD:brand/akicoches-coral-20261017
