@@ -156,11 +156,11 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
           <div className={styles.suitePopover}>
             <strong className={styles.suiteHeading}>{locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}</strong>
             {[
-              { id: "pasa", name: "AkiPasa", url: `https://akipasa.com/${locale}`, icon: "https://akipasa.com/pwa/akipasa-512.png", tone: "#F26B1D" },
-              { id: "duermo", name: "AkiDuermo", url: `https://akiduermo.com/?lang=${locale}`, icon: "https://akipasa.com/brand/duermo-icon.png", tone: "#2FC2A5" },
+              { id: "pasa", name: "AkiPasa", url: `https://akipasa.com/${locale}`, icon: "/brand/pasa-mark.svg", tone: "#F26B1D" },
+              { id: "duermo", name: "AkiDuermo", url: `https://akiduermo.com/?lang=${locale}`, icon: "/brand/duermo-mark.svg", tone: "#2FC2A5" },
               { id: "coches", name: "AkiCoches", url: `/?lang=${locale}`, icon: "/brand/conduzco-icon.svg", tone: "#FF3047" },
-              { id: "hq", name: "AkiHQ", url: "https://akihq.app", icon: "https://akipasa.com/brand/hq-mark.svg", tone: "#FFC533" },
-              { id: "business", name: "AkiBusiness", url: "https://akibusiness.com", icon: "https://akipasa.com/brand/business-mark.svg", tone: "#9A70FA" },
+              { id: "hq", name: "AkiHQ", url: "https://akihq.app", icon: "/brand/hq-mark.svg", tone: "#FFC533" },
+              { id: "business", name: "AkiBusiness", url: "https://akibusiness.com", icon: "/brand/business-mark.svg", tone: "#9A70FA" },
             ].map((app) => (
               <a key={app.id} href={app.url} aria-current={app.id === "coches" ? "page" : undefined} className={styles.suiteLink} style={{ "--suite-color": app.tone } as CSSProperties}>
                 <Image src={app.icon} width={36} height={36} alt="" unoptimized />
