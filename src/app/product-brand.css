@@ -1,0 +1,24 @@
+/* AkiCoches brand. Loaded last so it supersedes imported AkiPasa defaults. */
+:root {
+  --brand-navy: #0b1227;
+  --brand-orange: #ff5148;
+  --brand-yellow: #ff9160;
+  --brand-red: #ff5148;
+  --primary: #ff5148;
+  --primary-text: #ff8071;
+  --primary-dark: #df353e;
+  --primary-soft: rgba(255,81,72,.16);
+  --primary-contrast: #fff;
+  --accent: #ff9160;
+  --teal: #ff5148;
+  --teal-dark: #df353e;
+}
+html[data-theme="light"] {
+  --primary: #d72e37;
+  --primary-text: #b7232b;
+  --primary-dark: #ae2028;
+  --primary-soft: rgba(215,46,55,.1);
+  --accent: #b64b25;
+}
+:focus-visible { outline-color: var(--primary); }
+::selection { background: #ff5148; color: #fff; }

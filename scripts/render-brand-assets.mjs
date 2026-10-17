@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const {Resvg}=require(path.join(process.env.RUNNER_TEMP,'brand-render','node_modules','@resvg','resvg-js'));
+const render=(source,size)=>new Resvg(fs.readFileSync(source,'utf8'),{fitTo:{mode:'width',value:size}}).render().asPng();
+for(const size of [180,192,512])fs.writeFileSync(`public/brand/conduzco-${size}.png`,render('public/brand/conduzco-icon.svg',size));
+for(const size of [192,512])fs.writeFileSync(`public/brand/conduzco-maskable-${size}.png`,render('public/brand/conduzco-maskable.svg',size));
+fs.writeFileSync('src/app/apple-icon.png',render('public/brand/conduzco-icon.svg',180));
+console.log('Rendered AkiCoches app and PWA images');

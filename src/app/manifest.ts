@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Encuentra coches de alquiler para tu viaje.",
     start_url: "/",
     display: "standalone",
-    background_color: "#08090b",
-    theme_color: "#ed3345",
+    background_color: "#0b1227",
+    theme_color: "#ff5148",
     lang: "es",
     scope: "/",
     categories: ["travel", "navigation"],
@@ -19,12 +19,10 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/svg+xml",
         purpose: "any",
       },
-      {
-        src: "/brand/conduzco-icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "maskable",
-      },
+      { src: "/brand/conduzco-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/brand/conduzco-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/brand/conduzco-maskable-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
+      { src: "/brand/conduzco-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
