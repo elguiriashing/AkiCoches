@@ -47,7 +47,7 @@
   border-radius: 11px;
 }
 .brand span span {
-  color: #ff5148;
+  color: #ff3047;
 }
 .tools {
   display: flex;
@@ -73,8 +73,8 @@
 }
 .navlink:hover,
 .tools button:hover {
-  border-color: #ff5148;
-  background: #ff514814;
+  border-color: #ff3047;
+  background: #ff304714;
 }
 .main {
   width: min(1240px, 100%);
@@ -97,8 +97,8 @@
   width: min(58vw, 700px);
   height: 520px;
   background:
-    radial-gradient(ellipse at 55% 46%, #ff51483a, transparent 60%),
-    linear-gradient(135deg, transparent 35%, #ff51481a 35.2%, transparent 35.7%);
+    radial-gradient(ellipse at 55% 46%, #ff30473a, transparent 60%),
+    linear-gradient(135deg, transparent 35%, #ff30471a 35.2%, transparent 35.7%);
   transform: skewX(-12deg);
   pointer-events: none;
 }
@@ -109,12 +109,12 @@
   top: 100px;
   width: min(42vw, 520px);
   height: 250px;
-  border: 1px solid #ff514838;
+  border: 1px solid #ff304738;
   border-radius: 50%;
   transform: rotate(-18deg);
   box-shadow:
-    0 0 0 26px #ff514808,
-    0 0 0 52px #ff514805;
+    0 0 0 26px #ff304708,
+    0 0 0 52px #ff304705;
   pointer-events: none;
 }
 .heroContent {
@@ -138,7 +138,7 @@
   font-weight: 900;
 }
 .hero h1 em {
-  color: #ff5148;
+  color: #ff3047;
   font-style: normal;
 }
 .hero p {
@@ -160,8 +160,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #ff5148;
-  box-shadow: 0 0 15px #ff5148;
+  background: #ff3047;
+  box-shadow: 0 0 15px #ff3047;
 }
 .searchPanel {
   margin-top: -26px;
@@ -206,7 +206,7 @@
   border: 0;
   border-radius: 11px;
   padding: 0 19px;
-  background: #ff5148;
+  background: #ff3047;
   color: white;
   font-size: 14px;
   font-weight: 850;
@@ -259,7 +259,7 @@
 }
 .card:hover {
   transform: translateY(-3px);
-  border-color: #ff514880;
+  border-color: #ff304780;
 }
 .vehicleArt {
   height: 184px;
@@ -268,7 +268,7 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 90%, #ff514837, transparent 55%),
+    radial-gradient(ellipse at 50% 90%, #ff304737, transparent 55%),
     linear-gradient(145deg, #1b1c20, #0a0b0d);
 }
 .vehicleArt img {
@@ -367,7 +367,7 @@
   color: var(--coches-ink);
 }
 .error {
-  border-color: #ff514870;
+  border-color: #ff304770;
 }
 .footer {
   margin-top: 70px;
@@ -578,8 +578,8 @@
 }
 .notice {
   color: #f7a2aa;
-  background: #ff514814;
-  border: 1px solid #ff514840;
+  background: #ff304714;
+  border: 1px solid #ff304740;
   padding: 12px;
   border-radius: 10px;
 }
@@ -649,7 +649,7 @@
   border: 0;
   border-radius: 9px;
   padding: 0 14px;
-  background: #ff5148;
+  background: #ff3047;
   color: #fff;
   font-weight: 800;
   cursor: pointer;
@@ -873,4 +873,45 @@
   .fleetItem {
     grid-template-columns: 1fr;
   }
+}
+
+/* Shared AkiSuite product navigation: the existing page links stay untouched. */
+.suiteMenu { position: relative; flex: 0 0 auto; }
+.suiteTrigger {
+  list-style: none; width: 42px; min-width: 42px; height: 42px;
+  display: grid; place-items: center; cursor: pointer;
+  color: var(--coches-ink); border: 1px solid #ffffff20; border-radius: 50%;
+  background: var(--coches-surface);
+}
+.suiteTrigger::-webkit-details-marker { display: none; }
+.suiteTrigger span { font-size: 25px; letter-spacing: 0.04em; line-height: 1; transform: translateY(-3px); }
+.suiteMenu[open] .suiteTrigger,
+.suiteTrigger:focus-visible { outline: 2px solid #ff3047; outline-offset: 2px; }
+.suitePopover {
+  position: absolute; top: calc(100% + 12px); right: 0; z-index: 80;
+  width: min(282px, calc(100vw - 24px)); padding: 12px;
+  border: 1px solid #ffffff29; border-radius: 19px;
+  background: var(--coches-surface); box-shadow: 0 20px 55px #0009;
+}
+.suiteHeading {
+  display: block; font-size: 11px; letter-spacing: .13em; text-transform: uppercase;
+  margin: 6px 8px 12px; color: var(--coches-muted);
+}
+.suiteLink {
+  display: flex; align-items: center; gap: 12px; min-height: 56px;
+  padding: 8px; border-radius: 13px; color: var(--coches-ink);
+  text-decoration: none; border: 1px solid transparent;
+  font-weight: 750; font-size: 15px;
+}
+.suiteLink:hover, .suiteLink:focus-visible {
+  border-color: var(--suite-color); background: color-mix(in srgb, var(--suite-color) 13%, transparent);
+}
+.suiteLink[aria-current="page"] { background: color-mix(in srgb, var(--suite-color) 15%, transparent); }
+.suiteLink img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.suiteLink small { margin-left: auto; font-size: 10px; font-weight: 700; color: var(--coches-muted); }
+@media (max-width: 600px) {
+  .header { height: auto; min-height: 72px; flex-wrap: wrap; padding-block: 8px; }
+  .tools { margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+  .navlink, .tools button { min-height: 38px; padding-inline: 10px; }
+  .suiteTrigger { width: 38px; min-width: 38px; height: 38px; }
 }
