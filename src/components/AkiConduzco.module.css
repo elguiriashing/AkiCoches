@@ -915,3 +915,14 @@
   .navlink, .tools button { min-height: 38px; padding-inline: 10px; }
   .suiteTrigger { width: 38px; min-width: 38px; height: 38px; }
 }
+
+/* Consistent AkiSuite account actions; keep full menu reachable on small screens. */
+.suitePopover { max-height: calc(100dvh - 94px); overflow-y: auto; }
+.suiteActions { display: grid; gap: 7px; margin-top: 8px; padding-top: 10px; border-top: 1px solid #ffffff29; }
+.suiteAction {
+  display: flex; align-items: center; min-height: 44px; width: 100%;
+  padding: 9px 12px; border: 1px solid #ffffff29; border-radius: 12px;
+  background: transparent; color: var(--coches-ink); text-decoration: none;
+  font: inherit; font-weight: 750; text-align: left; cursor: pointer;
+}
+.suiteAction:hover, .suiteAction:focus-visible { background: #ff30471c; border-color: #ff3047; }

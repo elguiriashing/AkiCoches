@@ -74,6 +74,16 @@ await build({
     {
       name: "next-test-boundary",
       setup(builder) {
+        // This standalone browser harness runs without Next server actions.
+        // Keep the real application action in production; substitute only here.
+        builder.onResolve({ filter: /\/app\/\[locale\]\/auth\/actions$/ }, () => ({
+          path: "auth-actions",
+          namespace: "fixture-auth",
+        }));
+        builder.onLoad({ filter: /.*/, namespace: "fixture-auth" }, () => ({
+          contents: "export function signOut() {}",
+          loader: "js",
+        }));
         builder.onResolve({ filter: /^next\/(image|link)$/ }, (args) => ({
           path: args.path,
           namespace: "fixture-next",
