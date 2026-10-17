@@ -1,17 +1,17 @@
 /* AkiCoches brand. Loaded last so it supersedes imported AkiPasa defaults. */
 :root {
   --brand-navy: #0b1227;
-  --brand-orange: #ff5148;
+  --brand-orange: #FF3047;
   --brand-yellow: #ff9160;
-  --brand-red: #ff5148;
-  --primary: #ff5148;
+  --brand-red: #FF3047;
+  --primary: #FF3047;
   --primary-text: #ff8071;
-  --primary-dark: #df353e;
-  --primary-soft: rgba(255,81,72,.16);
+  --primary-dark: #DC233C;
+  --primary-soft: rgba(255,48,71,.16);
   --primary-contrast: #fff;
   --accent: #ff9160;
-  --teal: #ff5148;
-  --teal-dark: #df353e;
+  --teal: #FF3047;
+  --teal-dark: #DC233C;
 }
 html[data-theme="light"] {
   --primary: #d72e37;
@@ -21,4 +21,4 @@ html[data-theme="light"] {
   --accent: #b64b25;
 }
 :focus-visible { outline-color: var(--primary); }
-::selection { background: #ff5148; color: #fff; }
+::selection { background: #FF3047; color: #fff; }
