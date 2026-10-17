@@ -162,3 +162,20 @@ describe("AkiSuite app switcher branding", () => {
     expect(business).toContain("ab-violet");
   });
 });
+
+
+describe("AkiCoches renter dashboard contract", () => {
+  it("scopes renter history to the signed-in account and does not claim online payment", () => {
+    const account = readFileSync(join(process.cwd(), "src/app/account/page.tsx"), "utf8");
+    const css = readFileSync(join(process.cwd(), "src/app/account/account.module.css"), "utf8");
+    expect(account).toContain('.eq("renter_id", user.id)');
+    expect(account).toContain('["requested", "confirmed"]');
+    expect(account).toContain('booking.end_date >= today');
+    expect(account).toContain('filter === "upcoming"');
+    expect(account).toContain('filter === "history"');
+    expect(account).toContain('signOut');
+    expect(account).toContain('AkiCoches does not take online payments');
+    expect(css).toContain("@media (max-width: 620px)");
+    expect(css).toContain(':global(html[data-theme="light"])');
+  });
+});
