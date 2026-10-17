@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
 import { RasterRentalMap } from "./RasterRentalMap";
@@ -144,6 +144,32 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         >
           {t.lang}
         </button>
+        <details className={styles.suiteMenu} onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.currentTarget.open = false;
+            event.currentTarget.querySelector("summary")?.focus();
+          }
+        }}>
+          <summary className={styles.suiteTrigger} aria-label={locale === "es" ? "Cambiar aplicación AkiSuite" : "Switch AkiSuite app"} title="AkiSuite">
+            <span aria-hidden="true">⋯</span>
+          </summary>
+          <div className={styles.suitePopover}>
+            <strong className={styles.suiteHeading}>{locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}</strong>
+            {[
+              { id: "pasa", name: "AkiPasa", url: `https://akipasa.com/${locale}`, icon: "https://akipasa.com/pwa/akipasa-512.png", tone: "#F26B1D" },
+              { id: "duermo", name: "AkiDuermo", url: `https://akiduermo.com/?lang=${locale}`, icon: "https://akipasa.com/brand/duermo-icon.png", tone: "#2FC2A5" },
+              { id: "coches", name: "AkiCoches", url: `/?lang=${locale}`, icon: "/brand/conduzco-icon.svg", tone: "#FF3047" },
+              { id: "hq", name: "AkiHQ", url: "https://akihq.app", icon: "https://akipasa.com/brand/hq-mark.svg", tone: "#FFC533" },
+              { id: "business", name: "AkiBusiness", url: "https://akibusiness.com", icon: "https://akipasa.com/brand/business-mark.svg", tone: "#9A70FA" },
+            ].map((app) => (
+              <a key={app.id} href={app.url} aria-current={app.id === "coches" ? "page" : undefined} className={styles.suiteLink} style={{ "--suite-color": app.tone } as CSSProperties}>
+                <Image src={app.icon} width={36} height={36} alt="" unoptimized />
+                <span>{app.name}</span>
+                {app.id === "coches" && <small>{locale === "es" ? "Actual" : "Current"}</small>}
+              </a>
+            ))}
+          </div>
+        </details>
       </nav>
     </header>
   );
