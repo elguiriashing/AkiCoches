@@ -9,9 +9,8 @@ const brand = resolve(root, "public/brand");
 const normal = await readFile(resolve(brand, "conduzco-icon.svg"));
 const maskable = await readFile(resolve(brand, "conduzco-maskable.svg"));
 const targets = [
-  ...[180, 192, 512].map((size) => [normal, size, `public/brand/conduzco-${size}.png`]),
-  ...[192, 512].map((size) => [maskable, size, `public/brand/conduzco-maskable-${size}.png`]),
-  [normal, 180, "src/app/apple-icon.png"],
+  ...[180, 192, 512].map((size) => [normal, size, `public/brand/conduzco-v2-${size}.png`]),
+  ...[192, 512].map((size) => [maskable, size, `public/brand/conduzco-v2-maskable-${size}.png`]),
 ];
 for (const [source, size, path] of targets) {
   const target = resolve(root, path);

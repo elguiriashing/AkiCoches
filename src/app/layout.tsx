@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   applicationName: "AkiCoches",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/brand/conduzco-icon.svg",
-    apple: "/brand/conduzco-180.png",
+    icon: "/brand/conduzco-icon.svg?v=2",
+    apple: "/brand/conduzco-v2-180.png",
   },
   openGraph: {
     type: "website",

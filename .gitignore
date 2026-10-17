@@ -32,3 +32,6 @@ dist/
 *.p12
 *.key
 .DS_Store
+
+# Generated before AkiCoches web, Cloudflare and PWA builds
+/public/brand/conduzco-v2-*.png
