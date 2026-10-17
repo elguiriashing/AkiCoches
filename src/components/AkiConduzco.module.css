@@ -1,7 +1,7 @@
 .app {
   --ink: #f6f4f1;
-  --coches-bg: #08090b;
-  --coches-surface: #141518;
+  --coches-bg: #0b1227;
+  --coches-surface: #16213a;
   --coches-ink: #f6f4f1;
   --coches-muted: #b8b7b6;
   min-height: 100dvh;
@@ -47,7 +47,7 @@
   border-radius: 11px;
 }
 .brand span span {
-  color: #f04455;
+  color: #ff5148;
 }
 .tools {
   display: flex;
@@ -73,8 +73,8 @@
 }
 .navlink:hover,
 .tools button:hover {
-  border-color: #f04455;
-  background: #f0445514;
+  border-color: #ff5148;
+  background: #ff514814;
 }
 .main {
   width: min(1240px, 100%);
@@ -97,8 +97,8 @@
   width: min(58vw, 700px);
   height: 520px;
   background:
-    radial-gradient(ellipse at 55% 46%, #f044553a, transparent 60%),
-    linear-gradient(135deg, transparent 35%, #f044551a 35.2%, transparent 35.7%);
+    radial-gradient(ellipse at 55% 46%, #ff51483a, transparent 60%),
+    linear-gradient(135deg, transparent 35%, #ff51481a 35.2%, transparent 35.7%);
   transform: skewX(-12deg);
   pointer-events: none;
 }
@@ -109,12 +109,12 @@
   top: 100px;
   width: min(42vw, 520px);
   height: 250px;
-  border: 1px solid #f0445538;
+  border: 1px solid #ff514838;
   border-radius: 50%;
   transform: rotate(-18deg);
   box-shadow:
-    0 0 0 26px #f0445508,
-    0 0 0 52px #f0445505;
+    0 0 0 26px #ff514808,
+    0 0 0 52px #ff514805;
   pointer-events: none;
 }
 .heroContent {
@@ -123,7 +123,7 @@
   z-index: 1;
 }
 .eyebrow {
-  color: #fa6977;
+  color: #ff7a69;
   text-transform: uppercase;
   letter-spacing: 0.22em;
   font-size: 11px;
@@ -138,7 +138,7 @@
   font-weight: 900;
 }
 .hero h1 em {
-  color: #f04455;
+  color: #ff5148;
   font-style: normal;
 }
 .hero p {
@@ -160,8 +160,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #f04455;
-  box-shadow: 0 0 15px #f04455;
+  background: #ff5148;
+  box-shadow: 0 0 15px #ff5148;
 }
 .searchPanel {
   margin-top: -26px;
@@ -206,7 +206,7 @@
   border: 0;
   border-radius: 11px;
   padding: 0 19px;
-  background: #f04455;
+  background: #ff5148;
   color: white;
   font-size: 14px;
   font-weight: 850;
@@ -217,7 +217,7 @@
   justify-content: center;
 }
 .button:hover {
-  background: #d92d3e;
+  background: #e43840;
 }
 .sectionHead {
   display: flex;
@@ -259,7 +259,7 @@
 }
 .card:hover {
   transform: translateY(-3px);
-  border-color: #f0445580;
+  border-color: #ff514880;
 }
 .vehicleArt {
   height: 184px;
@@ -268,7 +268,7 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 90%, #f0445537, transparent 55%),
+    radial-gradient(ellipse at 50% 90%, #ff514837, transparent 55%),
     linear-gradient(145deg, #1b1c20, #0a0b0d);
 }
 .vehicleArt img {
@@ -304,13 +304,13 @@
   background:
     radial-gradient(
       circle at 14px 9px,
-      #08090b 0 7px,
+      #0b1227 0 7px,
       #f5f3ef 8px 9px,
       transparent 10px
     ),
     radial-gradient(
       circle at calc(100% - 14px) 9px,
-      #08090b 0 7px,
+      #0b1227 0 7px,
       #f5f3ef 8px 9px,
       transparent 10px
     );
@@ -321,7 +321,7 @@
   right: 12px;
   border-radius: 999px;
   padding: 7px 10px;
-  background: #08090be8;
+  background: #0b1227e8;
   color: #fff;
   font-weight: 850;
   font-size: 13px;
@@ -367,7 +367,7 @@
   color: var(--coches-ink);
 }
 .error {
-  border-color: #f0445570;
+  border-color: #ff514870;
 }
 .footer {
   margin-top: 70px;
@@ -447,7 +447,7 @@
   padding: 0 11px;
   border: 1px solid #ffffff20;
   border-radius: 10px;
-  background: #08090b;
+  background: #0b1227;
   color: #fff;
 }
 .mapResults {
@@ -472,7 +472,7 @@
   border: 1px solid #ffffff20;
   border-radius: 10px;
   padding: 0 10px;
-  background: #08090b;
+  background: #0b1227;
   color: #fff;
   font: inherit;
   text-transform: none;
@@ -540,7 +540,7 @@
   padding: 22px;
   border: 1px solid #ffffff1c;
   border-radius: 18px;
-  background: #141518;
+  background: #16213a;
 }
 .detailPanel h1 {
   margin: 8px 0;
@@ -578,8 +578,8 @@
 }
 .notice {
   color: #f7a2aa;
-  background: #f0445514;
-  border: 1px solid #f0445540;
+  background: #ff514814;
+  border: 1px solid #ff514840;
   padding: 12px;
   border-radius: 10px;
 }
@@ -649,7 +649,7 @@
   border: 0;
   border-radius: 9px;
   padding: 0 14px;
-  background: #f04455;
+  background: #ff5148;
   color: #fff;
   font-weight: 800;
   cursor: pointer;
