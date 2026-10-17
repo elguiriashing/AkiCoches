@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
+import { signOut } from "@/app/[locale]/auth/actions";
 import { RasterRentalMap } from "./RasterRentalMap";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
 import {
@@ -168,6 +169,17 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
                 {app.id === "coches" && <small>{locale === "es" ? "Actual" : "Current"}</small>}
               </a>
             ))}
+            <div className={styles.suiteActions}>
+              <a className={styles.suiteAction} href={`https://akipasa.com/${locale}/account/settings`}>
+                {locale === "es" ? "Ajustes" : "Settings"}
+              </a>
+              <form action={signOut}>
+                <input type="hidden" name="locale" value={locale} />
+                <button className={styles.suiteAction} type="submit">
+                  {locale === "es" ? "Cerrar sesión" : "Sign out"}
+                </button>
+              </form>
+            </div>
           </div>
         </details>
       </nav>
