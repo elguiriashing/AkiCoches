@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(target, 308);
   }
   if (
-    /^\/(?:(en|es)\/)?(?:membership|memberships|account\/(?:membership|memberships|subscription))\/?$/.test(
+    /^\/(?:(en|es)\/)?(?:memberships|account\/(?:membership|memberships|subscription))\/?$/.test(
       pathname,
     )
   ) {
