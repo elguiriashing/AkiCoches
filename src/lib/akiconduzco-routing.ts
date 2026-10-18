@@ -21,6 +21,7 @@ export function conduzcoHostRoute(pathname: string) {
   if (pathname === "/akiconduzco")
     return { kind: "canonical" as const, path: "/" };
   if (pathname === "/") return { kind: "public" as const, path: "/" };
+  if (pathname === "/membership") return { kind: "public" as const, path: pathname };
   if (
     pathname === "/map" ||
     pathname === "/account" ||
