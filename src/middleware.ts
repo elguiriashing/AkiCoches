@@ -34,17 +34,21 @@ export async function middleware(request: NextRequest) {
     target.searchParams.set("lang", locale);
     return NextResponse.redirect(target, 308);
   }
-  if (
-    /^\/(?:(en|es)\/)?(?:membership|memberships|account\/(?:membership|memberships|subscription))\/?$/.test(
-      pathname,
-    )
-  ) {
+  // Pricing stays on AkiCoches; existing subscription management stays on AkiPasa.
+  const productMembership = pathname.match(/^\/(?:(en|es)\/)?memberships?\/?$/);
+  if (productMembership) {
     if (!["GET", "HEAD"].includes(request.method))
       return new NextResponse(null, { status: 404 });
-    const url = new URL(
-      `/${locale}/account/subscription`,
-      "https://akipasa.com",
-    );
+    if (pathname !== "/membership") {
+      target.pathname = "/membership";
+      if (productMembership[1]) target.searchParams.set("lang", productMembership[1]);
+      return NextResponse.redirect(target, 308);
+    }
+  }
+  if (/^\/(?:(en|es)\/)?account\/(?:membership|memberships|subscription)\/?$/.test(pathname)) {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    const url = new URL(`/${locale}/account/subscription`, "https://akipasa.com");
     url.searchParams.set("from", "akicoches");
     return crossProductRedirect(url);
   }
