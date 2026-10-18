@@ -133,6 +133,9 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         <Link className={styles.navlink} href={`/account?lang=${locale}`}>
           {t.account}
         </Link>
+        <Link className={styles.navlink} href={`/membership?lang=${locale}`}>
+          {locale === "es" ? "Membresías" : "Membership"}
+        </Link>
         <ThemeToggle locale={locale} />
         <button
           type="button"
