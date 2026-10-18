@@ -79,9 +79,9 @@ describe("cross-product credential transfer prevention", () => {
     expect(target.hash).toBe("#redirected");
     expect(response.headers.get("referrer-policy")).toBe("no-referrer");
   });
-  it("does not inherit fragments or credentials on membership redirects", async () => {
+  it("does not inherit fragments or credentials on legacy subscription redirects", async () => {
     const response = await middleware(
-      request("/en/membership?access_token=private"),
+      request("/en/account/subscription?access_token=private"),
     );
     expect(response.headers.get("location")).toBe(
       "https://akipasa.com/en/account/subscription?from=akicoches#redirected",
@@ -94,10 +94,15 @@ describe("cross-product credential transfer prevention", () => {
     expect(response.status).toBe(200);
     expect(response.headers.has("location")).toBe(false);
   });
+  it("serves membership locally without cross-domain redirection", async () => {
+    const response = await middleware(request("/membership?lang=en"));
+    expect(response.status).toBe(200);
+    expect(response.headers.has("location")).toBe(false);
+  });
   it("rejects non-read methods before any cross-domain redirect", async () => {
     for (const path of [
       "/unknown?token=private",
-      "/en/membership?token=private",
+      "/en/account/subscription?token=private",
     ])
       expect((await middleware(request(path, "POST"))).status).toBe(404);
   });
