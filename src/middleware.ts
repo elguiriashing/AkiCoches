@@ -42,6 +42,7 @@ export async function middleware(request: NextRequest) {
     if (pathname !== "/membership") {
       target.pathname = "/membership";
       if (productMembership[1]) target.searchParams.set("lang", productMembership[1]);
+      stripCrossProductCredentials(target);
       return NextResponse.redirect(target, 308);
     }
   }
