@@ -69,6 +69,7 @@ export default async function RenterAccountPage({ searchParams }: {
               : "Follow your rental requests, plan your next trip and manage your AkiSuite account."}</p>
             <div className={styles.heroActions}>
               <Link href={"/?lang=" + locale} className={styles.primaryButton}>{es ? "Explorar coches" : "Explore cars"} <span aria-hidden="true">↗</span></Link>
+              <Link href="/membership" className={styles.secondaryButton}>{es ? "Membresías" : "Membership"}</Link>
               <Link href={"https://akipasa.com/" + locale + "/account/settings"} className={styles.secondaryButton}>{es ? "Ajustes de cuenta" : "Account settings"}</Link>
             </div>
           </div>
