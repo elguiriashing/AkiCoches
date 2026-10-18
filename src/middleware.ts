@@ -41,15 +41,23 @@ export async function middleware(request: NextRequest) {
       return new NextResponse(null, { status: 404 });
     if (pathname !== "/membership") {
       target.pathname = "/membership";
-      if (productMembership[1]) target.searchParams.set("lang", productMembership[1]);
+      if (productMembership[1])
+        target.searchParams.set("lang", productMembership[1]);
       stripCrossProductCredentials(target);
       return NextResponse.redirect(target, 308);
     }
   }
-  if (/^\/(?:(en|es)\/)?account\/(?:membership|memberships|subscription)\/?$/.test(pathname)) {
+  if (
+    /^\/(?:(en|es)\/)?account\/(?:membership|memberships|subscription)\/?$/.test(
+      pathname,
+    )
+  ) {
     if (!["GET", "HEAD"].includes(request.method))
       return new NextResponse(null, { status: 404 });
-    const url = new URL(`/${locale}/account/subscription`, "https://akipasa.com");
+    const url = new URL(
+      `/${locale}/account/subscription`,
+      "https://akipasa.com",
+    );
     url.searchParams.set("from", "akicoches");
     return crossProductRedirect(url);
   }

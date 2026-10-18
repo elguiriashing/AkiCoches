@@ -84,7 +84,9 @@ describe("cross-product credential transfer prevention", () => {
     expect(local.status).toBe(200);
     expect(local.headers.has("location")).toBe(false);
 
-    const response = await middleware(request("/en/membership?access_token=private"));
+    const response = await middleware(
+      request("/en/membership?access_token=private"),
+    );
     const target = new URL(response.headers.get("location")!);
     expect(response.status).toBe(308);
     expect(target.pathname).toBe("/membership");

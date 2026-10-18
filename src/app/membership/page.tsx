@@ -7,7 +7,8 @@ import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Memberships · AkiCoches",
-  description: "AkiCoches Premium, rental-branch upgrades, AkiBusiness and AkiEnterprise.",
+  description:
+    "AkiCoches Premium, rental-branch upgrades, AkiBusiness and AkiEnterprise.",
   alternates: { canonical: "https://akicoches.com/membership" },
 };
 
