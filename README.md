@@ -14,19 +14,22 @@ All runtime dependencies retain the source lock and verified MapLibre sanitizer 
 catalogue, availability, pricing and customer requests. `/en/auth`, `/es/auth`, callback,
 password recovery and Terms retain the shared Supabase identities and per-domain cookies.
 Fleet/company/rates/operator booking management is delegated to the authorized
-`https://akibusiness.com/{locale}/business/venue/{id}?section=fleet` workspace
-inside each linked venue. Legacy unlinked operators retain the mobility route.
-Membership subscriptions
-remain at the AkiPasa account hub. This product does not collect payments or guarantee
-instant confirmed bookings. Historical `akiconduzco` cookie, module and database identifiers
-remain stable; customer-facing branding is AkiCoches.
+`https://akihq.app/{locale}/business` management workspace. Rental branches have
+independent company membership and do not require an AkiPasa venue. Paid operating
+software is linked separately at `https://akibusiness.com`. Product-specific plan
+presentation lives at `/membership`; existing subscription management remains at the
+AkiPasa account hub. This product does not collect payments or guarantee instant confirmed
+bookings. Historical `akiconduzco` cookie, module and database identifiers remain stable;
+customer-facing branding is AkiCoches.
 
 ## Independent deployment
 
 Commit source before `npm run build:cloudflare`; release-source stamping rejects dirty
 tracked files and untracked source. `npx wrangler deploy --dry-run` verifies packaging.
-Deploy a preview first using `npm run deploy:cloudflare`; the worker is named `akicoches`,
-uses workers.dev and deliberately has no production domain routes or cron schedules.
+The worker is named `akicoches`, uses workers.dev for preview acceptance and serves the
+production custom domain `akicoches.com`. Cloudflare Workers Builds is connected directly
+to `elguiriashing/AkiCoches`, tracks `main`, builds the exact pushed commit and deploys the
+source-stamped artifact. It has no cron schedules.
 No billing webhook, global email sender or scheduled subscription task is installed.
 Only the original AkiPasa owns those shared jobs. `/api/health` reports process health,
 not database readiness.
@@ -44,14 +47,12 @@ The source includes read-only SQL contract snapshots for rental records/RLS; **d
 apply them to production from this extraction**. The shared schema is already owned by
 the AkiPasa migration process. No provider data was copied or changed.
 
-Keep `AKICOCHES_INDEXING_ENABLED=false` for previews. Before adding custom domain routes,
-verify credentials, actual role/RLS isolation, EN/ES at mobile/desktop, request/confirm
-booking in a sandbox, fleet management handoff, membership/logout/recovery, image/maps,
-SSL, HTTP errors and monitoring. Only after verification attach `akicoches.com`; legacy
-`akiconduzco.akipasa.com` and `akiautos.com` redirects belong to the coordinated migration,
-not this preview config. Preserve paths and query strings and treat callbacks separately.
-Rollback removes new redirects/domain route bindings and returns to the existing AkiPasa
-rental host; no database rollback or identity reset is required.
+Keep `AKICOCHES_INDEXING_ENABLED=false` until public inventory and launch readiness are
+approved. Every production release must verify credentials, role/RLS isolation, EN/ES at
+mobile/desktop, request booking boundaries, fleet-management handoff, membership,
+logout/recovery, images/maps, SSL, HTTP errors and monitoring. Preserve paths and query
+strings and treat callbacks separately. Rollback uses the previous Cloudflare Worker
+deployment/version; no database rollback or identity reset is required.
 
 Shared copied library maintenance is recorded in `docs/EXTRACTION.md`. Update security
 patches from the pinned upstream source deliberately and run this app's regression suite.

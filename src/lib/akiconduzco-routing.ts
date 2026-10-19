@@ -1,5 +1,10 @@
 export const conduzcoOrigin = "https://akicoches.com";
-export const conduzcoMemberPaths = ["/map", "/account", "/bookings", "/membership"];
+export const conduzcoMemberPaths = [
+  "/map",
+  "/account",
+  "/bookings",
+  "/membership",
+];
 
 export function safeConduzcoDestination(requested?: string) {
   if (!requested || requested.startsWith("//") || /[\\\r\n]/.test(requested))
@@ -21,11 +26,12 @@ export function conduzcoHostRoute(pathname: string) {
   if (pathname === "/akiconduzco")
     return { kind: "canonical" as const, path: "/" };
   if (pathname === "/") return { kind: "public" as const, path: "/" };
+  if (pathname === "/membership")
+    return { kind: "public" as const, path: pathname };
   if (
     pathname === "/map" ||
     pathname === "/account" ||
     pathname === "/bookings" ||
-    pathname === "/membership" ||
     /^\/rentals\/[a-z0-9-]+\/?$/.test(pathname)
   )
     return { kind: "public" as const, path: pathname };
