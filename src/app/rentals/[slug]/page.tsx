@@ -60,6 +60,9 @@ export default async function RentalCompanyPage({
   const listings = ((data || []) as RentalListing[]).filter(
     (row) => row.company_id === company.id,
   );
+  // Published company records without a live fleet are not public discovery
+  // pages. This keeps test/draft branches out even when their slug is known.
+  if (error || listings.length === 0) notFound();
   const picturedListings = await withRentalCovers(supabase, listings);
   const today = new Date().toISOString().slice(0, 10);
   const {
