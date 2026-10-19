@@ -9,7 +9,7 @@ export async function GET() {
     .from("car_rental_companies")
     .select("slug,updated_at,vehicles:car_rental_vehicles!inner(id)")
     .eq("status", "published")
-    .eq("vehicles.status", "active")
+    .eq("vehicles.active", true)
     .order("updated_at", { ascending: false })
     .limit(5_000);
 

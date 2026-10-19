@@ -8,7 +8,7 @@ describe("AkiCoches sitemap", () => {
     const route = readFileSync("src/app/sitemap.xml/route.ts", "utf8");
     expect(route).toContain("car_rental_vehicles!inner(id)");
     expect(route).toContain('.eq("status", "published")');
-    expect(route).toContain('.eq("vehicles.status", "active")');
+    expect(route).toContain('.eq("vehicles.active", true)');
   });
 
   it("publishes standalone discovery routes and rental details", () => {
