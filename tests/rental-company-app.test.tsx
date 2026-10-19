@@ -9,6 +9,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { RentalCompanyApp } from "../src/components/RentalCompanyApp";
+import { SavedRentalsPanel } from "../src/components/SavedRentalsPanel";
 import { rentalRangeBlocked } from "../src/lib/rental-calendar";
 import type { RentalListing } from "../src/lib/akiconduzco";
 vi.mock("../src/components/AkiConduzco", () => ({
@@ -35,6 +36,7 @@ const car = {
   total: 1,
 } satisfies RentalListing;
 beforeEach(() => {
+  window.localStorage.clear();
   vi.stubGlobal("React", React);
   vi.stubGlobal(
     "fetch",
@@ -58,6 +60,47 @@ describe("company-first rental journey", () => {
         .getByRole("button", { name: /Continue with this car/ })
         .hasAttribute("disabled"),
     ).toBe(true);
+  });
+  it("saves and removes a real car on this browser without claiming account sync", () => {
+    render(<RentalCompanyApp locale="en" slug="coches" listings={[car]} />);
+    const save = screen.getByRole("button", { name: /Save car/ });
+    fireEvent.click(save);
+    expect(
+      screen
+        .getByRole("button", { name: /Saved/ })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    expect(window.localStorage.getItem("akicoches:saved-rentals:v1")).toContain(
+      "vehicle-1",
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Saved/ }));
+    expect(window.localStorage.getItem("akicoches:saved-rentals:v1")).toBe(
+      "[]",
+    );
+  });
+  it("shows the device-only boundary and lets the customer remove a saved car", () => {
+    window.localStorage.setItem(
+      "akicoches:saved-rentals:v1",
+      JSON.stringify([
+        {
+          vehicle_id: car.vehicle_id,
+          vehicle_name: car.vehicle_name,
+          company_slug: car.company_slug,
+          company_name: car.company_name,
+          city: car.city,
+          daily_price_cents: car.daily_price_cents,
+          image_url: car.image_url,
+          saved_at: new Date().toISOString(),
+        },
+      ]),
+    );
+    render(<SavedRentalsPanel locale="en" />);
+    expect(screen.getByText(/Saved on this browser only/)).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "View car" }).getAttribute("href"),
+    ).toContain("vehicle-1");
+    fireEvent.click(screen.getByRole("button", { name: "Remove" }));
+    expect(screen.getByText("No saved cars yet")).toBeTruthy();
   });
   it("does not unlock request when server says unavailable", async () => {
     vi.mocked(fetch).mockResolvedValue({

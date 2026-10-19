@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ConduzcoHeader } from "./AkiConduzco";
+import { SaveRentalButton } from "./SaveRentalButton";
 import {
   formatRentalPrice,
   rentalCategoryLabels,
@@ -421,14 +422,21 @@ export function RentalCompanyApp({
                     {es ? "Fianza" : "Deposit"} {money(selected.deposit_cents)}
                   </small>
                 </div>
-                <button
-                  className={s.primary}
-                  onClick={() =>
-                    setTab(tab === "dates" && available ? "request" : "dates")
-                  }
-                >
-                  {es ? "Elegir fechas" : "Choose dates"} ↗
-                </button>
+                <div className={s.priceActions}>
+                  <SaveRentalButton
+                    listing={selected}
+                    locale={locale}
+                    className={s.secondary}
+                  />
+                  <button
+                    className={s.primary}
+                    onClick={() =>
+                      setTab(tab === "dates" && available ? "request" : "dates")
+                    }
+                  >
+                    {es ? "Elegir fechas" : "Choose dates"} ↗
+                  </button>
+                </div>
               </footer>
             </section>
             <section className={s.panel} aria-label={tab}>

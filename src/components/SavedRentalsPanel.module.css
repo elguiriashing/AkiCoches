@@ -1,0 +1,110 @@
+.deviceNote {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, #ff3047 35%, transparent);
+  border-radius: 12px;
+  color: var(--coches-muted);
+  background: color-mix(in srgb, #ff3047 7%, transparent);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.list {
+  display: grid;
+  gap: 11px;
+}
+.card {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 15px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--coches-ink) 12%, transparent);
+  border-radius: 19px;
+  background: var(--coches-surface);
+}
+.image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 68px;
+  overflow: hidden;
+  border-radius: 12px;
+  color: #ff8993;
+  background: linear-gradient(135deg, #252b3d, #491e2e);
+  font-size: 28px;
+}
+.image img {
+  object-fit: cover;
+}
+.details {
+  min-width: 0;
+}
+.details small {
+  color: var(--coches-muted);
+}
+.details h3 {
+  margin: 4px 0;
+  color: var(--coches-ink);
+  font-size: 19px;
+}
+.details strong {
+  color: #ff8993;
+  font-size: 13px;
+}
+.actions {
+  display: grid;
+  gap: 7px;
+  min-width: 96px;
+}
+.actions a,
+.actions button {
+  min-height: 38px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--coches-ink) 14%, transparent);
+  border-radius: 999px;
+  color: var(--coches-ink);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.actions a {
+  color: white;
+  border-color: #ff3047;
+  background: #ff3047;
+}
+.message {
+  padding: 28px;
+  border: 1px dashed color-mix(in srgb, var(--coches-ink) 12%, transparent);
+  border-radius: 19px;
+  background: var(--coches-surface);
+}
+.message strong {
+  display: block;
+  margin-bottom: 8px;
+}
+.message p {
+  color: var(--coches-muted);
+}
+.message a {
+  color: #ff8993;
+  font-weight: 800;
+}
+@media (max-width: 620px) {
+  .card {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 11px;
+  }
+  .image {
+    width: 72px;
+    height: 58px;
+  }
+  .actions {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+  }
+}

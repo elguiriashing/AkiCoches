@@ -1,5 +1,17 @@
 # Extraction contract
 
+## 2026-10-20 | Device-local saved rental shortlist
+
+Customers can save and remove a published vehicle from the rental-company app and
+review that shortlist in the AkiCoches account dashboard. The bounded, validated
+record contains public catalogue fields only and stays in that browser's local
+storage. The interface explicitly says that account sync is not available, so it
+does not imply a shared-backend feature that has not shipped. A dedicated shared
+table and ownership-scoped RLS remain owned by the authoritative AkiPasa migration
+process; this extraction neither applies schema changes nor reuses another
+product's saved-item table. Removing a saved car never changes fleet or booking
+records.
+
 ## 2026-10-15 | Visible WebGL rental pins
 
 Rental location buttons are projected into a dedicated page overlay above the
