@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "status": "PREPARATION_ONLY_NOT_SUBMITTABLE",
+  "product": "AkiCoches",
+  "webOrigin": "https://akicoches.com",
+  "startPath": "/",
+  "proposedIdentifiers": {
+    "androidApplicationId": "com.akipasa.coches",
+    "iosBundleId": "com.akipasa.coches",
+    "warning": "PROPOSALS ONLY. Confirm identifiers before first store app creation/signing."
+  },
+  "platformRequirements": {
+    "googlePlayTargetApiMinimum": 36,
+    "iosBuildWithXcodeMajorMinimum": 26
+  },
+  "listingDraft": {
+    "primaryLocale": "es-ES",
+    "secondaryLocale": "en-GB",
+    "categoryCandidate": "Travel",
+    "shortDescriptionEs": "Descubre coches de alquiler para tu viaje.",
+    "shortDescriptionEn": "Find rental cars for your journey.",
+    "fullDescriptionEs": "Encuentra empresas de alquiler de coches y explora sus vehículos con AkiCoches. Busca por destino, consulta ubicaciones en el mapa y revisa información de la flota y disponibilidad publicada. Cuando esté disponible, envía una solicitud de alquiler al proveedor; la confirmación depende del operador.",
+    "fullDescriptionEn": "Find car rental companies and explore their fleets with AkiCoches. Search by destination, browse rental locations on the map and review published vehicle details and availability. Where available, send a rental request to the provider. Requests require operator confirmation.",
+    "privacyPolicyUrl": "",
+    "supportUrl": "",
+    "marketingUrl": "https://akicoches.com"
+  },
+  "sourceObservation": "Next.js web/PWA manifest in src/app/manifest.ts",
+  "gates": {
+    "sourceAndLiveProductMappingVerified": true,
+    "nativeAndroidBuildVerified": false,
+    "nativeIosBuildVerified": false,
+    "realDeviceAuthAndDeepLinksPassed": false,
+    "nativeAppExperienceReviewed": false,
+    "appAccountDeletionPassed": false,
+    "privacyDataSafetyDeclared": false,
+    "storeBillingCompliant": false,
+    "appIconsAndScreenshotsReviewed": false,
+    "reviewerDemoCredentialsPrepared": false,
+    "signingAndStoreAccountsConfigured": false,
+    "ageRatingAndContentDeclarationsComplete": false
+  },
+  "delivery": {
+    "android": "Android App Bundle (.aab) signed for Play App Signing, not generated",
+    "ios": "Signed .ipa archive and TestFlight build, not generated",
+    "intendedTracks": ["Play internal testing", "TestFlight internal testing"]
+  },
+  "evidence": {
+    "repository": "elguiriashing/AkiCoches",
+    "branch": "main",
+    "cloudflareWorker": "akicoches",
+    "cloudflareWorkerTag": "4b26b28b73c14a4ca3b7675d6dc4ef38",
+    "canonicalHost": "https://akicoches.com",
+    "verifiedAt": "2026-10-19"
+  },
+  "notes": [
+    "Do not insert app signing keys, provisioning profiles, personal details, reviewer passwords or store API keys in Git.",
+    "Do not publish android/.well-known/assetlinks.json or apple-app-site-association with guessed fingerprints/team IDs.",
+    "Respect AkiSuite cross-domain OAuth callback and application deep linking; each product must survive login, logout and password recovery.",
+    "No automatic purchase-flow enabling: review mobile digital subscription rules and local availability before release."
+  ]
+}

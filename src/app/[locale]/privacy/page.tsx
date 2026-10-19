@@ -20,22 +20,22 @@ export default async function PrivacyPage({
         </h1>
         <p className="lede">
           {es
-            ? "Resumen de privacidad de AkiPasa para la versión preliminar pública."
-            : "AkiPasa privacy summary for the public preview."}
+            ? "Resumen de privacidad de AkiCoches para la versión preliminar pública."
+            : "AkiCoches privacy summary for the public preview."}
         </p>
       </section>
       <section className="panel prose">
         <h2>{es ? "Qué guardamos" : "What we store"}</h2>
         <p>
           {es
-            ? "Datos de cuenta, favoritos, locales seguidos, actividad de recompensas y contenido que envías. La ubicación precisa del dispositivo no se guarda por defecto."
-            : "Account data, favorites, followed venues, reward activity and content you submit. Precise device location is not stored by default."}
+            ? "Datos de cuenta, solicitudes de alquiler, datos de contacto incluidos en esas solicitudes, preferencias y consentimiento. La ubicación precisa del dispositivo no se guarda por defecto."
+            : "Account data, rental requests, contact details included in those requests, preferences and consent. Precise device location is not stored by default."}
         </p>
         <h2>{es ? "Para qué" : "Why"}</h2>
         <p>
           {es
-            ? "Para prestar el servicio, protegerlo contra abusos y ofrecer estadísticas agregadas a los negocios. No vendemos datos personales."
-            : "To provide the service, protect it from abuse and give businesses aggregate statistics. We do not sell personal data."}
+            ? "Para prestar el servicio, enviar tu solicitud al proveedor elegido, proteger AkiCoches contra abusos y ofrecer estadísticas agregadas. No vendemos datos personales."
+            : "To provide the service, send your request to the chosen provider, protect AkiCoches from abuse and provide aggregate statistics. We do not sell personal data."}
         </p>
         <h2>{es ? "Tus derechos" : "Your rights"}</h2>
         <p>

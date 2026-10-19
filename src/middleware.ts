@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { trustedProductOrigin } from "@/lib/public-request-origin";
 import { refreshSession } from "@/lib/supabase/middleware";
 import { stripCrossProductCredentials } from "@/lib/cross-product-query";
+import { config as productConfig } from "@/lib/config";
 import {
   conduzcoHostMethodAllowed,
   conduzcoHostRoute,
@@ -34,8 +35,21 @@ export async function middleware(request: NextRequest) {
     target.searchParams.set("lang", locale);
     return NextResponse.redirect(target, 308);
   }
+  // Pricing stays on AkiCoches; existing subscription management stays on AkiPasa.
+  const productMembership = pathname.match(/^\/(?:(en|es)\/)?memberships?\/?$/);
+  if (productMembership) {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    if (pathname !== "/membership") {
+      target.pathname = "/membership";
+      if (productMembership[1])
+        target.searchParams.set("lang", productMembership[1]);
+      stripCrossProductCredentials(target);
+      return NextResponse.redirect(target, 308);
+    }
+  }
   if (
-    /^\/(?:(en|es)\/)?(?:memberships|account\/(?:membership|memberships|subscription))\/?$/.test(
+    /^\/(?:(en|es)\/)?account\/(?:membership|memberships|subscription)\/?$/.test(
       pathname,
     )
   ) {
@@ -62,7 +76,7 @@ export async function middleware(request: NextRequest) {
       return new NextResponse(null, { status: 404 });
     const business = /^\/(en|es)\/business(?:\/|$)/.test(pathname);
     const destination = new URL(
-      business ? "https://akihq.app" : "https://akipasa.com",
+      business ? productConfig.businessUrl : "https://akipasa.com",
     );
     destination.pathname = pathname;
     destination.search = request.nextUrl.search;

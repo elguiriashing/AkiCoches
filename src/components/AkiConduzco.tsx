@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
 import { signOut } from "@/app/[locale]/auth/actions";
@@ -90,7 +97,8 @@ const copy = {
     fuel: "combustible",
     at: "en",
     operator: "¿Gestionas una empresa de alquiler?",
-    operatorNote: "Gestiona tu flota en AkiHQ. No necesitas un local publicado.",
+    operatorNote:
+      "Gestiona tu flota en AkiHQ. No necesitas un local publicado.",
     operatorLink: "Abrir AkiHQ",
     family: "PARTE DE LA FAMILIA AKIPASA",
     go: "Descubrir eventos",
@@ -133,6 +141,9 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         <Link className={styles.navlink} href={`/account?lang=${locale}`}>
           {t.account}
         </Link>
+        <Link className={styles.navlink} href={`/membership?lang=${locale}`}>
+          {locale === "es" ? "Membresías" : "Membership"}
+        </Link>
         <ThemeToggle locale={locale} />
         <button
           type="button"
@@ -145,32 +156,92 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         >
           {t.lang}
         </button>
-        <details className={styles.suiteMenu} onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.currentTarget.open = false;
-            event.currentTarget.querySelector("summary")?.focus();
-          }
-        }}>
-          <summary className={styles.suiteTrigger} aria-label={locale === "es" ? "Cambiar aplicación AkiSuite" : "Switch AkiSuite app"} title="AkiSuite">
+        <details
+          className={styles.suiteMenu}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.currentTarget.open = false;
+              event.currentTarget.querySelector("summary")?.focus();
+            }
+          }}
+        >
+          <summary
+            className={styles.suiteTrigger}
+            aria-label={
+              locale === "es"
+                ? "Cambiar aplicación AkiSuite"
+                : "Switch AkiSuite app"
+            }
+            title="AkiSuite"
+          >
             <span aria-hidden="true">⋯</span>
           </summary>
           <div className={styles.suitePopover}>
-            <strong className={styles.suiteHeading}>{locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}</strong>
+            <strong className={styles.suiteHeading}>
+              {locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}
+            </strong>
             {[
-              { id: "pasa", name: "AkiPasa", url: `https://akipasa.com/${locale}`, icon: "/brand/pasa-mark.svg", tone: "#F26B1D" },
-              { id: "duermo", name: "AkiDuermo", url: `https://akiduermo.com/?lang=${locale}`, icon: "/brand/duermo-mark.svg", tone: "#2FC2A5" },
-              { id: "coches", name: "AkiCoches", url: `/?lang=${locale}`, icon: "/brand/conduzco-icon.svg", tone: "#FF3047" },
-              { id: "hq", name: "AkiHQ", url: "https://akihq.app", icon: "/brand/hq-mark.svg", tone: "#FFC533" },
-              { id: "business", name: "AkiBusiness", url: "https://akibusiness.com", icon: "/brand/business-mark.svg", tone: "#9A70FA" },
+              {
+                id: "pasa",
+                name: "AkiPasa",
+                url: `https://akipasa.com/${locale}`,
+                icon: "/brand/pasa-mark.svg",
+                tone: "#F26B1D",
+              },
+              {
+                id: "duermo",
+                name: "AkiDuermo",
+                url: `https://akiduermo.com/?lang=${locale}`,
+                icon: "/brand/duermo-mark.svg",
+                tone: "#2FC2A5",
+              },
+              {
+                id: "coches",
+                name: "AkiCoches",
+                url: `/?lang=${locale}`,
+                icon: "/brand/conduzco-icon.svg",
+                tone: "#FF3047",
+              },
+              {
+                id: "hq",
+                name: "AkiHQ",
+                url: "https://akihq.app",
+                icon: "/brand/hq-mark.svg",
+                tone: "#FFC533",
+              },
+              {
+                id: "business",
+                name: "AkiBusiness",
+                url: "https://akibusiness.com",
+                icon: "/brand/business-mark.svg",
+                tone: "#9A70FA",
+              },
             ].map((app) => (
-              <a key={app.id} href={app.url} aria-current={app.id === "coches" ? "page" : undefined} className={styles.suiteLink} style={{ "--suite-color": app.tone } as CSSProperties}>
-                <Image src={app.icon} width={36} height={36} alt="" unoptimized />
+              <a
+                key={app.id}
+                href={app.url}
+                aria-current={app.id === "coches" ? "page" : undefined}
+                className={styles.suiteLink}
+                style={{ "--suite-color": app.tone } as CSSProperties}
+              >
+                <Image
+                  src={app.icon}
+                  width={36}
+                  height={36}
+                  alt=""
+                  unoptimized
+                />
                 <span>{app.name}</span>
-                {app.id === "coches" && <small>{locale === "es" ? "Actual" : "Current"}</small>}
+                {app.id === "coches" && (
+                  <small>{locale === "es" ? "Actual" : "Current"}</small>
+                )}
               </a>
             ))}
             <div className={styles.suiteActions}>
-              <a className={styles.suiteAction} href={`https://akipasa.com/${locale}/account/settings`}>
+              <a
+                className={styles.suiteAction}
+                href={`https://akipasa.com/${locale}/account/settings`}
+              >
                 {locale === "es" ? "Ajustes" : "Settings"}
               </a>
               <form action={signOut}>
@@ -458,12 +529,8 @@ export function AkiConduzco({
             <Link href={`https://akiduermo.com/?lang=${locale}`}>
               {t.stays}
             </Link>
-            　
-            <Link href={`https://akipasa.com/${locale}/terms`}>{t.terms}</Link>
-            　
-            <Link href={`https://akipasa.com/${locale}/privacy`}>
-              {t.privacy}
-            </Link>
+            　<Link href={`/${locale}/terms`}>{t.terms}</Link>　
+            <Link href={`/${locale}/privacy`}>{t.privacy}</Link>
           </span>
         </footer>
       </main>
@@ -571,37 +638,40 @@ export function ConduzcoMap({
         const load = (initial = false) => {
           if (!map) return;
           if (timer) clearTimeout(timer);
-          timer = setTimeout(async () => {
-            const b = map!.getBounds();
-            abort?.abort();
-            abort = new AbortController();
-            const bounds = [
-              b.getSouth(),
-              b.getWest(),
-              b.getNorth(),
-              b.getEast(),
-            ].join(",");
-            try {
-              const response = await fetch(
-                `/api/car-rentals?${new URLSearchParams({
-                  q: qRef.current,
-                  category: categoryRef.current,
-                  bounds,
-                  ...(datesRef.current.start && datesRef.current.end
-                    ? datesRef.current
-                    : {}),
-                })}`,
-                { signal: abort.signal },
-              );
-              if (!response.ok) throw new Error("unavailable");
-              const data = await response.json();
-              if (cancelled) return;
-              setRows(data.rows || []);
-              setError(false);
-            } catch {
-              if (!abort?.signal.aborted && !cancelled) setError(true);
-            }
-          }, initial ? 0 : 220);
+          timer = setTimeout(
+            async () => {
+              const b = map!.getBounds();
+              abort?.abort();
+              abort = new AbortController();
+              const bounds = [
+                b.getSouth(),
+                b.getWest(),
+                b.getNorth(),
+                b.getEast(),
+              ].join(",");
+              try {
+                const response = await fetch(
+                  `/api/car-rentals?${new URLSearchParams({
+                    q: qRef.current,
+                    category: categoryRef.current,
+                    bounds,
+                    ...(datesRef.current.start && datesRef.current.end
+                      ? datesRef.current
+                      : {}),
+                  })}`,
+                  { signal: abort.signal },
+                );
+                if (!response.ok) throw new Error("unavailable");
+                const data = await response.json();
+                if (cancelled) return;
+                setRows(data.rows || []);
+                setError(false);
+              } catch {
+                if (!abort?.signal.aborted && !cancelled) setError(true);
+              }
+            },
+            initial ? 0 : 220,
+          );
         };
         // Show the first set of rental locations as soon as the map is ready.
         // Keep the short debounce for later pans/filters to avoid excess requests.

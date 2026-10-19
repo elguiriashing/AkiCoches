@@ -45,22 +45,22 @@ const copy = {
   },
   "/privacy": {
     es: [
-      "Privacidad",
-      "Consulta cómo AkiPasa trata tus datos y cómo gestionar tu privacidad.",
+      "Privacidad de AkiCoches",
+      "Consulta cómo AkiCoches trata los datos de cuenta y las solicitudes de alquiler.",
     ],
     en: [
-      "Privacy",
-      "Learn how AkiPasa handles your data and how to manage your privacy.",
+      "AkiCoches privacy",
+      "Learn how AkiCoches handles account data and rental requests.",
     ],
   },
   "/terms": {
     es: [
-      "Condiciones de uso",
-      "Consulta las condiciones de uso de AkiPasa para contenido, reservas y recompensas.",
+      "Condiciones de AkiCoches",
+      "Consulta las condiciones de AkiCoches para descubrir vehículos y enviar solicitudes de alquiler.",
     ],
     en: [
-      "Terms of use",
-      "Read the AkiPasa terms of use for content, bookings and rewards.",
+      "AkiCoches terms",
+      "Read the AkiCoches terms for discovering vehicles and sending rental requests.",
     ],
   },
 } as const;

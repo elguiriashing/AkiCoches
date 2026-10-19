@@ -1,9 +1,42 @@
 import { spainLocations } from "./locations";
 
-const mgmt=process.env.NEXT_PUBLIC_BUSINESS_URL;
-const ops=process.env.NEXT_PUBLIC_CRM_URL;
-const managementUrl=!mgmt||mgmt.replace(/\/$/,"")==="https://akibusiness.com"?"https://akihq.app":mgmt;
-const operationsUrl=!ops||ops.replace(/\/$/,"")==="https://akihq.app"?"https://akibusiness.com":ops;
+export function resolveProductOrigin(
+  value: string | undefined,
+  legacyOrigin: string,
+  canonicalOrigin: string,
+) {
+  if (!value || value.replace(/\/$/, "") === legacyOrigin)
+    return canonicalOrigin;
+  try {
+    const url = new URL(value);
+    const loopback = ["localhost", "127.0.0.1"].includes(url.hostname);
+    if (
+      (url.protocol !== "https:" && !(loopback && url.protocol === "http:")) ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      url.pathname !== "/"
+    )
+      return canonicalOrigin;
+    return url.origin;
+  } catch {
+    return canonicalOrigin;
+  }
+}
+
+// Environment names are historical. Public product roles are now fixed:
+// free listing/fleet management lives in AkiHQ; paid operations live in AkiBusiness.
+const managementUrl = resolveProductOrigin(
+  process.env.NEXT_PUBLIC_BUSINESS_URL,
+  "https://akibusiness.com",
+  "https://akihq.app",
+);
+const operationsUrl = resolveProductOrigin(
+  process.env.NEXT_PUBLIC_CRM_URL,
+  "https://akihq.app",
+  "https://akibusiness.com",
+);
 export const config = {
   productName: process.env.NEXT_PUBLIC_PRODUCT_NAME || "AkiCoches",
   wordmark: "AkiCoches",

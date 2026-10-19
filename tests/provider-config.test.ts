@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import nextConfig from "../next.config";
+import { resolveProductOrigin } from "../src/lib/config";
 describe("shared Supabase canonical project and existing alias transport", () => {
   it("allows both exact known HTTPS storage origins for rental media", () => {
     const patterns = nextConfig.images?.remotePatterns || [];
@@ -33,5 +34,46 @@ describe("shared Supabase canonical project and existing alias transport", () =>
         `wss://${hostname}`,
       );
     }
+  });
+});
+
+describe("AkiSuite management and operations origins", () => {
+  it("maps historical defaults to the current product roles", () => {
+    expect(
+      resolveProductOrigin(
+        "https://akibusiness.com",
+        "https://akibusiness.com",
+        "https://akihq.app",
+      ),
+    ).toBe("https://akihq.app");
+    expect(
+      resolveProductOrigin(
+        "https://akihq.app",
+        "https://akihq.app",
+        "https://akibusiness.com",
+      ),
+    ).toBe("https://akibusiness.com");
+  });
+
+  it("preserves safe preview origins and rejects credentialed or pathful URLs", () => {
+    expect(
+      resolveProductOrigin(
+        "https://preview.example.test/",
+        "https://legacy.example.test",
+        "https://canonical.example.test",
+      ),
+    ).toBe("https://preview.example.test");
+    for (const candidate of [
+      "https://user:secret@example.test",
+      "https://example.test/path",
+      "javascript:alert(1)",
+    ])
+      expect(
+        resolveProductOrigin(
+          candidate,
+          "https://legacy.example.test",
+          "https://canonical.example.test",
+        ),
+      ).toBe("https://canonical.example.test");
   });
 });
