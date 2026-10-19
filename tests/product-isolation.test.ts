@@ -9,6 +9,7 @@ import {
   safeConduzcoDestination,
 } from "../src/lib/akiconduzco-routing";
 import { POST } from "../src/app/api/car-rentals/bookings/route";
+import { readFileSync } from "node:fs";
 describe("AkiCoches isolated identity and booking boundary", () => {
   afterEach(() => {
     delete process.env.AKISUITE_ALLOWED_PREVIEW_ORIGINS;
@@ -64,6 +65,12 @@ describe("AkiCoches isolated identity and booking boundary", () => {
     expect(conduzcoHostRoute("/api/stripe/webhook").kind).toBe("reject");
     expect(conduzcoHostRoute("/en/terms").kind).toBe("public");
     expect(conduzcoHostRoute("/es/privacy").kind).toBe("public");
+  });
+  it("does not publish a directly guessed company page without an active fleet", () => {
+    const rentalPage = readFileSync("src/app/rentals/[slug]/page.tsx", "utf8");
+    expect(rentalPage).toContain(
+      "if (error || listings.length === 0) notFound()",
+    );
   });
   it("rejects cross-origin booking before credentials or database access", async () => {
     const response = await POST(
