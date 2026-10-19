@@ -1,8 +1,16 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 
 import { renderSitemap } from "@/lib/sitemap";
 
 describe("AkiCoches sitemap", () => {
+  it("only discovers published branches backed by an active fleet", () => {
+    const route = readFileSync("src/app/sitemap.xml/route.ts", "utf8");
+    expect(route).toContain("car_rental_vehicles!inner(id)");
+    expect(route).toContain('.eq("status", "published")');
+    expect(route).toContain('.eq("vehicles.status", "active")');
+  });
+
   it("publishes standalone discovery routes and rental details", () => {
     const sitemap = renderSitemap([
       {

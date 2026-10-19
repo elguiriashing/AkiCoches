@@ -7,16 +7,26 @@ export async function GET() {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("car_rental_companies")
-    .select("slug,updated_at")
+    .select("slug,updated_at,vehicles:car_rental_vehicles!inner(id)")
     .eq("status", "published")
+    .eq("vehicles.status", "active")
     .order("updated_at", { ascending: false })
     .limit(5_000);
 
   const rentals = error
     ? []
-    : (data ?? []).filter(
-        (rental): rental is RentalSitemapEntry =>
-          typeof rental.slug === "string" && rental.slug.length > 0,
+    : (data ?? []).flatMap((rental): RentalSitemapEntry[] =>
+        typeof rental.slug === "string" && rental.slug.length > 0
+          ? [
+              {
+                slug: rental.slug,
+                updated_at:
+                  typeof rental.updated_at === "string"
+                    ? rental.updated_at
+                    : null,
+              },
+            ]
+          : [],
       );
 
   return new Response(renderSitemap(rentals), {
