@@ -68,7 +68,7 @@ try {
         });
         if (
           (await operations.getAttribute("href")) !==
-          `https://akibusiness.com/?lang=${locale}`
+          `https://akibusiness.com/?locale=${locale}`
         )
           throw new Error("operations handoff changed");
         const headingColor = await page
