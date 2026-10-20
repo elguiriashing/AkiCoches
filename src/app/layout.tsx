@@ -1,3 +1,5 @@
+import { optionalUser } from "@/lib/auth";
+import { accountFeaturesAllowed } from "@/lib/account-eligibility";
 import "./globals.css";
 import "./compact-app.css";
 import "./brand.css";
@@ -40,6 +42,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  let trackingAllowed = true;
+  if (process.env.AKISUITE_ONBOARDING_SCHEMA_READY === "true") {
+    try {
+      const { supabase, user } = await optionalUser();
+      if (user) trackingAllowed = await accountFeaturesAllowed(supabase);
+    } catch {
+      trackingAllowed = false;
+    }
+  }
+
   const locale =
     (await headers()).get("x-akipasa-locale") === "en" ? "en" : "es";
   return (
@@ -48,7 +60,7 @@ export default async function RootLayout({
         <PwaRegistration />
         <ThemeManager />
         {children}
-        <ConsentAnalytics />
+        <ConsentAnalytics trackingAllowed={trackingAllowed} />
         <PersonalisationConsent locale={locale} />
       </body>
     </html>

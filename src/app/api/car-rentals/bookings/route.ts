@@ -1,3 +1,4 @@
+import { accountFeaturesAllowed } from "@/lib/account-eligibility";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { z } from "zod";
 import { validDate } from "@/lib/akiconduzco";
@@ -43,6 +44,11 @@ export async function GET() {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user)
     return Response.json({ error: "sign_in_required" }, { status: 401 });
+  if (!(await accountFeaturesAllowed(supabase)))
+    return Response.json(
+      { error: "account_completion_required" },
+      { status: 403, headers: { "Cache-Control": "private, no-store" } },
+    );
   const { data, error } = await supabase
     .from("car_rental_bookings")
     .select(
@@ -72,6 +78,11 @@ export async function POST(request: Request) {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user)
     return Response.json({ error: "sign_in_required" }, { status: 401 });
+  if (!(await accountFeaturesAllowed(supabase)))
+    return Response.json(
+      { error: "account_completion_required" },
+      { status: 403, headers: { "Cache-Control": "private, no-store" } },
+    );
   if (!auth.user.email || !auth.user.email_confirmed_at)
     return Response.json({ error: "verified_email_required" }, { status: 403 });
   if (input.data.email.toLowerCase() !== auth.user.email.toLowerCase())
