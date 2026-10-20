@@ -1,5 +1,6 @@
 "use client";
 
+import { BusinessPathway } from "./BusinessPathway";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -512,16 +513,7 @@ export function AkiConduzco({
             <p>{t.emptyNote}</p>
           </div>
         )}
-        <section className={styles.businessIntro}>
-          <strong>{t.operator}</strong>
-          <p>{t.operatorNote}</p>
-          <Link
-            className={styles.button}
-            href={`https://akihq.app/${locale}/business`}
-          >
-            {t.operatorLink}
-          </Link>
-        </section>
+        <BusinessPathway locale={locale} category="rental" />
         <footer className={styles.footer}>
           <span>{t.family} · AkiPasa × AkiDuermo × AkiCoches</span>
           <span>
