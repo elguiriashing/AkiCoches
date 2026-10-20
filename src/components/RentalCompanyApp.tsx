@@ -1,5 +1,6 @@
 "use client";
 
+import { BusinessPathway } from "./BusinessPathway";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -858,6 +859,7 @@ export function RentalCompanyApp({
             </section>
           </div>
         )}
+        <BusinessPathway locale={locale} category="rental" />
       </main>
     </div>
   );

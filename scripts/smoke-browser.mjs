@@ -28,20 +28,6 @@ try {
         if (response?.status() !== 200)
           throw new Error(`home ${response?.status()}`);
         await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
-        await page
-          .getByRole("link", {
-            name: locale === "es" ? "Abrir AkiHQ" : "Open AkiHQ",
-          })
-          .waitFor();
-        if (
-          (await page
-            .getByRole("link", {
-              name: locale === "es" ? "Abrir AkiHQ" : "Open AkiHQ",
-            })
-            .getAttribute("href")) !==
-          `https://akihq.app/${locale}/business`
-        )
-          throw new Error("fleet handoff changed");
         await page.waitForFunction(() =>
           Boolean(document.documentElement.dataset.theme),
         );
@@ -57,6 +43,34 @@ try {
         await closeConsent.waitFor({ state: "visible" });
         await closeConsent.click();
         await closeConsent.waitFor({ state: "hidden" });
+        // The acquisition pathway is deliberately disclosed by the user, not an
+        // always-visible duplicate fleet button. Verify the new interaction and
+        // both canonical product roles after privacy controls are dismissed.
+        await page
+          .getByText(
+            locale === "es" ? "¿Gestionas un negocio?" : "Run a business?",
+            { exact: true },
+          )
+          .click();
+        const management = page.getByRole("link", {
+          name: locale === "es" ? "Abrir AkiHQ gratis" : "Open free AkiHQ",
+          exact: true,
+        });
+        await management.waitFor();
+        if (
+          (await management.getAttribute("href")) !==
+          `https://akihq.app/${locale}/business`
+        )
+          throw new Error("fleet handoff changed");
+        const operations = page.getByRole("link", {
+          name: locale === "es" ? "Abrir AkiBusiness" : "Open AkiBusiness",
+          exact: true,
+        });
+        if (
+          (await operations.getAttribute("href")) !==
+          `https://akibusiness.com/?locale=${locale}`
+        )
+          throw new Error("operations handoff changed");
         const headingColor = await page
           .locator("h1")
           .evaluate((el) => getComputedStyle(el).color);
