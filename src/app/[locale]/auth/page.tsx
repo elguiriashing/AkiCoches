@@ -1,3 +1,4 @@
+import { suiteHref } from "@/lib/suite-navigation";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { config, isLocale } from "@/lib/config";
@@ -158,7 +159,7 @@ export default async function AuthPage({
             </a>
             <a
               className={`auth-product-card ${isBusinessHost ? "active" : ""}`}
-              href={`${config.businessUrl}/${locale}/auth?next=/${locale}/business`}
+              href={suiteHref("hq", locale, { path: "/auth" })}
             >
               <i
                 className="auth-product-dot auth-product-dot-business"
@@ -168,7 +169,10 @@ export default async function AuthPage({
                 <strong>AkiHQ</strong>
               </span>
             </a>
-            <a className="auth-product-card" href={config.crmUrl}>
+            <a
+              className="auth-product-card"
+              href={suiteHref("business", locale)}
+            >
               <i
                 className="auth-product-dot auth-product-dot-hq"
                 aria-hidden="true"

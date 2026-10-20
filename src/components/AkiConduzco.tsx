@@ -14,6 +14,8 @@ import styles from "./AkiConduzco.module.css";
 import { ThemeToggle } from "./ThemeModeControls";
 import { signOut } from "@/app/[locale]/auth/actions";
 import { RasterRentalMap } from "./RasterRentalMap";
+import { useSuiteReferral } from "./useSuiteReferral";
+import { suiteHref } from "@/lib/suite-navigation";
 import { conduzcoLanguageUrl } from "@/lib/akiconduzco-routing";
 import {
   rentalCategories,
@@ -110,6 +112,7 @@ const copy = {
 };
 
 export function ConduzcoHeader({ locale }: { locale: Locale }) {
+  const referralCode = useSuiteReferral();
   const t = copy[locale];
   function switchLocale() {
     const next = locale === "en" ? "es" : "en";
@@ -184,14 +187,14 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
               {
                 id: "pasa",
                 name: "AkiPasa",
-                url: `https://akipasa.com/${locale}`,
+                url: suiteHref("pasa", locale, { referralCode }),
                 icon: "/brand/pasa-mark.svg",
                 tone: "#F26B1D",
               },
               {
                 id: "duermo",
                 name: "AkiDuermo",
-                url: `https://akiduermo.com/?lang=${locale}`,
+                url: suiteHref("duermo", locale, { referralCode }),
                 icon: "/brand/duermo-mark.svg",
                 tone: "#2FC2A5",
               },
@@ -205,14 +208,14 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
               {
                 id: "hq",
                 name: "AkiHQ",
-                url: "https://akihq.app",
+                url: suiteHref("hq", locale, { referralCode }),
                 icon: "/brand/hq-mark.svg",
                 tone: "#FFC533",
               },
               {
                 id: "business",
                 name: "AkiBusiness",
-                url: "https://akibusiness.com",
+                url: suiteHref("business", locale, { referralCode }),
                 icon: "/brand/business-mark.svg",
                 tone: "#9A70FA",
               },
@@ -251,6 +254,19 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
                 </button>
               </form>
             </div>
+            {referralCode && (
+              <a
+                className={styles.suiteLink}
+                href={suiteHref("pasa", locale, {
+                  path: "/referrals",
+                  referralCode,
+                })}
+              >
+                {locale === "es"
+                  ? "Aplicar invitación de referido"
+                  : "Apply referral invitation"}
+              </a>
+            )}
           </div>
         </details>
       </nav>
