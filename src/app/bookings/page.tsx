@@ -7,7 +7,7 @@ export default async function RentalBookingsAlias({
   searchParams,
 }: {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
-} = {}) {
+}) {
   const locale = conduzcoLocale((await headers()).get("x-akipasa-locale"));
   const task =
     accountTaskFromSearch(
