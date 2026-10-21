@@ -14,8 +14,8 @@ describe("AkiCoches memberships", () => {
     );
     expect(experience).toContain("AkiHQ");
     expect(experience).toContain("AkiCoches");
-    expect(experience).toContain("AkiBusiness Básico");
     expect(experience).toContain("AkiBusiness Standard");
+    expect(experience).toContain("AkiBusiness Plus");
     expect(experience).toContain("AkiBusiness Pro");
     expect(experience).toContain("Choose 4 of 12 operating tools");
     expect(experience).toContain("Choose 8 of 12 operating tools");
@@ -44,8 +44,8 @@ for (const locale of ["en", "es"] as const) {
     const cards = html.match(/<article\b[\s\S]*?<\/article>/g) ?? [];
     expect(cards).toHaveLength(5);
     for (const [name, cents, tools, replacements] of [
-      ["Básico", 2499, locale === "es" ? "4 de 12" : "4 of 12", "1"],
-      ["Standard", 4499, locale === "es" ? "8 de 12" : "8 of 12", "2"],
+      ["Standard", 2499, locale === "es" ? "4 de 12" : "4 of 12", "1"],
+      ["Plus", 4499, locale === "es" ? "8 de 12" : "8 of 12", "2"],
       [
         "Pro",
         6499,
@@ -66,7 +66,7 @@ for (const locale of ["en", "es"] as const) {
       );
     }
     expect(html.replace(/<[^>]+>/g, "")).not.toMatch(
-      /AkiBusiness Plus|Most popular|Más elegido|20\s?%/,
+      /Most popular|Más elegido|20\s?%/,
     );
     expect(html).not.toContain("aria-pressed=");
     expect(html).toContain(locale === "es" ? "8 herramientas" : "8 tools");

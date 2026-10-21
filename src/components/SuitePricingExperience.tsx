@@ -241,12 +241,12 @@ export function SuitePricingExperience({
       benefits: es ? app.listingEs : app.listingEn,
     },
     basico: {
-      name: "AkiBusiness Básico",
+      name: "AkiBusiness Standard",
       label: es ? "Operaciones" : "Operations",
       benefits: basicoFeatures[locale],
     },
     standard: {
-      name: "AkiBusiness Standard",
+      name: "AkiBusiness Plus",
       label: es ? "Más capacidad" : "More capacity",
       benefits: standardFeatures[locale],
     },
@@ -378,8 +378,10 @@ export function SuitePricingExperience({
                   : offer === "listing"
                     ? "Premium"
                     : offer === "basico"
-                      ? "Básico"
-                      : offer[0].toUpperCase() + offer.slice(1)}
+                      ? "Standard"
+                      : offer === "standard"
+                        ? "Plus"
+                        : offer[0].toUpperCase() + offer.slice(1)}
               </button>
             ))}
           </div>
