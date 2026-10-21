@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/maplibre-attribution-patch.mjs --check && next dev",
+    "dev": "next dev --webpack",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
@@ -11,7 +11,7 @@
     "preview:cloudflare": "npm run build:cloudflare && opennextjs-cloudflare preview",
     "deploy:cloudflare": "npm run build:cloudflare && opennextjs-cloudflare deploy",
     "postinstall": "node scripts/maplibre-attribution-patch.mjs",
-    "build": "node scripts/maplibre-attribution-patch.mjs --check && next build",
+    "build": "node scripts/maplibre-attribution-patch.mjs --check && next build --webpack",
     "test": "vitest run tests/business-pathway.test.tsx tests/suite-referral.test.tsx tests/suite-selector.test.tsx --environment node tests/rental-company-app.test.tsx tests/akiconduzco.test.ts tests/auth-security.test.ts tests/product-isolation.test.ts tests/booking-boundary.test.ts tests/middleware.test.ts tests/provider-config.test.ts tests/map-fallback.test.tsx tests/map-webgl-pins.test.tsx tests/logout-scope.test.ts tests/cross-product-query.test.ts tests/rental-covers.test.ts tests/membership-storefront.test.ts tests/akisuite-rollout.test.ts tests/sitemap.test.ts && node --test scripts/maplibre-attribution-patch.test.mjs deployment/akiautos-redirect/akiautos-worker.test.mjs && npm run test:suite-navigation && vitest run --config vitest.onboarding.config.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "predev": "node scripts/generate-brand-icons.mjs",
@@ -24,7 +24,7 @@
     "@supabase/supabase-js": "2.110.8",
     "clsx": "2.1.1",
     "maplibre-gl": "5.12.0",
-    "next": "15.5.28",
+    "next": "16.4.2",
     "pdfjs-dist": "5.4.296",
     "qrcode": "1.5.4",
     "react": "19.1.10",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.3.14",
-    "@opennextjs/cloudflare": "^1.20.2",
+    "@opennextjs/cloudflare": "1.20.12",
     "@playwright/test": "1.61.1",
     "@tailwindcss/postcss": "4.1.7",
     "@testing-library/jest-dom": "6.6.3",
@@ -43,7 +43,7 @@
     "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",
     "eslint": "9.27.0",
-    "eslint-config-next": "15.5.28",
+    "eslint-config-next": "16.4.2",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "26.1.0",
     "postgres": "^3.4.7",
@@ -52,7 +52,7 @@
     "tailwindcss": "4.1.7",
     "typescript": "5.8.3",
     "vitest": "3.2.7",
-    "wrangler": "^4.113.0"
+    "wrangler": "4.151.3"
   },
   "overrides": {
     "postcss": {

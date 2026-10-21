@@ -76,22 +76,30 @@ await build({
       setup(builder) {
         // This standalone browser harness runs without Next server actions.
         // Keep the real application action in production; substitute only here.
-        builder.onResolve({ filter: /\/app\/\[locale\]\/auth\/actions$/ }, () => ({
-          path: "auth-actions",
-          namespace: "fixture-auth",
-        }));
+        builder.onResolve(
+          { filter: /\/app\/\[locale\]\/auth\/actions$/ },
+          () => ({
+            path: "auth-actions",
+            namespace: "fixture-auth",
+          }),
+        );
         builder.onLoad({ filter: /.*/, namespace: "fixture-auth" }, () => ({
           contents: "export function signOut() {}",
           loader: "js",
         }));
-        builder.onResolve({ filter: /^next\/(image|link)$/ }, (args) => ({
-          path: args.path,
-          namespace: "fixture-next",
-        }));
+        builder.onResolve(
+          { filter: /^next\/(image|link|navigation)$/ },
+          (args) => ({
+            path: args.path,
+            namespace: "fixture-next",
+          }),
+        );
         builder.onLoad({ filter: /.*/, namespace: "fixture-next" }, (args) => ({
-          contents: args.path.endsWith("image")
-            ? `import React from 'react';export default function Image({src,alt,fill,width,height,style,className}){return React.createElement('img',{src,alt,width,height,className,style:{...(fill?{position:'absolute',inset:0,width:'100%',height:'100%'}:{}),...style}})}`
-            : `import React from 'react';export default function Link({href,children,...props}){return React.createElement('a',{href,...props},children)}`,
+          contents: args.path.endsWith("navigation")
+            ? `export function useRouter(){return {push(href){window.location.assign(href)}}}`
+            : args.path.endsWith("image")
+              ? `import React from 'react';export default function Image({src,alt,fill,width,height,style,className}){return React.createElement('img',{src,alt,width,height,className,style:{...(fill?{position:'absolute',inset:0,width:'100%',height:'100%'}:{}),...style}})}`
+              : `import React from 'react';export default function Link({href,children,...props}){return React.createElement('a',{href,...props},children)}`,
           loader: "js",
           resolveDir: root,
         }));

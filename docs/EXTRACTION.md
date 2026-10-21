@@ -321,3 +321,7 @@ and exact-source release checks remain required; unit fixtures do not establish
 authenticated production browser acceptance.
 
 Actual rental Account and the Bookings alias now preserve a single validated referral and bounded tab/vehicle/date task keys before the authoritative account gate. The alias retains explicit EN/ES. Repeated search values and arbitrary URLs are discarded rather than selected or decoded into redirects.
+
+## Supported runtime update — 21 October 2026
+
+Next/OpenNext build support migrated after Next15 crossed the adapter support window. Existing product/role, locale, auth, shared schema and source-stamp release contracts remain authoritative; see NEXT16_SUPPORTED_RUNTIME.md. No unsupported-version flag, runtime pin change or production configuration mutation is permitted by this source amendment.

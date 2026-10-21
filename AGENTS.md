@@ -15,3 +15,7 @@ The original AkiPasa repository, master history and live Worker must remain inta
 Shared backend project reference: `vhpbvcfkcteswlsdjrfl`; verify its configured endpoint
 and deployment role before release. Preserve the destination bootstrap contract in
 `docs/INITIAL_MIGRATION_CONTRACT.md`; never overwrite remote work or force-push.
+
+## Version-matched framework documentation
+
+For Next16 migration/runtime work, read installed `node_modules/next/dist/docs/01-app/02-guides/upgrading/version-16.md` and `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/middleware.md` when present; bundled docs match the exact installed dependency. Existing product and release contracts above still apply.

@@ -3,6 +3,7 @@
 import { BusinessPathway } from "./BusinessPathway";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ConduzcoHeader } from "./AkiConduzco";
 import { SaveRentalButton } from "./SaveRentalButton";
@@ -60,6 +61,7 @@ export function RentalCompanyApp({
   calendarReady = false,
   accountEmail = "",
 }: Props) {
+  const router = useRouter();
   const es = locale === "es";
   const today = new Date().toISOString().slice(0, 10);
   const [selectedId, setSelectedId] = useState(
@@ -207,7 +209,7 @@ export function RentalCompanyApp({
       });
       if (response.status === 401) {
         const next = `/rentals/${slug}?${new URLSearchParams({ vehicle: selected.vehicle_id, start, end, lang: locale })}`;
-        location.assign(`/${locale}/auth?next=${encodeURIComponent(next)}`);
+        router.push(`/${locale}/auth?next=${encodeURIComponent(next)}`);
         return;
       }
       if (!response.ok)

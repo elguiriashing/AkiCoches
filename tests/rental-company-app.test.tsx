@@ -15,6 +15,8 @@ import type { RentalListing } from "../src/lib/akiconduzco";
 vi.mock("../src/components/AkiConduzco", () => ({
   ConduzcoHeader: () => null,
 }));
+const navigation = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock("next/navigation", () => ({ useRouter: () => navigation }));
 const car = {
   vehicle_id: "vehicle-1",
   vehicle_name: "Mustang GT",
@@ -36,6 +38,7 @@ const car = {
   total: 1,
 } satisfies RentalListing;
 beforeEach(() => {
+  navigation.push.mockReset();
   window.localStorage.clear();
   vi.stubGlobal("React", React);
   vi.stubGlobal(
@@ -175,3 +178,49 @@ describe("company-first rental journey", () => {
     ).toBe(false);
   });
 });
+
+it.each(["en", "es"] as const)(
+  "retains %s rental dates and car in the supported client-router login handoff",
+  async (locale) => {
+    vi.mocked(fetch).mockImplementation(async (input) =>
+      String(input).includes("/bookings")
+        ? ({ ok: false, status: 401 } as Response)
+        : ({ ok: true, json: async () => ({ rows: [car] }) } as Response),
+    );
+    render(
+      <RentalCompanyApp
+        locale={locale}
+        slug="coches"
+        listings={[car]}
+        initialStart="2099-01-01"
+        initialEnd="2099-01-03"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /02/ }));
+    const button = screen.getByRole("button", {
+      name:
+        locale === "es" ? /Continuar con este coche/ : /Continue with this car/,
+    });
+    await waitFor(() => expect(button.hasAttribute("disabled")).toBe(false));
+    fireEvent.click(button);
+    const submit = screen.getByRole("button", {
+      name: locale === "es" ? /Enviar solicitud/ : /Send request/,
+    });
+    fireEvent.submit(submit.closest("form")!);
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledOnce());
+    const auth = new URL(
+      navigation.push.mock.calls[0][0],
+      "https://akicoches.com",
+    );
+    expect(auth.pathname).toBe(`/${locale}/auth`);
+    const task = new URL(auth.searchParams.get("next")!, auth.origin);
+    expect(task.origin).toBe(auth.origin);
+    expect(task.pathname).toBe("/rentals/coches");
+    expect(Object.fromEntries(task.searchParams)).toEqual({
+      vehicle: "vehicle-1",
+      start: "2099-01-01",
+      end: "2099-01-03",
+      lang: locale,
+    });
+  },
+);
