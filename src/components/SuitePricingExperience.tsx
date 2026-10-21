@@ -6,7 +6,7 @@ import styles from "./SuitePricingExperience.module.css";
 
 export type DiscoveryProduct = "akipasa" | "akiduermo" | "akicoches" | "akihq";
 type Locale = "en" | "es";
-type Offer = "hq" | "listing" | "standard" | "plus" | "pro";
+type Offer = "hq" | "listing" | "basico" | "standard" | "pro";
 
 const products = {
   akipasa: {
@@ -150,14 +150,14 @@ const products = {
   },
 } as const;
 
-const price: Record<Offer, { month: number; year: number }> = {
-  hq: { month: 0, year: 0 },
-  listing: { month: 1499, year: 14390 },
-  standard: { month: 2499, year: 23990 },
-  plus: { month: 4499, year: 43190 },
-  pro: { month: 6499, year: 62390 },
+const price: Record<Offer, number> = {
+  hq: 0,
+  listing: 1499,
+  basico: 2499,
+  standard: 4499,
+  pro: 6499,
 };
-const standardFeatures = {
+const basicoFeatures = {
   en: [
     "Choose 4 of 12 operating tools",
     "Replace 1 tool each monthly cycle",
@@ -169,7 +169,7 @@ const standardFeatures = {
     "Por ubicación, con acceso de equipo",
   ],
 };
-const plusFeatures = {
+const standardFeatures = {
   en: [
     "Choose 8 of 12 operating tools",
     "Replace 2 tools each monthly cycle",
@@ -184,12 +184,12 @@ const plusFeatures = {
 const proFeatures = {
   en: [
     "All 12 operating tools",
-    "No toolbox swaps needed",
+    "Unrestricted replacements",
     "Complete operations workspace",
   ],
   es: [
     "Las 12 herramientas operativas",
-    "Sin cambios de herramientas",
+    "Cambios sin límite",
     "Espacio de operaciones completo",
   ],
 };
@@ -224,9 +224,8 @@ export function SuitePricingExperience({
 }) {
   const es = locale === "es";
   const app = products[product];
-  const [cycle, setCycle] = useState<"month" | "year">("month");
   const [selectedOffer, setSelectedOffer] = useState<Offer>("listing");
-  const productOffers: Offer[] = ["hq", "listing", "standard", "plus", "pro"];
+  const productOffers: Offer[] = ["hq", "listing", "basico", "standard", "pro"];
   const catalogue: Record<
     Offer,
     { name: string; label: string; benefits: readonly string[] }
@@ -241,15 +240,15 @@ export function SuitePricingExperience({
       label: es ? "Más visibilidad" : "More visibility",
       benefits: es ? app.listingEs : app.listingEn,
     },
+    basico: {
+      name: "AkiBusiness Básico",
+      label: es ? "Operaciones" : "Operations",
+      benefits: basicoFeatures[locale],
+    },
     standard: {
       name: "AkiBusiness Standard",
-      label: es ? "Operaciones" : "Operations",
-      benefits: standardFeatures[locale],
-    },
-    plus: {
-      name: "AkiBusiness Plus",
       label: es ? "Más capacidad" : "More capacity",
-      benefits: plusFeatures[locale],
+      benefits: standardFeatures[locale],
     },
     pro: {
       name: "AkiBusiness Pro",
@@ -359,25 +358,6 @@ export function SuitePricingExperience({
                   : "Only the plans that make sense for this product."}
               </p>
             </div>
-            <fieldset className={styles.billingSwitch}>
-              <legend>{es ? "Facturación" : "Billing"}</legend>
-              <div>
-                <button
-                  type="button"
-                  aria-pressed={cycle === "month"}
-                  onClick={() => setCycle("month")}
-                >
-                  {es ? "Mensual" : "Monthly"}
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={cycle === "year"}
-                  onClick={() => setCycle("year")}
-                >
-                  {es ? "Anual" : "Yearly"} <small>−20%</small>
-                </button>
-              </div>
-            </fieldset>
           </div>
           <div
             className={styles.planTabs}
@@ -397,7 +377,9 @@ export function SuitePricingExperience({
                   ? "Free"
                   : offer === "listing"
                     ? "Premium"
-                    : offer[0].toUpperCase() + offer.slice(1)}
+                    : offer === "basico"
+                      ? "Básico"
+                      : offer[0].toUpperCase() + offer.slice(1)}
               </button>
             ))}
           </div>
@@ -406,8 +388,8 @@ export function SuitePricingExperience({
             {productOffers.map((offer) => {
               const item = catalogue[offer];
               const free = offer === "hq";
-              const featured = offer === "plus";
-              const amount = price[offer][cycle];
+              const featured = offer === "standard";
+              const amount = price[offer];
               return (
                 <article
                   id={`suite-${offer}`}
@@ -424,9 +406,9 @@ export function SuitePricingExperience({
                         ? "⌂"
                         : offer === "listing"
                           ? "◈"
-                          : offer === "standard"
+                          : offer === "basico"
                             ? "▦"
-                            : offer === "plus"
+                            : offer === "standard"
                               ? "✦"
                               : offer === "pro"
                                 ? "✳"
@@ -435,7 +417,7 @@ export function SuitePricingExperience({
                     <span className={styles.cardType}>{item.label}</span>
                     {featured && (
                       <span className={styles.recommended}>
-                        {es ? "Más elegido" : "Most popular"}
+                        {es ? "8 herramientas" : "8 tools"}
                       </span>
                     )}
                   </div>
@@ -462,31 +444,16 @@ export function SuitePricingExperience({
                           : "Free"
                         : formatCents(amount, locale)}
                     </strong>
-                    {!free && (
-                      <span>
-                        /
-                        {cycle === "year"
-                          ? es
-                            ? "año"
-                            : "year"
-                          : es
-                            ? "mes"
-                            : "month"}
-                      </span>
-                    )}
+                    {!free && <span>/{es ? "mes" : "month"}</span>}
                   </div>
                   <p className={styles.cycleInfo}>
                     {free
                       ? es
                         ? "Sin tarjeta y sin suscripción."
                         : "No card and no subscription required."
-                      : cycle === "year"
-                        ? es
-                          ? "Equivale al 20 % de descuento anual."
-                          : "20% off compared with 12 monthly payments."
-                        : es
-                          ? "También disponible con pago anual."
-                          : "Annual billing available at 20% off."}
+                      : es
+                        ? "Importe mensual."
+                        : "Monthly amount."}
                   </p>
                   <div className={styles.planDivider} />
                   <ul className={styles.features}>
@@ -533,8 +500,13 @@ export function SuitePricingExperience({
           </div>
           <p className={styles.footerNote}>
             {es
-              ? "Los precios son los del catálogo de lanzamiento previsto, antes de impuestos aplicables. No se realiza ningún cobro desde esta pantalla. Las suscripciones anteriores siguen disponibles desde Mis suscripciones."
-              : "These are staged launch prices before applicable taxes. This page does not collect payment. Existing subscriptions remain manageable under My subscriptions."}
+              ? "Tu selección activa permite trabajar ahora. Los cambios guardados se aplican en la próxima rotación mensual, también para las suscripciones anuales existentes. Puedes delegar las herramientas activas al equipo al instante. Listing Premium y las herramientas operativas son suscripciones distintas."
+              : "Your active toolbox is available now. Saved changes apply at the next monthly rotation, including existing annual subscriptions. Delegate active tools to staff instantly. Listing Premium and operating tools are separate subscriptions."}
+          </p>
+          <p className={styles.footerNote}>
+            {es
+              ? "Importes mensuales. Los impuestos aplicables se confirman antes del pago. No se realiza ningún cobro desde esta pantalla. Las suscripciones anteriores siguen disponibles desde Mis suscripciones."
+              : "Monthly amounts. Applicable taxes are confirmed before payment. This page does not collect payment. Existing subscriptions remain manageable under My subscriptions."}
           </p>
         </section>
       </div>
