@@ -301,3 +301,27 @@ provenance and no sibling-checkout imports.
 Validation: new five-case rendered/interaction/consent suite; full source gates
 and responsive/provider acceptance remain tracked in the release report. Revert
 these source commits for rollback; no data restoration is required.
+
+## 2026-10-20 | Validated referral task completion
+
+Account completion preserves a single public referral code matching the existing
+uppercase alphanumeric 8–24 character navigation bound. The canonical public
+`/{locale}/referrals?ref=CODE` task returns to AkiPasa's explicit confirmation page;
+other allowed product tasks retain their validated code and EN/ES choice through
+the same fixed-origin resume envelope. Duplicate, URL-shaped, lowercase and
+out-of-range codes are discarded. Direct unprefixed AkiPasa referral completion
+uses this same sanitizer rather than falling back to Account.
+
+This changes navigation only: pending/underage restrictions, legal and tracking
+choices, first-attribution immutability and the explicit confirmation action remain
+authoritative. No automatic attribution, referral cookie, identity transfer, schema,
+financial incentive or production write is introduced. Shared contract copies and
+role-controller regressions cover all five products and both languages. Hosted CI
+and exact-source release checks remain required; unit fixtures do not establish
+authenticated production browser acceptance.
+
+Actual rental Account and the Bookings alias now preserve a single validated referral and bounded tab/vehicle/date task keys before the authoritative account gate. The alias retains explicit EN/ES. Repeated search values and arbitrary URLs are discarded rather than selected or decoded into redirects.
+
+## Supported runtime update — 21 October 2026
+
+Next/OpenNext build support migrated after Next15 crossed the adapter support window. Existing product/role, locale, auth, shared schema and source-stamp release contracts remain authoritative; see NEXT16_SUPPORTED_RUNTIME.md. No unsupported-version flag, runtime pin change or production configuration mutation is permitted by this source amendment.

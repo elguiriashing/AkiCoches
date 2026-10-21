@@ -1,3 +1,4 @@
+import { accountTaskFromSearch } from "@/lib/account-task-resume";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { signOut } from "@/app/[locale]/auth/actions";
@@ -45,8 +46,11 @@ export default async function RenterAccountPage({
 }) {
   const locale = conduzcoLocale((await headers()).get("x-akipasa-locale"));
   const es = locale === "es";
-  const { supabase, user } = await requireUser(locale, "/account");
   const params = await searchParams;
+  const { supabase, user } = await requireUser(
+    locale,
+    accountTaskFromSearch("coches", locale, "/account", params),
+  );
   const filter =
     params.tab === "upcoming" ||
     params.tab === "history" ||
