@@ -1,5 +1,21 @@
 # Extraction contract
 
+## 2026-10-21 | Compact five-plan membership studio
+
+The public membership page has one consistent commercial ladder: free AkiHQ,
+AkiCoches Premium, and AkiBusiness Standard/Plus/Pro. Public sector/tool
+configurators and Enterprise/personal cards are removed from this comparison.
+Standard communicates 4 of 12 tools with one replacement per monthly cycle,
+Plus 8 of 12 with two, and Pro all 12. Annual customers retain the same monthly
+anniversary rotation; billing frequency changes price, not toolbox rules.
+
+Mobile and tablet use five concise plan tabs with one visible sales panel;
+desktop uses the same five plans in one comparison row. Checkout remains closed
+and every paid CTA is an availability enquiry. No Stripe product, entitlement,
+RLS, identity, rental booking, customer record or deployment mapping changes.
+The authenticated AkiBusiness toolbox remains the only place to save active and
+next-cycle tool selections.
+
 ## 2026-10-20 | Device-local saved rental shortlist
 
 Customers can save and remove a published vehicle from the rental-company app and

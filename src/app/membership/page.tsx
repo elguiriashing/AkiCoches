@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { SuitePricingExperience } from "@/components/SuitePricingExperience";
-import { personalPremiumVisible } from "@/lib/akisuite-rollout";
 import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +17,6 @@ export default async function MembershipPage() {
     <SuitePricingExperience
       locale={locale}
       product="akicoches"
-      personalUnlocked={await personalPremiumVisible()}
       logo="/brand/conduzco-icon.svg"
     />
   );

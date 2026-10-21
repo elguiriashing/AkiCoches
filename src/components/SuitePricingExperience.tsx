@@ -6,76 +6,7 @@ import styles from "./SuitePricingExperience.module.css";
 
 export type DiscoveryProduct = "akipasa" | "akiduermo" | "akicoches" | "akihq";
 type Locale = "en" | "es";
-type Sector =
-  | "hospitality"
-  | "nightlife"
-  | "accommodation"
-  | "mobility"
-  | "retail"
-  | "services";
-type Offer = "personal" | "listing" | "standard" | "pro" | "enterprise";
-
-const sectors: {
-  id: Sector;
-  en: string;
-  es: string;
-  focus: { en: string; es: string };
-}[] = [
-  {
-    id: "hospitality",
-    en: "Restaurants & bars",
-    es: "Restaurantes y bares",
-    focus: {
-      en: "Orders, shifts and guest relationships",
-      es: "Pedidos, turnos y relación con clientes",
-    },
-  },
-  {
-    id: "nightlife",
-    en: "Events & nightlife",
-    es: "Eventos y ocio nocturno",
-    focus: {
-      en: "Events, teams and customer engagement",
-      es: "Eventos, equipos y fidelización",
-    },
-  },
-  {
-    id: "accommodation",
-    en: "Accommodation",
-    es: "Alojamientos",
-    focus: {
-      en: "Reservations, operations and reporting",
-      es: "Reservas, operaciones e informes",
-    },
-  },
-  {
-    id: "mobility",
-    en: "Car rental",
-    es: "Alquiler de coches",
-    focus: {
-      en: "Fleet workflows, teams and customers",
-      es: "Flotas, equipos y clientes",
-    },
-  },
-  {
-    id: "retail",
-    en: "Shops & retail",
-    es: "Tiendas y comercios",
-    focus: {
-      en: "Inventory, sales and customer records",
-      es: "Inventario, ventas y clientes",
-    },
-  },
-  {
-    id: "services",
-    en: "Services & studios",
-    es: "Servicios y estudios",
-    focus: {
-      en: "Bookings, tasks and client relationships",
-      es: "Reservas, tareas y relación con clientes",
-    },
-  },
-];
+type Offer = "hq" | "listing" | "standard" | "plus" | "pro";
 
 const products = {
   akipasa: {
@@ -219,49 +150,59 @@ const products = {
   },
 } as const;
 
-const price: Record<
-  Exclude<Offer, "enterprise">,
-  { month: number; year: number }
-> = {
-  personal: { month: 199, year: 1910 },
+const price: Record<Offer, { month: number; year: number }> = {
+  hq: { month: 0, year: 0 },
   listing: { month: 1499, year: 14390 },
   standard: { month: 2499, year: 23990 },
+  plus: { month: 4499, year: 43190 },
   pro: { month: 6499, year: 62390 },
 };
 const standardFeatures = {
   en: [
-    "Daily operations workspace",
-    "Tasks, staff and business overview",
-    "Structured management tools",
+    "Choose 4 of 12 operating tools",
+    "Replace 1 tool each monthly cycle",
+    "Per location, with team access",
   ],
   es: [
-    "Espacio para las operaciones diarias",
-    "Tareas, equipo y visión general",
-    "Herramientas de gestión organizadas",
+    "Elige 4 de 12 herramientas",
+    "Cambia 1 cada ciclo mensual",
+    "Por ubicación, con acceso de equipo",
+  ],
+};
+const plusFeatures = {
+  en: [
+    "Choose 8 of 12 operating tools",
+    "Replace 2 tools each monthly cycle",
+    "More room for growing teams",
+  ],
+  es: [
+    "Elige 8 de 12 herramientas",
+    "Cambia 2 cada ciclo mensual",
+    "Más capacidad para equipos en crecimiento",
   ],
 };
 const proFeatures = {
   en: [
-    "Everything in Standard",
-    "Point of sale and inventory",
-    "Advanced operations and team workflows",
+    "All 12 operating tools",
+    "No toolbox swaps needed",
+    "Complete operations workspace",
   ],
   es: [
-    "Todo lo de Standard",
-    "TPV e inventario",
-    "Operaciones avanzadas y equipos",
+    "Las 12 herramientas operativas",
+    "Sin cambios de herramientas",
+    "Espacio de operaciones completo",
   ],
 };
-const enterpriseFeatures = {
+const hqFeatures = {
   en: [
-    "Premium across AkiSuite discovery products",
-    "Business listing upgrades",
-    "Advanced AkiBusiness operations",
+    "Listings, locations and teams",
+    "One free management hub",
+    "Upgrade only when you need operations",
   ],
   es: [
-    "Premium en los productos de AkiSuite",
-    "Mejoras para anuncios de empresas",
-    "Operaciones avanzadas de AkiBusiness",
+    "Fichas, ubicaciones y equipos",
+    "Un centro de gestión gratuito",
+    "Mejora solo cuando necesites operaciones",
   ],
 };
 
@@ -275,47 +216,29 @@ function formatCents(cents: number, locale: Locale) {
 export function SuitePricingExperience({
   locale,
   product,
-  personalUnlocked,
   logo,
 }: {
   locale: Locale;
   product: DiscoveryProduct;
-  personalUnlocked: boolean;
   logo?: string;
 }) {
   const es = locale === "es";
   const app = products[product];
   const [cycle, setCycle] = useState<"month" | "year">("month");
-  const [sector, setSector] = useState<Sector>("hospitality");
-  const selectedSector =
-    sectors.find((item) => item.id === sector) || sectors[0];
-  const productOffers =
-    product === "akihq"
-      ? (["listing", "standard", "pro", "enterprise"] as Offer[])
-      : ([
-          ...(personalUnlocked ? (["personal"] as Offer[]) : []),
-          "listing",
-          "standard",
-          "pro",
-          "enterprise",
-        ] as Offer[]);
+  const [selectedOffer, setSelectedOffer] = useState<Offer>("listing");
+  const productOffers: Offer[] = ["hq", "listing", "standard", "plus", "pro"];
   const catalogue: Record<
     Offer,
     { name: string; label: string; benefits: readonly string[] }
   > = {
-    personal: {
-      name: `${app.name} Premium`,
-      label: es ? "Para ti" : "For you",
-      benefits: es ? app.personalEs : app.personalEn,
+    hq: {
+      name: "AkiHQ",
+      label: es ? "Gestión gratis" : "Free management",
+      benefits: hqFeatures[locale],
     },
     listing: {
-      name:
-        product === "akihq"
-          ? es
-            ? "Premium para empresas"
-            : "Premium for businesses"
-          : `${app.name} Premium ${es ? "para empresas" : "for Businesses"}`,
-      label: es ? "Para empresas" : "For businesses",
+      name: `${app.name} Premium`,
+      label: es ? "Más visibilidad" : "More visibility",
       benefits: es ? app.listingEs : app.listingEn,
     },
     standard: {
@@ -323,15 +246,15 @@ export function SuitePricingExperience({
       label: es ? "Operaciones" : "Operations",
       benefits: standardFeatures[locale],
     },
+    plus: {
+      name: "AkiBusiness Plus",
+      label: es ? "Más capacidad" : "More capacity",
+      benefits: plusFeatures[locale],
+    },
     pro: {
       name: "AkiBusiness Pro",
       label: es ? "Operaciones avanzadas" : "Advanced operations",
       benefits: proFeatures[locale],
-    },
-    enterprise: {
-      name: "AkiEnterprise",
-      label: es ? "Toda la suite" : "Complete suite",
-      benefits: enterpriseFeatures[locale],
     },
   };
   const offerEmail = (offer: Offer) =>
@@ -456,70 +379,63 @@ export function SuitePricingExperience({
               </div>
             </fieldset>
           </div>
-          <div className={styles.sectorBar}>
-            <div className={styles.sectorHeading}>
-              <span className={styles.sectorIcon} aria-hidden="true">
-                ✳
-              </span>
-              <span>
-                <strong>
-                  {es
-                    ? "¿Qué tipo de negocio tienes?"
-                    : "What kind of business do you run?"}
-                </strong>
-                <small>
-                  {es
-                    ? "Personalizamos los ejemplos de Standard y Pro."
-                    : "See how Standard and Pro fit your work."}
-                </small>
-              </span>
-            </div>
-            <label className={styles.sectorSelect}>
-              <span>{es ? "Tu sector" : "Your industry"}</span>
-              <select
-                value={sector}
-                onChange={(event) => setSector(event.target.value as Sector)}
+          <div
+            className={styles.planTabs}
+            role="tablist"
+            aria-label={es ? "Elige un plan" : "Choose a plan"}
+          >
+            {productOffers.map((offer) => (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={selectedOffer === offer}
+                aria-controls={`suite-${offer}`}
+                key={offer}
+                onClick={() => setSelectedOffer(offer)}
               >
-                {sectors.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option[locale]}
-                  </option>
-                ))}
-              </select>
-            </label>
+                {offer === "hq"
+                  ? "Free"
+                  : offer === "listing"
+                    ? "Premium"
+                    : offer[0].toUpperCase() + offer.slice(1)}
+              </button>
+            ))}
           </div>
 
           <div className={styles.cards} data-count={productOffers.length}>
             {productOffers.map((offer) => {
               const item = catalogue[offer];
-              const enterprise = offer === "enterprise";
-              const featured = offer === "pro";
-              const amount = !enterprise ? price[offer][cycle] : undefined;
-              const focus = offer === "standard" || offer === "pro";
+              const free = offer === "hq";
+              const featured = offer === "plus";
+              const amount = price[offer][cycle];
               return (
                 <article
                   id={`suite-${offer}`}
                   key={offer}
                   className={styles.card}
+                  role="tabpanel"
                   data-featured={featured || undefined}
+                  data-selected={selectedOffer === offer || undefined}
                   data-offer={offer}
                 >
                   <div className={styles.cardTop}>
                     <span className={styles.planIcon} aria-hidden="true">
-                      {offer === "personal"
-                        ? "✦"
+                      {offer === "hq"
+                        ? "⌂"
                         : offer === "listing"
                           ? "◈"
                           : offer === "standard"
                             ? "▦"
-                            : offer === "pro"
-                              ? "✳"
-                              : "✧"}
+                            : offer === "plus"
+                              ? "✦"
+                              : offer === "pro"
+                                ? "✳"
+                                : "✧"}
                     </span>
                     <span className={styles.cardType}>{item.label}</span>
                     {featured && (
                       <span className={styles.recommended}>
-                        {es ? "Más completo" : "Advanced tools"}
+                        {es ? "Más elegido" : "Most popular"}
                       </span>
                     )}
                   </div>
@@ -531,34 +447,22 @@ export function SuitePricingExperience({
                         : "Upgrade your business presence in this app."}
                     </p>
                   )}
-                  {offer === "personal" && (
+                  {offer === "hq" && (
                     <p className={styles.planSub}>
                       {es
-                        ? "Ventajas personales desbloqueadas."
-                        : "Personal member benefits unlocked."}
-                    </p>
-                  )}
-                  {focus && (
-                    <p className={styles.planSub}>
-                      {selectedSector.focus[locale]}
-                    </p>
-                  )}
-                  {enterprise && (
-                    <p className={styles.planSub}>
-                      {es
-                        ? "Un paquete adaptado a toda tu empresa."
-                        : "A bundled solution for your whole business."}
+                        ? "Tu centro gratuito para gestionar AkiSuite."
+                        : "Your free home for managing AkiSuite."}
                     </p>
                   )}
                   <div className={styles.price}>
                     <strong>
-                      {amount === undefined
+                      {free
                         ? es
-                          ? "A medida"
-                          : "Let's talk"
+                          ? "Gratis"
+                          : "Free"
                         : formatCents(amount, locale)}
                     </strong>
-                    {amount !== undefined && (
+                    {!free && (
                       <span>
                         /
                         {cycle === "year"
@@ -572,10 +476,10 @@ export function SuitePricingExperience({
                     )}
                   </div>
                   <p className={styles.cycleInfo}>
-                    {enterprise
+                    {free
                       ? es
-                        ? "Solicita una propuesta con todos los productos."
-                        : "Ask about the complete AkiSuite bundle."
+                        ? "Sin tarjeta y sin suscripción."
+                        : "No card and no subscription required."
                       : cycle === "year"
                         ? es
                           ? "Equivale al 20 % de descuento anual."
@@ -592,37 +496,32 @@ export function SuitePricingExperience({
                         <span>{benefit}</span>
                       </li>
                     ))}
-                    {focus && (
-                      <li className={styles.dynamicFeature}>
-                        <span aria-hidden="true">✓</span>
-                        <span>
-                          {selectedSector[locale]}:{" "}
-                          {selectedSector.focus[locale]}
-                        </span>
-                      </li>
-                    )}
                   </ul>
                   <div className={styles.cardBottom}>
                     <a
-                      href={offerEmail(offer)}
+                      href={
+                        free
+                          ? `https://akihq.app/${locale}/business`
+                          : offerEmail(offer)
+                      }
                       className={
                         featured ? styles.primaryAction : styles.secondaryAction
                       }
                     >
-                      {enterprise
+                      {free
                         ? es
-                          ? "Consultar Enterprise"
-                          : "Enquire about Enterprise"
+                          ? "Abrir AkiHQ gratis"
+                          : "Open AkiHQ for free"
                         : es
                           ? "Consultar disponibilidad"
                           : "Enquire about this plan"}
                       <span aria-hidden="true">↗</span>
                     </a>
                     <small>
-                      {enterprise
+                      {free
                         ? es
-                          ? "Precio según el paquete elegido"
-                          : "Bundle price on request"
+                          ? "Siempre disponible"
+                          : "Always available"
                         : es
                           ? "Precio previsto · activación pendiente"
                           : "Staged pricing · checkout not yet live"}
@@ -632,14 +531,6 @@ export function SuitePricingExperience({
               );
             })}
           </div>
-          {!personalUnlocked && product !== "akihq" && (
-            <p className={styles.privateNote} role="status">
-              <span aria-hidden="true">✦</span>{" "}
-              {es
-                ? "Las membresías Premium personales se lanzarán cuando alcancemos nuestro objetivo de adopción. Las opciones para negocios siguen visibles."
-                : "Personal Premium will appear when we reach our adoption milestone. Business options are always visible."}
-            </p>
-          )}
           <p className={styles.footerNote}>
             {es
               ? "Los precios son los del catálogo de lanzamiento previsto, antes de impuestos aplicables. No se realiza ningún cobro desde esta pantalla. Las suscripciones anteriores siguen disponibles desde Mis suscripciones."
