@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import styles from "./SuitePricingExperience.module.css";
 
@@ -224,7 +223,6 @@ export function SuitePricingExperience({
 }) {
   const es = locale === "es";
   const app = products[product];
-  const [selectedOffer, setSelectedOffer] = useState<Offer>("listing");
   const productOffers: Offer[] = ["hq", "listing", "basico", "standard", "pro"];
   const catalogue: Record<
     Offer,
@@ -359,33 +357,6 @@ export function SuitePricingExperience({
               </p>
             </div>
           </div>
-          <div
-            className={styles.planTabs}
-            role="tablist"
-            aria-label={es ? "Elige un plan" : "Choose a plan"}
-          >
-            {productOffers.map((offer) => (
-              <button
-                type="button"
-                role="tab"
-                aria-selected={selectedOffer === offer}
-                aria-controls={`suite-${offer}`}
-                key={offer}
-                onClick={() => setSelectedOffer(offer)}
-              >
-                {offer === "hq"
-                  ? "Free"
-                  : offer === "listing"
-                    ? "Premium"
-                    : offer === "basico"
-                      ? "Standard"
-                      : offer === "standard"
-                        ? "Plus"
-                        : offer[0].toUpperCase() + offer.slice(1)}
-              </button>
-            ))}
-          </div>
-
           <div className={styles.cards} data-count={productOffers.length}>
             {productOffers.map((offer) => {
               const item = catalogue[offer];
@@ -397,9 +368,7 @@ export function SuitePricingExperience({
                   id={`suite-${offer}`}
                   key={offer}
                   className={styles.card}
-                  role="tabpanel"
                   data-featured={featured || undefined}
-                  data-selected={selectedOffer === offer || undefined}
                   data-offer={offer}
                 >
                   <div className={styles.cardTop}>
@@ -422,6 +391,15 @@ export function SuitePricingExperience({
                         {es ? "8 herramientas" : "8 tools"}
                       </span>
                     )}
+                  </div>
+                  <div className={styles.cardBrand}>
+                    <Image
+                      src={free ? "/brand/hq-mark.svg" : offer === "listing" ? app.logo : "/brand/business-mark.svg"}
+                      alt=""
+                      width={46}
+                      height={46}
+                      unoptimized
+                    />
                   </div>
                   <h3>{item.name}</h3>
                   {offer === "listing" && (

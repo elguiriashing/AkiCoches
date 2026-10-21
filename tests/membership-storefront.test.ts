@@ -23,6 +23,11 @@ describe("AkiCoches memberships", () => {
     expect(experience).not.toContain("What kind of business do you run?");
     expect(experience).not.toContain("AkiEnterprise");
     expect(experience).not.toContain("stripe.checkout");
+    expect(experience).toContain('"/brand/hq-mark.svg"');
+    expect(experience).toContain('"/brand/business-mark.svg"');
+    const style = readFileSync("src/components/SuitePricingExperience.module.css", "utf8");
+    expect(style).toContain("grid-template-columns: repeat(5, minmax(0, 1fr))");
+    expect(style).toContain("grid-auto-flow: column");
   });
   it("links to the local membership page from the account", () => {
     expect(account).toContain('href="/membership"');

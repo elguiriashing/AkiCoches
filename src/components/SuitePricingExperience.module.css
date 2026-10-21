@@ -671,3 +671,44 @@
     transition: none !important;
   }
 }
+
+/* Shared AkiSuite membership card anatomy, using the original brand artwork. */
+.cardBrand {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  margin-bottom: 0.5rem;
+}
+.cardBrand img {
+  display: block;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 0.65rem;
+}
+@media (min-width: 1101px) {
+  .cards[data-count="5"] { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  /* Maintain a single aligned row on tablets, with swipe/keyboard scrolling. */
+  .planTabs { display: none; }
+  .cards, .cards[data-count="5"] {
+    display: grid;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(235px, min(78vw, 320px));
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    padding-bottom: 0.65rem;
+  }
+  .card:not([data-selected]) { display: flex; }
+  .card { min-height: 0; scroll-snap-align: start; }
+}
+@media (max-width: 570px) {
+  .cards, .cards[data-count="5"] {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(235px, 84vw);
+  }
+}
