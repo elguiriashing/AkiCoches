@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import styles from "./SuitePricingExperience.module.css";
+import { AkiSuiteMembershipStudio, type MembershipOffer, type MembershipTheme } from "./AkiSuiteMembershipStudio";
 
 export type DiscoveryProduct = "akipasa" | "akiduermo" | "akicoches" | "akihq";
 type Locale = "en" | "es";
@@ -256,239 +257,64 @@ export function SuitePricingExperience({
   };
   const offerEmail = (offer: Offer) =>
     `mailto:alex@akipasa.com?subject=${encodeURIComponent(`AkiSuite enquiry: ${product} / ${catalogue[offer].name} (${offer})`)}`;
+  const offers = productOffers.map((offer): MembershipOffer => {
+    const item = catalogue[offer];
+    const free = offer === "hq";
+    return {
+      id: `suite-${offer}`,
+      name: item.name,
+      label: item.label,
+      description: free
+        ? (es ? "Tu centro gratuito para gestionar AkiSuite." : "Your free home for managing AkiSuite.")
+        : offer === "listing"
+          ? (es ? "Mejora el perfil de tu negocio en esta aplicación." : "Upgrade your business presence in this app.")
+          : offer === "basico"
+            ? (es ? "Las herramientas esenciales para una ubicación." : "Essential operating tools for one location.")
+            : offer === "standard"
+              ? (es ? "Más herramientas y capacidad para tu equipo." : "More tools and capacity for your team.")
+              : (es ? "Todas las herramientas para operar sin límites." : "Every operating tool without selection limits."),
+      price: free ? (es ? "Gratis" : "Free") : formatCents(price[offer], locale),
+      period: free ? undefined : (es ? "/ mes por ubicación" : "/ month per location"),
+      benefits: item.benefits,
+      featured: offer === "standard",
+      action: <a href={free ? `https://akihq.app/${locale}/business` : offerEmail(offer)}>
+        {free ? (es ? "Abrir AkiHQ gratis" : "Open AkiHQ for free") : (es ? "Consultar disponibilidad" : "Enquire about this plan")}
+        <span aria-hidden="true">↗</span>
+      </a>,
+      actionNote: free ? (es ? "Siempre disponible" : "Always available") : (es ? "Precio previsto · activación pendiente" : "Staged pricing · checkout not yet live"),
+    };
+  }) as [MembershipOffer, MembershipOffer, MembershipOffer, MembershipOffer, MembershipOffer];
+
   return (
     <main className={styles.root} data-theme={app.theme} data-product={product}>
-      <div className={styles.orbit} aria-hidden="true" />
       <div className={styles.inner}>
         <header className={styles.topline}>
-          <a
-            className={styles.brand}
-            href={
-              product === "akipasa"
-                ? `/${locale}`
-                : product === "akihq"
-                  ? `/${locale}/business`
-                  : `/?lang=${locale}`
-            }
-          >
-            <Image
-              src={logo || app.logo}
-              alt=""
-              width={40}
-              height={40}
-              unoptimized
-            />
-            <span>
-              {app.name}
-              <small>MEMBERSHIP STUDIO</small>
-            </span>
+          <a className={styles.brand} href={product === "akipasa" ? `/${locale}` : product === "akihq" ? `/${locale}/business` : `/?lang=${locale}`}>
+            <Image src={logo || app.logo} alt="" width={40} height={40} unoptimized />
+            <span>{app.name}<small>AKISUITE</small></span>
           </a>
-          <nav
-            className={styles.topActions}
-            aria-label={es ? "Acciones de membresía" : "Membership navigation"}
-          >
-            <a
-              href={`https://akipasa.com/${locale}/account/subscription?from=${product === "akihq" ? "akibusiness" : product}`}
-            >
-              {es ? "Mis suscripciones" : "My subscriptions"}{" "}
-              <span aria-hidden="true">↗</span>
+          <nav className={styles.topActions} aria-label={es ? "Acciones de membresía" : "Membership navigation"}>
+            <a href={ `https://akipasa.com/${locale}/account/subscription?from=${product === "akihq" ? "akibusiness" : product}` }>
+              {es ? "Mis suscripciones" : "My subscriptions"} <span aria-hidden="true">↗</span>
             </a>
           </nav>
         </header>
-
-        <section className={styles.hero} aria-labelledby="suite-pricing-title">
-          <div className={styles.heroCopy}>
-            <span className={styles.overline}>
-              <span className={styles.spark} aria-hidden="true">
-                ✦
-              </span>
-              {app[locale].eyebrow}
-            </span>
-            <h1 id="suite-pricing-title">{app[locale].title}</h1>
-            <p>{app[locale].intro}</p>
-            <div className={styles.heroFacts}>
-              <span>
-                <span aria-hidden="true">✓</span>{" "}
-                {es ? "Tu cuenta AkiSuite" : "One AkiSuite account"}
-              </span>
-              <span>
-                <span aria-hidden="true">✓</span>{" "}
-                {es
-                  ? "Pago seguro cuando se active"
-                  : "Secure checkout on launch"}
-              </span>
-            </div>
-          </div>
-          <div className={styles.heroArtwork} aria-hidden="true">
-            <div className={styles.artGlow} />
-            <div className={styles.artMain}>
-              <Image
-                src={logo || app.logo}
-                width={92}
-                height={92}
-                alt=""
-                unoptimized
-              />
-              <span>{app.name}</span>
-            </div>
-            <span className={styles.orbitOne}>✦</span>
-            <span className={styles.orbitTwo}>✧</span>
-          </div>
-        </section>
-
-        <section
-          className={styles.catalogue}
-          aria-labelledby="suite-packages-heading"
-        >
-          <div className={styles.catalogueTop}>
-            <div>
-              <span className={styles.kicker}>
-                AKISUITE / {es ? "MEMBRESÍAS" : "MEMBERSHIPS"}
-              </span>
-              <h2 id="suite-packages-heading">
-                {es
-                  ? "El plan adecuado para cada paso."
-                  : "A plan for your next move."}
-              </h2>
-              <p>
-                {es
-                  ? "Solo las opciones relevantes para esta aplicación."
-                  : "Only the plans that make sense for this product."}
-              </p>
-            </div>
-          </div>
-          <div className={styles.cards} data-count={productOffers.length}>
-            {productOffers.map((offer) => {
-              const item = catalogue[offer];
-              const free = offer === "hq";
-              const featured = offer === "standard";
-              const amount = price[offer];
-              return (
-                <article
-                  id={`suite-${offer}`}
-                  key={offer}
-                  className={styles.card}
-                  data-featured={featured || undefined}
-                  data-offer={offer}
-                >
-                  <div className={styles.cardTop}>
-                    <span className={styles.planIcon} aria-hidden="true">
-                      {offer === "hq"
-                        ? "⌂"
-                        : offer === "listing"
-                          ? "◈"
-                          : offer === "basico"
-                            ? "▦"
-                            : offer === "standard"
-                              ? "✦"
-                              : offer === "pro"
-                                ? "✳"
-                                : "✧"}
-                    </span>
-                    <span className={styles.cardType}>{item.label}</span>
-                    {featured && (
-                      <span className={styles.recommended}>
-                        {es ? "8 herramientas" : "8 tools"}
-                      </span>
-                    )}
-                  </div>
-                  <div className={styles.cardBrand}>
-                    <Image
-                      src={free ? "/brand/hq-mark.svg" : offer === "listing" ? app.logo : "/brand/business-mark.svg"}
-                      alt=""
-                      width={46}
-                      height={46}
-                      unoptimized
-                    />
-                  </div>
-                  <h3>{item.name}</h3>
-                  {offer === "listing" && (
-                    <p className={styles.planSub}>
-                      {es
-                        ? "Mejora el perfil de tu negocio en esta aplicación."
-                        : "Upgrade your business presence in this app."}
-                    </p>
-                  )}
-                  {offer === "hq" && (
-                    <p className={styles.planSub}>
-                      {es
-                        ? "Tu centro gratuito para gestionar AkiSuite."
-                        : "Your free home for managing AkiSuite."}
-                    </p>
-                  )}
-                  <div className={styles.price}>
-                    <strong>
-                      {free
-                        ? es
-                          ? "Gratis"
-                          : "Free"
-                        : formatCents(amount, locale)}
-                    </strong>
-                    {!free && <span>/{es ? "mes" : "month"}</span>}
-                  </div>
-                  <p className={styles.cycleInfo}>
-                    {free
-                      ? es
-                        ? "Sin tarjeta y sin suscripción."
-                        : "No card and no subscription required."
-                      : es
-                        ? "Importe mensual."
-                        : "Monthly amount."}
-                  </p>
-                  <div className={styles.planDivider} />
-                  <ul className={styles.features}>
-                    {item.benefits.map((benefit) => (
-                      <li key={benefit}>
-                        <span aria-hidden="true">✓</span>
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className={styles.cardBottom}>
-                    <a
-                      href={
-                        free
-                          ? `https://akihq.app/${locale}/business`
-                          : offerEmail(offer)
-                      }
-                      className={
-                        featured ? styles.primaryAction : styles.secondaryAction
-                      }
-                    >
-                      {free
-                        ? es
-                          ? "Abrir AkiHQ gratis"
-                          : "Open AkiHQ for free"
-                        : es
-                          ? "Consultar disponibilidad"
-                          : "Enquire about this plan"}
-                      <span aria-hidden="true">↗</span>
-                    </a>
-                    <small>
-                      {free
-                        ? es
-                          ? "Siempre disponible"
-                          : "Always available"
-                        : es
-                          ? "Precio previsto · activación pendiente"
-                          : "Staged pricing · checkout not yet live"}
-                    </small>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-          <p className={styles.footerNote}>
-            {es
+        <AkiSuiteMembershipStudio
+          theme={app.theme as MembershipTheme}
+          locale={locale}
+          eyebrow={app[locale].eyebrow}
+          title={app[locale].title}
+          description={app[locale].intro}
+          offers={offers}
+          footnotes={<>
+            <p>{es
               ? "Tu selección activa permite trabajar ahora. Los cambios guardados se aplican en la próxima rotación mensual, también para las suscripciones anuales existentes. Puedes delegar las herramientas activas al equipo al instante. Listing Premium y las herramientas operativas son suscripciones distintas."
-              : "Your active toolbox is available now. Saved changes apply at the next monthly rotation, including existing annual subscriptions. Delegate active tools to staff instantly. Listing Premium and operating tools are separate subscriptions."}
-          </p>
-          <p className={styles.footerNote}>
-            {es
+              : "Your active toolbox is available now. Saved changes apply at the next monthly rotation, including existing annual subscriptions. Delegate active tools to staff instantly. Listing Premium and operating tools are separate subscriptions."}</p>
+            <p>{es
               ? "Importes mensuales. Los impuestos aplicables se confirman antes del pago. No se realiza ningún cobro desde esta pantalla. Las suscripciones anteriores siguen disponibles desde Mis suscripciones."
-              : "Monthly amounts. Applicable taxes are confirmed before payment. This page does not collect payment. Existing subscriptions remain manageable under My subscriptions."}
-          </p>
-        </section>
+              : "Monthly amounts. Applicable taxes are confirmed before payment. This page does not collect payment. Existing subscriptions remain manageable under My subscriptions."}</p>
+          </>}
+        />
       </div>
     </main>
   );
