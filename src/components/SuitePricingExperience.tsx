@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./SuitePricingExperience.module.css";
 import { AkiSuiteAudienceStudio, type MembershipAudienceOffer } from "./AkiSuiteAudienceStudio";
 
@@ -35,7 +36,7 @@ export function SuitePricingExperience({ locale, product, logo }: { locale: Loca
       description: es ? `Descubre ${app.name} sin pagar una cuota.` : `Discover ${app.name} without a subscription fee.`,
       price: es ? "Gratis" : "Free",
       benefits: es ? ["Explora opciones de alquiler", "Guarda tus favoritos", "Sin suscripción obligatoria"] : ["Explore rental options", "Save your favourites", "No required subscription"],
-      action: <a href="/">{es ? "Explorar gratis" : "Explore for free"} ↗</a>,
+      action: <Link href="/">{es ? "Explorar gratis" : "Explore for free"} ↗</Link>,
     },
     {
       id: "personal-premium", name: `${app.name} Personal Premium`,
