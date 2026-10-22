@@ -17,7 +17,7 @@ const products = {
       eyebrow: "PLACES. PEOPLE. POSSIBILITIES.",
       title: "More of the places you love.",
       intro:
-        "Give your favourite discoveries a little extra. Give your business the tools to get discovered.",
+        "Discover more on AkiPasa. Manage your listing free in AkiHQ, upgrade visibility or add operations with AkiBusiness.",
     },
     es: {
       eyebrow: "LUGARES. GENTE. POSIBILIDADES.",
@@ -54,7 +54,7 @@ const products = {
       eyebrow: "GOOD NIGHTS. BETTER TRIPS.",
       title: "A better stay starts here.",
       intro:
-        "Find your next favourite stay, or give your property a stronger presence.",
+        "Discover accommodation on AkiDuermo. Manage your property free in AkiHQ, or upgrade visibility and operations separately.",
     },
     es: {
       eyebrow: "BUENAS NOCHES. MEJORES VIAJES.",
@@ -90,7 +90,7 @@ const products = {
       eyebrow: "GO FURTHER.",
       title: "Your next journey, upgraded.",
       intro:
-        "Explore with more confidence. Help your rental business stand out.",
+        "Discover vehicle rentals, manage your rental listing free with AkiHQ, and upgrade when your business needs more.",
     },
     es: {
       eyebrow: "LLEGA MÁS LEJOS.",
@@ -231,12 +231,12 @@ export function SuitePricingExperience({
   > = {
     hq: {
       name: "AkiHQ",
-      label: es ? "Gestión gratis" : "Free management",
+      label: es ? "Gestión gratuita" : "Free management",
       benefits: hqFeatures[locale],
     },
     listing: {
       name: `${app.name} Premium`,
-      label: es ? "Más visibilidad" : "More visibility",
+      label: es ? "PARA AKIHQ · MÁS VISIBILIDAD" : "FOR AKIHQ · MORE VISIBILITY",
       benefits: es ? app.listingEs : app.listingEn,
     },
     basico: {
@@ -265,9 +265,9 @@ export function SuitePricingExperience({
       name: item.name,
       label: item.label,
       description: free
-        ? (es ? "Tu centro gratuito para gestionar AkiSuite." : "Your free home for managing AkiSuite.")
+        ? (es ? `Tu centro para gestionar gratis tu ficha de ${app.name}.` : `Your home for managing your free ${app.name} listing.`)
         : offer === "listing"
-          ? (es ? "Mejora el perfil de tu negocio en esta aplicación." : "Upgrade your business presence in this app.")
+          ? (es ? `Mejora tu presencia y accede a las herramientas Premium de ${app.name} para gestionar tu ficha desde AkiHQ.` : `Upgrade your presence and unlock the deluxe suite of ${app.name} listing tools in AkiHQ.`)
           : offer === "basico"
             ? (es ? "Las herramientas esenciales para una ubicación." : "Essential operating tools for one location.")
             : offer === "standard"
