@@ -93,6 +93,9 @@ for (const locale of ["en", "es"] as const) {
     );
     expect(html).toContain(locale === "es" ? "al instante" : "instantly");
     expect(html).toContain(`https://akihq.app/${locale}/business`);
+    expect(html).toContain(locale === "es" ? "tu ficha de AkiCoches" : "free AkiCoches listing");
+    expect(html).toContain(locale === "es" ? "PARA AKIHQ" : "FOR AKIHQ");
+    expect(html).toContain(locale === "es" ? "herramientas Premium de AkiCoches" : "deluxe suite of AkiCoches listing tools");
   });
 }
 
