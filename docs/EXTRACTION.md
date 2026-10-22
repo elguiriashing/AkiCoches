@@ -1,5 +1,10 @@
 # Extraction contract
 
+## 2026-10-22 | Membership language and product boundaries
+
+The five-card AkiSuite Membership Studio remains the canonical shared layout. AkiHQ is explicitly the free management home for an AkiCoches rental listing. AkiCoches Premium is presented as a listing/visibility upgrade whose enhanced listing tools are managed in AkiHQ, while AkiBusiness Standard/Plus/Pro are **separate** per-location operating subscriptions. EN/ES display these boundaries without implying that listing Premium includes all 12 AkiBusiness tools. The two original grouped brand assets, plan amounts, open billing restrictions, monthly replacement limits, checkout gating, rental and provider flows remain unchanged. Regression evidence: membership storefront EN/ES server-render tests and CI; no live visual or authenticated payment validation is inferred from the tests. Roll back the copy changes without touching subscriptions.
+
+
 ## 2026-10-21 | Compact five-plan membership studio
 
 The public membership page has one consistent commercial ladder: free AkiHQ,
