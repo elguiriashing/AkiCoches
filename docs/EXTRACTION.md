@@ -1,5 +1,19 @@
 # Extraction contract
 
+## 2026-10-22 | Membership audience clarity
+
+The earlier five-card listing/operations comparison below is superseded.
+The native AkiCoches membership shows Individual Free/Personal Premium
+(staged, no invented price or checkout) and Business free AkiHQ rental-branch
+management/€14.99 staged listing Premium. A standalone AkiBusiness link
+explains that 4/8/12 operating tools are independently licensed by location.
+Use the byte-identical audience-studio source and CSS also in AkiPasa and
+AkiDuermo. Preserve host-local account security, all real booking/fleet data,
+EN/ES and no-charge status. No Stripe, Supabase, RLS or production route
+changes. CI, mobile/desktop, real auth/role and exact deployed-SHA
+verification remain required.
+
+
 ## 2026-10-21 | Compact five-plan membership studio
 
 The public membership page has one consistent commercial ladder: free AkiHQ,
