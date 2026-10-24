@@ -39,3 +39,7 @@ verified by the no-horizontal-overflow browser assertion without relying on a
 product-global reset. Local profile/auth returns and account↔membership/explore
 links retain EN/ES explicitly. AkiBusiness persists its native language choice
 through the existing callback. No billing, role, schema or data changes.
+
+### 2026-10-24 — Native profile quick link
+
+The account sidebar still sent “My AkiSuite profile” to Pasa despite the new native settings page. It now opens the same local shared-profile form as the primary settings action, preserving language and the single shared identity. No profile, entitlement or payment behavior changes. Verify with the full existing CI and live route readback.

@@ -334,7 +334,7 @@ export default async function RenterAccountPage({
                 <span>{es ? "Explorar el mapa" : "Explore the map"}</span>
                 <span aria-hidden="true">↗</span>
               </Link>
-              <Link href={"https://akipasa.com/" + locale + "/account"}>
+              <Link href={"/settings?lang=" + locale}>
                 <span>{es ? "Mi perfil AkiSuite" : "My AkiSuite profile"}</span>
                 <span aria-hidden="true">↗</span>
               </Link>
