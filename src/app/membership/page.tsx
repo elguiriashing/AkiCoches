@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Memberships · AkiCoches",
   description:
-    "AkiCoches Premium, rental-branch upgrades, AkiBusiness and AkiEnterprise.",
+    "AkiCoches Premium for individuals and businesses. Free AkiHQ management and separate AkiBusiness operating tools.",
   alternates: { canonical: "https://akicoches.com/membership" },
 };
 
