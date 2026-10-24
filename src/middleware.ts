@@ -24,6 +24,21 @@ export async function middleware(request: NextRequest) {
   request.headers.delete("x-akipasa-membership-next");
   request.headers.set("x-akipasa-product", "akiconduzco");
   const pathname = request.nextUrl.pathname;
+  if (
+    /^\/(?:(en|es)\/)?account\/(?:profile|settings)\/?$/.test(
+      request.nextUrl.pathname,
+    )
+  ) {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    const local = request.nextUrl.clone();
+    local.pathname = "/settings";
+    const prefix = request.nextUrl.pathname.match(/^\/(en|es)\//)?.[1];
+    if (prefix) local.searchParams.set("lang", prefix);
+    stripCrossProductCredentials(local);
+    return NextResponse.redirect(local, 307);
+  }
+
   const lang =
     request.nextUrl.searchParams.get("lang") ||
     request.cookies.get("akiconduzco_locale")?.value;
@@ -35,7 +50,7 @@ export async function middleware(request: NextRequest) {
     target.searchParams.set("lang", locale);
     return NextResponse.redirect(target, 308);
   }
-  // Pricing stays on AkiCoches; existing subscription management stays on AkiPasa.
+  // Membership navigation stays on the current product origin.
   const productMembership = pathname.match(/^\/(?:(en|es)\/)?memberships?\/?$/);
   if (productMembership) {
     if (!["GET", "HEAD"].includes(request.method))
@@ -55,11 +70,9 @@ export async function middleware(request: NextRequest) {
   ) {
     if (!["GET", "HEAD"].includes(request.method))
       return new NextResponse(null, { status: 404 });
-    const url = new URL(
-      `/${locale}/account/subscription`,
-      "https://akipasa.com",
-    );
-    url.searchParams.set("from", "akicoches");
+    const url = request.nextUrl.clone();
+    url.pathname = "/membership";
+    url.searchParams.set("lang", locale);
     return crossProductRedirect(url);
   }
   if (pathname === "/api/health")
@@ -91,7 +104,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.set(name, value, options),
     );
   if (
-    /^\/(account|bookings|en|es)(?:\/|$)/.test(pathname) ||
+    /^\/(account|settings|bookings|en|es)(?:\/|$)/.test(pathname) ||
     process.env.AKICOCHES_INDEXING_ENABLED !== "true"
   )
     response.headers.set("X-Robots-Tag", "noindex, nofollow");

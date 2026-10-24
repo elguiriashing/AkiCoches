@@ -95,7 +95,7 @@ describe("cross-product credential transfer prevention", () => {
 
     const billing = await middleware(request("/en/account/subscription"));
     expect(billing.headers.get("location")).toBe(
-      "https://akipasa.com/en/account/subscription?from=akicoches#redirected",
+      "http://localhost:3103/membership?lang=en#redirected",
     );
   });
   it("keeps callback code and state on local auth route instead of a cross-product redirect", async () => {

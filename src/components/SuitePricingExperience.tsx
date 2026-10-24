@@ -170,7 +170,7 @@ export function SuitePricingExperience({
         ? ["Sucursales y flotas", "Equipo y permisos", "Siempre gratis"]
         : ["Branches and fleets", "Team permissions", "Always free"],
       action: (
-        <a href={`https://akihq.app/${locale}/business`}>
+        <a href={`https://akihq.app/${locale}/business/mobility`}>
           {es ? "Abrir AkiHQ gratis" : "Open free AkiHQ"} ↗
         </a>
       ),
@@ -240,9 +240,7 @@ export function SuitePricingExperience({
             className={styles.topActions}
             aria-label={es ? "Acciones de membresía" : "Membership navigation"}
           >
-            <a
-              href={`https://akipasa.com/${locale}/account/subscription?from=${product === "akihq" ? "akibusiness" : product}`}
-            >
+            <a href={`/settings?lang=${locale}`}>
               {es ? "Mis suscripciones" : "My subscriptions"} ↗
             </a>
           </nav>

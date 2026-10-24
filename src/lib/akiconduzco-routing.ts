@@ -2,6 +2,7 @@ export const conduzcoOrigin = "https://akicoches.com";
 export const conduzcoMemberPaths = [
   "/map",
   "/account",
+  "/settings",
   "/bookings",
   "/membership",
 ];
@@ -31,6 +32,7 @@ export function conduzcoHostRoute(pathname: string) {
   if (
     pathname === "/map" ||
     pathname === "/account" ||
+    pathname === "/settings" ||
     pathname === "/bookings" ||
     /^\/rentals\/[a-z0-9-]+\/?$/.test(pathname)
   )
@@ -73,6 +75,7 @@ export function conduzcoHostMethodAllowed(pathname: string, method: string) {
     ["GET", "HEAD"].includes(method) ||
     (method === "POST" &&
       (pathname === "/account" ||
+        pathname === "/settings" ||
         pathname === "/api/car-rentals/bookings" ||
         pathname === "/api/v1/personalisation/consent" ||
         /^\/(en|es)\/auth(?:\/|$)/.test(pathname) ||
