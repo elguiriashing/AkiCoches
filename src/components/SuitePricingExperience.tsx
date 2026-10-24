@@ -123,7 +123,9 @@ export function SuitePricingExperience({
             "No required subscription",
           ],
       action: (
-        <Link href="/">{es ? "Explorar gratis" : "Explore for free"} ↗</Link>
+        <Link href={`/?lang=${locale}`}>
+          {es ? "Explorar gratis" : "Explore for free"} ↗
+        </Link>
       ),
     },
     {

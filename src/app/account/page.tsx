@@ -123,7 +123,10 @@ export default async function RenterAccountPage({
                 {es ? "Explorar coches" : "Explore cars"}{" "}
                 <span aria-hidden="true">↗</span>
               </Link>
-              <Link href="/membership" className={styles.secondaryButton}>
+              <Link
+                href={`/membership?lang=${locale}`}
+                className={styles.secondaryButton}
+              >
                 {es ? "Membresías" : "Membership"}
               </Link>
               <Link
