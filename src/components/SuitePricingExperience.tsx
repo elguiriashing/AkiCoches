@@ -37,7 +37,7 @@ const products = {
   akiduermo: {
     name: "AkiDuermo",
     theme: "mint",
-    logo: "/brand/duermo-icon.png",
+    logo: "/brand/v3/duermo.svg",
     en: {
       eyebrow: "GOOD NIGHTS. BETTER TRIPS.",
       title: "A better stay starts here.",
@@ -54,7 +54,7 @@ const products = {
   akicoches: {
     name: "AkiCoches",
     theme: "coral",
-    logo: "/brand/conduzco-icon.svg",
+    logo: "/brand/v3/coches.svg",
     en: {
       eyebrow: "GO FURTHER.",
       title: "Your next journey, upgraded.",
@@ -73,7 +73,7 @@ const products = {
   akihq: {
     name: "AkiHQ",
     theme: "orange",
-    logo: "/brand/hq-mark.svg",
+    logo: "/brand/v3/hq.svg",
     en: {
       eyebrow: "MANAGE FOR FREE.",
       title: "Your business. One home.",

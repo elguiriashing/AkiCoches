@@ -131,31 +131,31 @@ describe("AkiSuite app switcher branding", () => {
       "utf8",
     );
     const icons = {
-      pasa: "pasa-mark.svg",
-      duermo: "duermo-mark.svg",
-      coches: "conduzco-icon.svg",
-      hq: "hq-mark.svg",
-      business: "business-mark.svg",
+      pasa: "pasa.svg",
+      duermo: "duermo.svg",
+      coches: "coches.svg",
+      hq: "hq.svg",
+      business: "business.svg",
     };
     for (const [product, filename] of Object.entries(icons)) {
       expect(component).toContain(`id: "${product}"`);
-      expect(component).toContain(`icon: "/brand/${filename}"`);
-      const svg = readFileSync(join(root, "public/brand", filename), "utf8");
+      expect(component).toContain(`icon: "/brand/v3/${filename}"`);
+      const svg = readFileSync(join(root, "public/brand/v3", filename), "utf8");
       expect(svg).toContain('viewBox="0 0 128 128"');
       expect(svg).toContain('rx="29"');
     }
     expect(component).not.toMatch(/icon:\s*["']https?:\/\//);
     const car = readFileSync(
-      join(root, "public/brand/conduzco-icon.svg"),
+      join(root, "public/brand/v3/coches.svg"),
       "utf8",
     );
     expect(car).toContain("#FF3047");
     expect(car).toContain("#111111");
-    const hq = readFileSync(join(root, "public/brand/hq-mark.svg"), "utf8");
+    const hq = readFileSync(join(root, "public/brand/v3/hq.svg"), "utf8");
     expect(hq).toContain("#111111");
     expect(hq).toContain("#FFC533");
     const business = readFileSync(
-      join(root, "public/brand/business-mark.svg"),
+      join(root, "public/brand/v3/business.svg"),
       "utf8",
     );
     expect(business).toContain("ab-indigo");

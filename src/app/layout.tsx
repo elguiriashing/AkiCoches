@@ -13,7 +13,7 @@ import { ConsentAnalytics } from "@/components/ConsentAnalytics";
 import { PersonalisationConsent } from "@/components/PersonalisationConsent";
 import { PwaRegistration } from "@/components/PwaRegistration";
 import { ThemeManager } from "@/components/ThemeModeControls";
-export const viewport: Viewport = { themeColor: "#FF3047" };
+export const viewport: Viewport = { themeColor: "#3B101B" };
 export const metadata: Metadata = {
   metadataBase: new URL("https://akicoches.com"),
   title: {
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   applicationName: "AkiCoches",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/brand/conduzco-icon.svg?v=2",
-    apple: "/brand/conduzco-v2-180.png",
+    icon: "/brand/v3/coches.svg",
+    apple: "/brand/v3/coches-180.png",
   },
   openGraph: {
     type: "website",
