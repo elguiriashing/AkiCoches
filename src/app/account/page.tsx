@@ -123,11 +123,14 @@ export default async function RenterAccountPage({
                 {es ? "Explorar coches" : "Explore cars"}{" "}
                 <span aria-hidden="true">↗</span>
               </Link>
-              <Link href="/membership" className={styles.secondaryButton}>
+              <Link
+                href={`/membership?lang=${locale}`}
+                className={styles.secondaryButton}
+              >
                 {es ? "Membresías" : "Membership"}
               </Link>
               <Link
-                href={"https://akipasa.com/" + locale + "/account/settings"}
+                href={"/settings?lang=" + locale}
                 className={styles.secondaryButton}
               >
                 {es ? "Ajustes de cuenta" : "Account settings"}
@@ -335,9 +338,7 @@ export default async function RenterAccountPage({
                 <span>{es ? "Mi perfil AkiSuite" : "My AkiSuite profile"}</span>
                 <span aria-hidden="true">↗</span>
               </Link>
-              <Link
-                href={"https://akipasa.com/" + locale + "/account/settings"}
-              >
+              <Link href={"/settings?lang=" + locale}>
                 <span>
                   {es ? "Seguridad y ajustes" : "Security & settings"}
                 </span>

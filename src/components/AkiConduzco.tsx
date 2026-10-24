@@ -244,7 +244,7 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
             <div className={styles.suiteActions}>
               <a
                 className={styles.suiteAction}
-                href={`https://akipasa.com/${locale}/account/settings`}
+                href={`/settings?lang=${locale}`}
               >
                 {locale === "es" ? "Ajustes" : "Settings"}
               </a>
