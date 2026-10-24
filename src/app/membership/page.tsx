@@ -17,7 +17,7 @@ export default async function MembershipPage() {
     <SuitePricingExperience
       locale={locale}
       product="akicoches"
-      logo="/brand/conduzco-icon.svg"
+      logo="/brand/v3/coches.svg"
     />
   );
 }

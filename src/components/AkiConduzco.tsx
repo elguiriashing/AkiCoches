@@ -128,7 +128,7 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         aria-label="AkiCoches home"
       >
         <Image
-          src="/brand/conduzco-icon.svg"
+          src="/brand/v3/coches.svg"
           alt=""
           width={38}
           height={38}
@@ -189,35 +189,35 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
                 id: "pasa",
                 name: "AkiPasa",
                 url: suiteHref("pasa", locale, { referralCode }),
-                icon: "/brand/pasa-mark.svg",
+                icon: "/brand/v3/pasa.svg",
                 tone: "#F26B1D",
               },
               {
                 id: "duermo",
                 name: "AkiDuermo",
                 url: suiteHref("duermo", locale, { referralCode }),
-                icon: "/brand/duermo-mark.svg",
+                icon: "/brand/v3/duermo.svg",
                 tone: "#2FC2A5",
               },
               {
                 id: "coches",
                 name: "AkiCoches",
                 url: `/?lang=${locale}`,
-                icon: "/brand/conduzco-icon.svg",
+                icon: "/brand/v3/coches.svg",
                 tone: "#FF3047",
               },
               {
                 id: "hq",
                 name: "AkiHQ",
                 url: suiteHref("hq", locale, { referralCode }),
-                icon: "/brand/hq-mark.svg",
+                icon: "/brand/v3/hq.svg",
                 tone: "#FFC533",
               },
               {
                 id: "business",
                 name: "AkiBusiness",
                 url: suiteHref("business", locale, { referralCode }),
-                icon: "/brand/business-mark.svg",
+                icon: "/brand/v3/business.svg",
                 tone: "#9A70FA",
               },
             ].map((app) => (
