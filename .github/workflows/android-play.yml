@@ -27,7 +27,21 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "9.5.0"
-      - run: gradle --no-daemon test lint bundleRelease assembleRelease assembleDebug
+      - name: Generate pinned Gradle wrapper
+        run: gradle --no-daemon wrapper --gradle-version 9.5.0 --distribution-type bin
+      - run: ./gradlew --no-daemon test lint bundleRelease assembleRelease assembleDebug
+      - name: Package Android Studio project
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          mkdir -p ../android-studio-project
+          rsync -a --exclude='build/' --exclude='.gradle/' --exclude='local.properties' --exclude='*.jks' --exclude='*.keystore' --exclude='keystore.properties' ./ ../android-studio-project/
+          printf '%s\n' "$SOURCE_COMMIT" > ../android-studio-project/BUILD-SOURCE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: akicoches-android-studio-project
+          path: android-studio-project/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: akicoches-android-unsigned
