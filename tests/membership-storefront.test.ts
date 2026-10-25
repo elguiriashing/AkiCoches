@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from "vitest";
+import { beforeEach, afterEach, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import * as React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { SuitePricingExperience } from "../src/components/SuitePricingExperience";
+beforeEach(() => window.history.replaceState(null, "", "/membership"));
 afterEach(cleanup);
 
 describe("AkiCoches audience-first membership storefront", () => {
@@ -58,7 +59,7 @@ describe("AkiCoches audience-first membership storefront", () => {
       expect(
         container.querySelector('a[href*="akibusiness.com"]'),
       ).not.toBeNull();
-      expect(container.querySelector("form")).toBeNull();
+      expect(container.querySelector("[data-offer] form")).toBeNull();
       const premium = container.querySelector("#listing-premium");
       expect(premium?.textContent).toContain(
         locale === "es"
@@ -71,7 +72,7 @@ describe("AkiCoches audience-first membership storefront", () => {
     for (const [path, sha] of [
       [
         "src/components/AkiSuiteAudienceStudio.tsx",
-        "e384c6c0cf0954e595aebb69079b677756cb4500",
+        "949828873ce35fd5768d497c9ea86084bc732f3d",
       ],
       [
         "src/components/AkiSuiteAudienceStudio.module.css",

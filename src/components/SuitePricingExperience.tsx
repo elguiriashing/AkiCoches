@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ConduzcoHeader } from "./AkiConduzco";
 import Link from "next/link";
 import styles from "./SuitePricingExperience.module.css";
 import {
@@ -213,59 +214,70 @@ export function SuitePricingExperience({
     },
   ];
   return (
-    <main className={styles.root} data-theme={app.theme} data-product={product}>
-      <div className={styles.inner}>
-        <header className={styles.topline}>
-          <a
-            className={styles.brand}
-            href={
-              product === "akipasa"
-                ? `/${locale}`
-                : product === "akihq"
-                  ? `/${locale}/business`
-                  : `/?lang=${locale}`
+    <>
+      {product === "akicoches" && <ConduzcoHeader locale={locale} />}
+      <main
+        className={styles.root}
+        data-theme={app.theme}
+        data-product={product}
+      >
+        <div className={styles.inner}>
+          {product !== "akicoches" && (
+            <header className={styles.topline}>
+              <a
+                className={styles.brand}
+                href={
+                  product === "akipasa"
+                    ? `/${locale}`
+                    : product === "akihq"
+                      ? `/${locale}/business`
+                      : `/?lang=${locale}`
+                }
+              >
+                <Image
+                  src={logo || app.logo}
+                  alt=""
+                  width={40}
+                  height={40}
+                  unoptimized
+                />
+                <span>
+                  {app.name}
+                  <small>AKISUITE</small>
+                </span>
+              </a>
+              <nav
+                className={styles.topActions}
+                aria-label={
+                  es ? "Acciones de membresía" : "Membership navigation"
+                }
+              >
+                <a href={`/settings?lang=${locale}`}>
+                  {es ? "Mis suscripciones" : "My subscriptions"} ↗
+                </a>
+              </nav>
+            </header>
+          )}
+          <AkiSuiteAudienceStudio
+            theme={app.theme}
+            locale={locale}
+            product={app.name}
+            eyebrow={app[locale].eyebrow}
+            title={app[locale].title}
+            description={app[locale].intro}
+            individual={individual}
+            business={business}
+            businessSoftwareHref={`https://akibusiness.com/?locale=${locale}`}
+            footerNote={
+              <p>
+                {es
+                  ? "Premium personal, Premium de fichas y AkiBusiness son independientes. Esta página no inicia ningún cobro."
+                  : "Personal Premium, listing Premium and AkiBusiness are separate products. No payment is collected on this page."}
+              </p>
             }
-          >
-            <Image
-              src={logo || app.logo}
-              alt=""
-              width={40}
-              height={40}
-              unoptimized
-            />
-            <span>
-              {app.name}
-              <small>AKISUITE</small>
-            </span>
-          </a>
-          <nav
-            className={styles.topActions}
-            aria-label={es ? "Acciones de membresía" : "Membership navigation"}
-          >
-            <a href={`/settings?lang=${locale}`}>
-              {es ? "Mis suscripciones" : "My subscriptions"} ↗
-            </a>
-          </nav>
-        </header>
-        <AkiSuiteAudienceStudio
-          theme={app.theme}
-          locale={locale}
-          product={app.name}
-          eyebrow={app[locale].eyebrow}
-          title={app[locale].title}
-          description={app[locale].intro}
-          individual={individual}
-          business={business}
-          businessSoftwareHref={`https://akibusiness.com/?locale=${locale}`}
-          footerNote={
-            <p>
-              {es
-                ? "Premium personal, Premium de fichas y AkiBusiness son independientes. Esta página no inicia ningún cobro."
-                : "Personal Premium, listing Premium and AkiBusiness are separate products. No payment is collected on this page."}
-            </p>
-          }
-        />
-      </div>
-    </main>
+          />
+        </div>
+      </main>
+    </>
   );
 }

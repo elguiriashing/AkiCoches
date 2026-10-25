@@ -1,4 +1,5 @@
 "use client";
+import { DiscoveryNavigation } from "./DiscoveryNavigation";
 
 import { BusinessPathway } from "./BusinessPathway";
 import Image from "next/image";
@@ -121,157 +122,151 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
     location.assign(conduzcoLanguageUrl(location.href, next));
   }
   return (
-    <header className={styles.header}>
-      <Link
-        href={`/?lang=${locale}`}
-        className={styles.brand}
-        aria-label="AkiCoches home"
-      >
-        <Image
-          src="/brand/v3/coches.svg"
-          alt=""
-          width={38}
-          height={38}
-          priority
-        />
-        <span>
-          Aki<span>Coches</span>.
-        </span>
-      </Link>
-      <nav className={styles.tools} aria-label="AkiCoches">
-        <Link className={styles.navlink} href={`/map?lang=${locale}`}>
-          {t.map}
-        </Link>
-        <Link className={styles.navlink} href={`/account?lang=${locale}`}>
-          {t.account}
-        </Link>
-        <Link className={styles.navlink} href={`/membership?lang=${locale}`}>
-          {locale === "es" ? "Membresías" : "Membership"}
-        </Link>
-        <ThemeToggle locale={locale} />
-        <button
-          type="button"
-          onClick={switchLocale}
-          aria-label={
-            locale === "en"
-              ? "Cambiar idioma a español"
-              : "Switch language to English"
-          }
+    <>
+      <header className={styles.header} data-suite-header>
+        <Link
+          href={`/?lang=${locale}`}
+          className={styles.brand}
+          aria-label="AkiCoches home"
         >
-          {t.lang}
-        </button>
-        <details
-          className={styles.suiteMenu}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              event.currentTarget.open = false;
-              event.currentTarget.querySelector("summary")?.focus();
-            }
-          }}
-        >
-          <summary
-            className={styles.suiteTrigger}
+          <Image
+            src="/brand/v3/coches.svg"
+            alt=""
+            width={38}
+            height={38}
+            priority
+          />
+          <span>
+            Aki<span>Coches</span>.
+          </span>
+        </Link>
+        <nav className={styles.tools} aria-label="AkiCoches">
+          <ThemeToggle locale={locale} />
+          <button
+            type="button"
+            onClick={switchLocale}
             aria-label={
-              locale === "es"
-                ? "Cambiar aplicación AkiSuite"
-                : "Switch AkiSuite app"
+              locale === "en"
+                ? "Cambiar idioma a español"
+                : "Switch language to English"
             }
-            title="AkiSuite"
           >
-            <span aria-hidden="true">⋯</span>
-          </summary>
-          <div className={styles.suitePopover}>
-            <strong className={styles.suiteHeading}>
-              {locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}
-            </strong>
-            {[
-              {
-                id: "pasa",
-                name: "AkiPasa",
-                url: suiteHref("pasa", locale, { referralCode }),
-                icon: "/brand/v3/pasa.svg",
-                tone: "#F26B1D",
-              },
-              {
-                id: "duermo",
-                name: "AkiDuermo",
-                url: suiteHref("duermo", locale, { referralCode }),
-                icon: "/brand/v3/duermo.svg",
-                tone: "#2FC2A5",
-              },
-              {
-                id: "coches",
-                name: "AkiCoches",
-                url: `/?lang=${locale}`,
-                icon: "/brand/v3/coches.svg",
-                tone: "#FF3047",
-              },
-              {
-                id: "hq",
-                name: "AkiHQ",
-                url: suiteHref("hq", locale, { referralCode }),
-                icon: "/brand/v3/hq.svg",
-                tone: "#FFC533",
-              },
-              {
-                id: "business",
-                name: "AkiBusiness",
-                url: suiteHref("business", locale, { referralCode }),
-                icon: "/brand/v3/business.svg",
-                tone: "#9A70FA",
-              },
-            ].map((app) => (
-              <a
-                key={app.id}
-                href={app.url}
-                aria-current={app.id === "coches" ? "page" : undefined}
-                className={styles.suiteLink}
-                style={{ "--suite-color": app.tone } as CSSProperties}
-              >
-                <Image
-                  src={app.icon}
-                  width={36}
-                  height={36}
-                  alt=""
-                  unoptimized
-                />
-                <span>{app.name}</span>
-                {app.id === "coches" && (
-                  <small>{locale === "es" ? "Actual" : "Current"}</small>
-                )}
-              </a>
-            ))}
-            <div className={styles.suiteActions}>
-              <a
-                className={styles.suiteAction}
-                href={`/settings?lang=${locale}`}
-              >
-                {locale === "es" ? "Ajustes" : "Settings"}
-              </a>
-              <form action={signOut}>
-                <input type="hidden" name="locale" value={locale} />
-                <button className={styles.suiteAction} type="submit">
-                  {locale === "es" ? "Cerrar sesión" : "Sign out"}
-                </button>
-              </form>
+            {t.lang}
+          </button>
+          <details
+            className={styles.suiteMenu}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.currentTarget.open = false;
+                event.currentTarget.querySelector("summary")?.focus();
+              }
+            }}
+          >
+            <summary
+              className={styles.suiteTrigger}
+              aria-label={
+                locale === "es"
+                  ? "Cambiar aplicación AkiSuite"
+                  : "Switch AkiSuite app"
+              }
+              title="AkiSuite"
+            >
+              <span aria-hidden="true">⋯</span>
+            </summary>
+            <div className={styles.suitePopover}>
+              <strong className={styles.suiteHeading}>
+                {locale === "es" ? "Aplicaciones AkiSuite" : "AkiSuite apps"}
+              </strong>
+              {[
+                {
+                  id: "pasa",
+                  name: "AkiPasa",
+                  url: suiteHref("pasa", locale, { referralCode }),
+                  icon: "/brand/v3/pasa.svg",
+                  tone: "#F26B1D",
+                },
+                {
+                  id: "duermo",
+                  name: "AkiDuermo",
+                  url: suiteHref("duermo", locale, { referralCode }),
+                  icon: "/brand/v3/duermo.svg",
+                  tone: "#2FC2A5",
+                },
+                {
+                  id: "coches",
+                  name: "AkiCoches",
+                  url: `/?lang=${locale}`,
+                  icon: "/brand/v3/coches.svg",
+                  tone: "#FF3047",
+                },
+                {
+                  id: "hq",
+                  name: "AkiHQ",
+                  url: suiteHref("hq", locale, { referralCode }),
+                  icon: "/brand/v3/hq.svg",
+                  tone: "#FFC533",
+                },
+                {
+                  id: "business",
+                  name: "AkiBusiness",
+                  url: suiteHref("business", locale, { referralCode }),
+                  icon: "/brand/v3/business.svg",
+                  tone: "#9A70FA",
+                },
+              ].map((app) => (
+                <a
+                  key={app.id}
+                  href={app.url}
+                  aria-current={app.id === "coches" ? "page" : undefined}
+                  className={styles.suiteLink}
+                  style={{ "--suite-color": app.tone } as CSSProperties}
+                >
+                  <Image
+                    src={app.icon}
+                    width={36}
+                    height={36}
+                    alt=""
+                    unoptimized
+                  />
+                  <span>{app.name}</span>
+                  {app.id === "coches" && (
+                    <small>{locale === "es" ? "Actual" : "Current"}</small>
+                  )}
+                </a>
+              ))}
+              <div className={styles.suiteActions}>
+                <a
+                  className={styles.suiteAction}
+                  href={`/settings?lang=${locale}`}
+                >
+                  {locale === "es" ? "Ajustes" : "Settings"}
+                </a>
+                <form action={signOut}>
+                  <input type="hidden" name="locale" value={locale} />
+                  <button className={styles.suiteAction} type="submit">
+                    {locale === "es" ? "Cerrar sesión" : "Sign out"}
+                  </button>
+                </form>
+              </div>
+              {referralCode && (
+                <a
+                  className={styles.suiteLink}
+                  href={suiteHref("pasa", locale, {
+                    path: "/referrals",
+                    referralCode,
+                  })}
+                >
+                  {locale === "es"
+                    ? "Aplicar invitación de referido"
+                    : "Apply referral invitation"}
+                </a>
+              )}
             </div>
-            {referralCode && (
-              <a
-                className={styles.suiteLink}
-                href={suiteHref("pasa", locale, {
-                  path: "/referrals",
-                  referralCode,
-                })}
-              >
-                {locale === "es"
-                  ? "Aplicar invitación de referido"
-                  : "Apply referral invitation"}
-              </a>
-            )}
-          </div>
-        </details>
-      </nav>
-    </header>
+          </details>
+        </nav>
+      </header>
+      <DiscoveryNavigation locale={locale} product="coches" />
+    </>
   );
 }
 

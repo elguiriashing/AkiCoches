@@ -1018,3 +1018,22 @@
   background: #ff30471c;
   border-color: #ff3047;
 }
+
+/* Auth/legal headers also render outside .app: provide complete surface tokens. */
+.header {
+  --coches-bg: #3b101b;
+  --coches-surface: #50212c;
+  --coches-ink: #f6f4f1;
+  --coches-muted: #b8b7b6;
+}
+.header .tools :is(button, summary) {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+:global(html[data-theme="light"]) .header {
+  --coches-bg: #f7f7f8;
+  --coches-surface: #fff;
+  --coches-ink: #17181c;
+  --coches-muted: #62646b;
+}
