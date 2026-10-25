@@ -697,7 +697,7 @@ export function ConduzcoMap({
     };
   }, [container, styleUrl, locale]);
   return (
-    <div className={styles.app}>
+    <div className={styles.app} data-suite-fullscreen>
       <ConduzcoHeader locale={locale} />
       <main className={styles.mapLayout}>
         {rasterFallback ? (

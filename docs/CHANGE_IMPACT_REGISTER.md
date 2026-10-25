@@ -109,3 +109,11 @@ asserts zero scene scroll and captures settled transitions.
 The rental sign-in canvas now follows the saved light/dark appearance with the
 same burgundy/dark and neutral/light palette as its header and navigation.
 The source browser smoke checks the auth heading for each actual theme.
+
+### 2026-10-25 | Rental map navigation safe area
+
+The full-screen Coches map reserves the same responsive dock inset as the
+rental company view and Duermo map. Its canvas stays above the phone dock
+and beside the desktop rail, with no extra document padding. Existing filters,
+map state and results remain unchanged. Browser smoke asserts both geometry
+boundaries in EN/ES and light/dark. No API, data or provider changes.

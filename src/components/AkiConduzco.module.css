@@ -385,7 +385,7 @@
   text-decoration: none;
 }
 .mapLayout {
-  height: calc(100dvh - 72px);
+  height: calc(100dvh - 72px - var(--suite-navigation-offset, 0px));
   min-height: 480px;
   position: relative;
 }
@@ -847,7 +847,7 @@
     height: 205px;
   }
   .mapLayout {
-    height: calc(100dvh - 64px);
+    height: calc(100dvh - 64px - var(--suite-navigation-offset, 0px));
   }
   .mapPanel {
     left: 10px;
@@ -1036,4 +1036,10 @@
   --coches-surface: #fff;
   --coches-ink: #17181c;
   --coches-muted: #62646b;
+}
+
+.app[data-suite-fullscreen] {
+  height: calc(100dvh - var(--suite-navigation-offset, 0px));
+  min-height: 0;
+  padding-bottom: 0;
 }
