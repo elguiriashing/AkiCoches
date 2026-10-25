@@ -57,3 +57,12 @@ No roles, links, data, billing, analytics, storage or provider configuration cha
 See AKISUITE_ICON_FAMILY.md for dependencies, checks, native rebuild limitations
 and source-only rollback. Local visual/asset validation and required CI are
 separate from exact-source production and signed native-device acceptance.
+
+# 2026-10-25 | Rental photo caption contrast
+
+Live light-mode rental detail showed the BMW M4 name almost black over its dark
+photo placeholder. RentalCompanyApp.module.css now sets the photo-caption h2
+foreground explicitly to white. Both themes/locales use this same selector;
+responsive font sizing, photo overlay and all actions remain unchanged. Local npm run check passed lint, typecheck, 308 tests and the production build.
+Hosted browser/Cloudflare CI and exact-source release remain pending. No production deployment, real booking, customer mutation,
+image upload, schema, auth, billing or provider change. Rollback: source revert.
