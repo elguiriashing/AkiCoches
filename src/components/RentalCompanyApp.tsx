@@ -277,7 +277,7 @@ export function RentalCompanyApp({
             : "Checking availability…";
 
   return (
-    <div className={`${shell.app} ${s.app}`}>
+    <div className={`${shell.app} ${s.app}`} data-suite-fullscreen>
       <ConduzcoHeader locale={locale} />
       <main className={s.workspace}>
         <header className={s.companyHeader}>
