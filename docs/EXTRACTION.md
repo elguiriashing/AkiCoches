@@ -458,3 +458,11 @@ no framework runtime or third-party dependency added. The private lab keeps
 its administrator-only route. No pricing, session, tenant, permissions or
 provider setting changes. Source revert is rollback. Source, responsive
 browser, exact live source and physical device acceptance remain distinct.
+
+### 2026-10-25 | Rental map navigation safe area
+
+The full-screen Coches map reserves the same responsive dock inset as the
+rental company view and Duermo map. Its canvas stays above the phone dock
+and beside the desktop rail, with no extra document padding. Existing filters,
+map state and results remain unchanged. Browser smoke asserts both geometry
+boundaries in EN/ES and light/dark. No API, data or provider changes.

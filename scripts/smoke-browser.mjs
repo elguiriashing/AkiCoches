@@ -134,6 +134,16 @@ try {
         });
         if (map?.status() !== 200) throw new Error(`map ${map?.status()}`);
         await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
+        const mapBounds = await page.locator("main").boundingBox();
+        const navBounds = await page
+          .locator(".suite-discovery-nav")
+          .boundingBox();
+        if (!mapBounds || !navBounds)
+          throw new Error("map navigation geometry missing");
+        if (width < 1024 && mapBounds.y + mapBounds.height > navBounds.y + 1)
+          throw new Error(`mobile map extends behind the navigation dock: ${JSON.stringify({mapBounds, navBounds})}`);
+        if (width >= 1024 && mapBounds.x < navBounds.x + navBounds.width)
+          throw new Error("desktop map extends behind the navigation rail");
         results.push({
           locale,
           width,

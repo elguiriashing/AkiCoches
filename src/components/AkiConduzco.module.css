@@ -1037,3 +1037,20 @@
   --coches-ink: #17181c;
   --coches-muted: #62646b;
 }
+
+.app[data-suite-fullscreen] {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--suite-navigation-offset, 0px));
+  min-height: 0;
+  padding-bottom: 0;
+}
+
+.app[data-suite-fullscreen] .header {
+  flex-shrink: 0;
+}
+.app[data-suite-fullscreen] .mapLayout {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
