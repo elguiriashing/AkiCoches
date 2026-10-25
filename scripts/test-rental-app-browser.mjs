@@ -96,7 +96,7 @@ await build({
         );
         builder.onLoad({ filter: /.*/, namespace: "fixture-next" }, (args) => ({
           contents: args.path.endsWith("navigation")
-            ? `export function useRouter(){return {push(href){window.location.assign(href)}}}`
+            ? `export function usePathname(){return window.location.pathname} export function useRouter(){return {push(href){window.location.assign(href)}}}`
             : args.path.endsWith("image")
               ? `import React from 'react';export default function Image({src,alt,fill,width,height,style,className}){return React.createElement('img',{src,alt,width,height,className,style:{...(fill?{position:'absolute',inset:0,width:'100%',height:'100%'}:{}),...style}})}`
               : `import React from 'react';export default function Link({href,children,...props}){return React.createElement('a',{href,...props},children)}`,
