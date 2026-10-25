@@ -159,6 +159,7 @@
   color: #ffffffb0;
 }
 .photoCaption h2 {
+  color: #fff;
   font-size: clamp(24px, 3vw, 46px);
   letter-spacing: -0.05em;
   margin: 7px 0 0;
