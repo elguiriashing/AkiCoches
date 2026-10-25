@@ -34,8 +34,8 @@ export function ProductPrivacy({ locale }: { locale: "en" | "es" }) {
         <h2>{es ? "Ubicación y mapas" : "Location and maps"}</h2>
         <p>
           {es
-            ? "Los mapas envían la zona visible y las búsquedas a nuestros servicios para mostrar resultados. Cuando usas una función de ubicación y das permiso, la zona enviada puede revelar tu ubicación precisa. Puedes utilizar el servicio sin activar la ubicación. Las ubicaciones de negocios y eventos que publicas pueden ser visibles para otras personas."
-            : "Maps send the visible area and searches to our services to display results. If you use a location feature and grant permission, the transmitted area may reveal your precise location. You can use the service without enabling location. Business and event locations you publish may be visible to other people."}
+            ? "Los mapas envían la zona que estás consultando, las búsquedas y los filtros a nuestros servicios para mostrar vehículos. Las solicitudes de mapas también pueden enviar la zona consultada al proveedor de mapas. La zona elegida en un mapa no indica necesariamente tu ubicación actual."
+            : "Maps send the area you are viewing, searches and filters to our services to display vehicles. Map requests may also send the viewed area to the map provider. The area selected on a map does not necessarily indicate your current location."}
         </p>
         <h2>{es ? "Analítica opcional" : "Optional analytics"}</h2>
         <p>
@@ -84,6 +84,11 @@ export function ProductPrivacy({ locale }: { locale: "en" | "es" }) {
             : "Necessary account data is retained while providing the service and deleted when processing a verified request within 48 hours. The retention policy sets 90 days for operational logs and 12 months after closure for support records managed in our system and minimal deletion evidence. Business and accounting records subject to the applicable Spanish obligation are retained for 6 years from the last entry. A legal obligation or claim may require specific records to be kept longer; support explains and documents those exceptions separately. Backups and provider systems, including external email, have separate retention processes; support can explain the applicable scope."}
         </p>
         <h2>{es ? "Contacto y derechos" : "Contact and rights"}</h2>
+        <p>
+          {es
+            ? "Responsable del servicio: AkiPasa Marketing S.L."
+            : "Service operator: AkiPasa Marketing S.L."}
+        </p>
         <p>
           {es
             ? "Para acceso, exportación, corrección y otras consultas de privacidad: privacy@akipasa.com. Para eliminación y seguimiento de solicitudes: support@akipasa.com."
