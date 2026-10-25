@@ -94,3 +94,6 @@ rental company view and Duermo map. Its canvas stays above the phone dock
 and beside the desktop rail, with no extra document padding. Existing filters,
 map state and results remain unchanged. Browser smoke asserts both geometry
 boundaries in EN/ES and light/dark. No API, data or provider changes.
+
+Map height uses the actual header row, including its wrapped phone layout,
+rather than assuming a 64px header. Browser geometry must clear the dock.

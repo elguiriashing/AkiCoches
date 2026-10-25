@@ -141,7 +141,7 @@ try {
         if (!mapBounds || !navBounds)
           throw new Error("map navigation geometry missing");
         if (width < 1024 && mapBounds.y + mapBounds.height > navBounds.y + 1)
-          throw new Error("mobile map extends behind the navigation dock");
+          throw new Error(`mobile map extends behind the navigation dock: ${JSON.stringify({mapBounds, navBounds})}`);
         if (width >= 1024 && mapBounds.x < navBounds.x + navBounds.width)
           throw new Error("desktop map extends behind the navigation rail");
         results.push({

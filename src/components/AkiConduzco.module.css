@@ -385,7 +385,7 @@
   text-decoration: none;
 }
 .mapLayout {
-  height: calc(100dvh - 72px - var(--suite-navigation-offset, 0px));
+  height: calc(100dvh - 72px);
   min-height: 480px;
   position: relative;
 }
@@ -847,7 +847,7 @@
     height: 205px;
   }
   .mapLayout {
-    height: calc(100dvh - 64px - var(--suite-navigation-offset, 0px));
+    height: calc(100dvh - 64px);
   }
   .mapPanel {
     left: 10px;
@@ -1039,7 +1039,18 @@
 }
 
 .app[data-suite-fullscreen] {
+  display: flex;
+  flex-direction: column;
   height: calc(100dvh - var(--suite-navigation-offset, 0px));
   min-height: 0;
   padding-bottom: 0;
+}
+
+.app[data-suite-fullscreen] .header {
+  flex-shrink: 0;
+}
+.app[data-suite-fullscreen] .mapLayout {
+  flex: 1;
+  height: auto;
+  min-height: 0;
 }
