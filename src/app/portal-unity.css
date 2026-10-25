@@ -237,3 +237,44 @@ body[data-product="akiconduzco"] .auth-page .consent-row,
 body[data-product="akiconduzco"] .auth-page .auth-intro a {
   color: #f6f4f1;
 }
+
+/* Rental sign-in uses the same saved appearance and burgundy surfaces as its header. */
+body[data-product="akiconduzco"]:has(.auth-page) {
+  background: #3b101b;
+}
+body[data-product="akiconduzco"] .auth-page {
+  --surface: #50212c;
+  --surface-alt: #3b101b;
+}
+body[data-product="akiconduzco"] .auth-page input:not([type="checkbox"]) {
+  background: var(--surface);
+}
+html[data-theme="light"] body[data-product="akiconduzco"]:has(.auth-page) {
+  background: #f7f7f8;
+}
+html[data-theme="light"] body[data-product="akiconduzco"] .auth-page {
+  --auth-ink: #17181c;
+  --ink: #17181c;
+  --muted: #62646b;
+  --line: #dce1e8;
+  --surface: #ffffff;
+  --surface-alt: #f7f7f8;
+  --primary-strong: #b91c32;
+  color: var(--ink);
+  color-scheme: light;
+}
+html[data-theme="light"]
+  body[data-product="akiconduzco"]
+  .auth-page
+  input:not([type="checkbox"]),
+html[data-theme="light"]
+  body[data-product="akiconduzco"]
+  .auth-page
+  .consent-row,
+html[data-theme="light"]
+  body[data-product="akiconduzco"]
+  .auth-page
+  .auth-intro
+  a {
+  color: var(--ink);
+}
