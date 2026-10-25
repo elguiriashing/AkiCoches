@@ -1,5 +1,16 @@
 # Extraction contract
 
+## 2026-10-25 | Rental photo caption contrast
+
+The vehicle name over the rental detail photo/placeholder is explicitly white in
+both saved themes. The photo remains dark even in light mode; inherited global
+heading color previously made the selected vehicle name nearly invisible there.
+This is scoped to RentalCompanyApp's photo caption, including EN/ES, responsive
+sizes and no-image states. Fleet selection, dates, requests, account, pricing,
+media loading, permissions and provider configuration are unchanged. Rollback is
+a source revert. Validation is recorded in the change-impact register; source
+preparation is not a production release.
+
 Android Google OAuth requires the product-specific code-only browser return and
 paired custom-scheme Android client described in android-oauth-return.md. The
 original WebView performs PKCE exchange; sessions never transfer across hosts.
