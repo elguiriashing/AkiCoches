@@ -66,3 +66,18 @@ foreground explicitly to white. Both themes/locales use this same selector;
 responsive font sizing, photo overlay and all actions remain unchanged. Local npm run check passed lint, typecheck, 308 tests and the production build.
 Hosted browser/Cloudflare CI and exact-source release remain pending. No production deployment, real booking, customer mutation,
 image upload, schema, auth, billing or provider change. Rollback: source revert.
+
+## 2026-10-25 | AkiSuite navigation and surface continuity
+
+Owner-authorized tightening preserves identity, tenant permissions, booking and
+billing authority. Discovery membership audience now survives explicit Business
+handoffs, reload and browser history without enabling checkout. Duermo/Coches
+share one desktop rail/mobile dock component where available; Coches membership
+retains its product header. Pasa's auth selector uses all five canonical brands
+and origins. Duermo auth stays teal; HQ marketing and login use one request
+language, keep readable dark-surface text, and expose header controls. Business
+login gains local home/language/appearance controls retaining input only in memory.
+Each repository carries only its affected subset. No schema, feature activation,
+provider setting, customer record or native signing change. Source revert is the
+rollback. Full source, browser/CI and exact production checks remain required;
+device/authenticated acceptance must not be inferred from fixtures.
