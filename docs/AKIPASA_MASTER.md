@@ -1,5 +1,13 @@
 # Product contract
 
+## 2026-10-25 | Rental photo caption contrast
+
+The selected vehicle name on the rental detail dark photo surface uses explicit
+white text in light and dark themes. Global heading tokens must not override
+that surface's foreground. No interaction, URL, identity, booking, pricing,
+media, permission or provider behavior changes. See the impact register for
+validation and release limits. Source revert is sufficient.
+
 ## 2026-10-24 | Native shared account journey
 
 AkiCoches now serves its own shared profile/settings forms and retains local
