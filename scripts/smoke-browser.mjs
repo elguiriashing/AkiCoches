@@ -118,7 +118,9 @@ try {
         const authChannels = authHeadingColor.match(/\d+/g)?.map(Number) || [];
         if (
           authChannels.length < 3 ||
-          authChannels.slice(0, 3).some((value) => value < 200)
+          (theme === "light"
+            ? authChannels.slice(0, 3).some((value) => value > 80)
+            : authChannels.slice(0, 3).some((value) => value < 200))
         )
           throw new Error(
             `unreadable rental auth heading ${authHeadingColor} ${locale} ${theme}`,
