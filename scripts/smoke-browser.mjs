@@ -1,4 +1,4 @@
-import { chromium } from "@playwright/test";
+import { chromium, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 const base = process.env.SMOKE_BASE_URL || "http://127.0.0.1:3103";
 const browser = await chromium.launch({
@@ -27,7 +27,11 @@ try {
         });
         if (response?.status() !== 200)
           throw new Error(`home ${response?.status()}`);
-        await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
+        await page
+          .getByRole("link", {
+            name: locale === "es" ? "Inicio de AkiCoches" : "AkiCoches home",
+          })
+          .waitFor();
         await page.waitForFunction(() =>
           Boolean(document.documentElement.dataset.theme),
         );
@@ -43,6 +47,52 @@ try {
         await closeConsent.waitFor({ state: "visible" });
         await closeConsent.click();
         await closeConsent.waitFor({ state: "hidden" });
+        if (width >= 1024) {
+          const rail = page.locator(".suite-discovery-nav");
+          await expect(page.locator("[data-suite-header]")).toBeHidden();
+          expect((await rail.boundingBox()).y).toBe(0);
+          expect((await rail.boundingBox()).height).toBe(900);
+          await expect(
+            page.locator(".suite-discovery-brand img"),
+          ).toHaveAttribute("src", "/brand/v3/coches.svg");
+          await page
+            .getByRole("button", {
+              name:
+                locale === "es" ? "Contraer barra lateral" : "Collapse sidebar",
+              exact: true,
+            })
+            .click();
+          await expect(rail).toHaveAttribute("data-compact", "true");
+          await expect(
+            page.locator(".suite-discovery-brand strong"),
+          ).toBeHidden();
+          await page.evaluate(() =>
+            window.scrollTo(0, document.body.scrollHeight),
+          );
+          expect((await rail.boundingBox()).y).toBe(0);
+          await page.setViewportSize({ width, height: 480 });
+          await page.locator(".suite-discovery-menu summary").click();
+          const menu = page.locator(".suite-discovery-popover");
+          await expect(menu).toBeVisible();
+          const bounds = await menu.boundingBox();
+          expect(bounds.y).toBeGreaterThanOrEqual(0);
+          expect(bounds.y + bounds.height).toBeLessThanOrEqual(480);
+          await expect(
+            menu.getByRole("navigation").getByRole("link"),
+          ).toHaveCount(5);
+          await page.keyboard.press("Escape");
+          await expect(menu).toBeHidden();
+          await page
+            .getByRole("button", {
+              name:
+                locale === "es" ? "Expandir barra lateral" : "Expand sidebar",
+              exact: true,
+            })
+            .click();
+          await expect(rail).toHaveAttribute("data-compact", "false");
+          await page.setViewportSize({ width, height: 900 });
+          await page.evaluate(() => window.scrollTo(0, 0));
+        }
         // The acquisition pathway is deliberately disclosed by the user, not an
         // always-visible duplicate fleet button. Verify the new interaction and
         // both canonical product roles after privacy controls are dismissed.
@@ -133,7 +183,11 @@ try {
           waitUntil: "domcontentloaded",
         });
         if (map?.status() !== 200) throw new Error(`map ${map?.status()}`);
-        await page.getByRole("link", { name: "AkiCoches home" }).waitFor();
+        await page
+          .getByRole("link", {
+            name: locale === "es" ? "Inicio de AkiCoches" : "AkiCoches home",
+          })
+          .waitFor();
         const mapBounds = await page.locator("main").boundingBox();
         const navBounds = await page
           .locator(".suite-discovery-nav")
@@ -141,7 +195,9 @@ try {
         if (!mapBounds || !navBounds)
           throw new Error("map navigation geometry missing");
         if (width < 1024 && mapBounds.y + mapBounds.height > navBounds.y + 1)
-          throw new Error(`mobile map extends behind the navigation dock: ${JSON.stringify({mapBounds, navBounds})}`);
+          throw new Error(
+            `mobile map extends behind the navigation dock: ${JSON.stringify({ mapBounds, navBounds })}`,
+          );
         if (width >= 1024 && mapBounds.x < navBounds.x + navBounds.width)
           throw new Error("desktop map extends behind the navigation rail");
         results.push({
