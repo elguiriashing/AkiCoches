@@ -127,7 +127,9 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
         <Link
           href={`/?lang=${locale}`}
           className={styles.brand}
-          aria-label="AkiCoches home"
+          aria-label={
+            locale === "es" ? "Inicio de AkiCoches" : "AkiCoches home"
+          }
         >
           <Image
             src="/brand/v3/coches.svg"
@@ -265,7 +267,18 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
           </details>
         </nav>
       </header>
-      <DiscoveryNavigation locale={locale} product="coches" />
+      <DiscoveryNavigation
+        locale={locale}
+        product="coches"
+        onLanguageChange={switchLocale}
+      >
+        <form action={signOut}>
+          <input type="hidden" name="locale" value={locale} />
+          <button type="submit">
+            {locale === "es" ? "Cerrar sesión" : "Sign out"}
+          </button>
+        </form>
+      </DiscoveryNavigation>
     </>
   );
 }
@@ -627,6 +640,7 @@ export function ConduzcoMap({
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let abort: AbortController | undefined;
+    let sizeObserver: ResizeObserver | undefined;
     void import("maplibre-gl")
       .then(({ default: maplibre }) => {
         if (cancelled) return;
@@ -637,6 +651,10 @@ export function ConduzcoMap({
           zoom: 8,
         });
         mapRef.current = map;
+        if (typeof ResizeObserver !== "undefined") {
+          sizeObserver = new ResizeObserver(() => map?.resize());
+          sizeObserver.observe(container);
+        }
         map.addControl(new maplibre.NavigationControl(), "bottom-right");
         const load = (initial = false) => {
           if (!map) return;
@@ -690,6 +708,7 @@ export function ConduzcoMap({
       });
     return () => {
       cancelled = true;
+      sizeObserver?.disconnect();
       if (timer) clearTimeout(timer);
       abort?.abort();
       mapRef.current = null;
