@@ -11,13 +11,13 @@ describe("AkiCoches sitemap", () => {
     expect(route).toContain('.eq("vehicles.active", true)');
   });
 
-  it("publishes standalone discovery routes and rental details", () => {
+  it("publishes standalone discovery routes and rental details after approval", () => {
     const sitemap = renderSitemap([
       {
         slug: "costa-&-cars",
         updated_at: "2026-10-19T12:00:00.000Z",
       },
-    ]);
+    ], true);
 
     expect(sitemap).toContain("<loc>https://akicoches.com/</loc>");
     expect(sitemap).toContain("<loc>https://akicoches.com/map</loc>");
