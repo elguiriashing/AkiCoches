@@ -34,7 +34,7 @@ export default async function AkiConduzcoPage({
   const query = await searchParams;
   const locale = conduzcoLocale((await headers()).get("x-akipasa-locale"));
   if (typeof query.q !== "string" || !query.q.trim()) return (
-    <LaunchWaitlist product="coches" locale={locale} siteKey={process.env.NEXT_PUBLIC_LAUNCH_WAITLIST_TURNSTILE_SITE_KEY || null} />
+    <LaunchWaitlist product="coches" locale={locale} siteKey={process.env.NEXT_PUBLIC_LAUNCH_WAITLIST_TURNSTILE_SITE_KEY || "0x4AAAAAAFpBhxqGpSL9Cqgg"} />
   );
   return (
     <AkiConduzco
