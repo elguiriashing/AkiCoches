@@ -276,3 +276,12 @@ only loss on the scene cancels its gesture. Mouse movement with no primary
 button held clears a pending gesture after an uncaptured outside release.
 Acceptance now uses real Chromium touch input originating on a card descendant,
 and covers outside vertical release followed by ordinary mouse hover.
+
+
+## 2026-10-28 | Product reset / launch waitlist staging (PR #66)
+
+Proposed public AkiCoches root becomes a branded bilingual under-development landing with a segmented launch waitlist (name, email, city, individual/business audience, optional interests, language); launch notification consent is required and marketing consent separate, optional, unchecked. Existing account/rental deep links and /hq-login remain reachable. AkiBusiness remains a separate product.
+
+Dependencies: shared secure AkiPasa endpoint from merged PR akipasa#318, Supabase launch_waitlist_private_optin_20261028 and service-only RLS, live Resend mail verification plus unsubscribe/delete, valid Cloudflare Turnstile hostname/action and key, bounded rate limits, strict origin/CSP/CORS, reviewed privacy/retention and an observed active cleanup job. Explicit Turnstile rendering on script readiness and cleanup on client-side navigation is required. Disable signup if missing site key or backend proof. No client secrets.
+
+Release blockers: reconcile preview-only PR #67 rather than merge two competing landing implementations; complete real browser form remount, double-opt-in inbox, duplicate/throttle/unsubscribe/deletion, ES/EN and Android login return tests; confirm crawler/canonical SEO, full exact-head CI and live Cloudflare deployment SHA. Roll back root landing via normal source deployment without altering existing customers or data. Do not activate public personal-data collection, send marketing, change payment flows or delete production data until gates are accepted.
