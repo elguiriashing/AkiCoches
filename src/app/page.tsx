@@ -4,6 +4,12 @@ import { AkiConduzco } from "@/components/AkiConduzco";
 import { LaunchWaitlist } from "@/components/LaunchWaitlist";
 import { conduzcoLocale } from "@/lib/akiconduzco-i18n";
 
+const launchSiteKey =
+  process.env.NEXT_PUBLIC_LAUNCH_WAITLIST_ENABLED === "true"
+    ? process.env.NEXT_PUBLIC_LAUNCH_WAITLIST_TURNSTILE_SITE_KEY ||
+      "0x4AAAAAAFpBhxqGpSL9Cqgg"
+    : null;
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = conduzcoLocale((await headers()).get("x-akipasa-locale"));
   const title =
@@ -34,7 +40,7 @@ export default async function AkiConduzcoPage({
   const query = await searchParams;
   const locale = conduzcoLocale((await headers()).get("x-akipasa-locale"));
   if (typeof query.q !== "string" || !query.q.trim()) return (
-    <LaunchWaitlist product="coches" locale={locale} siteKey={process.env.NEXT_PUBLIC_LAUNCH_WAITLIST_TURNSTILE_SITE_KEY || "0x4AAAAAAFpBhxqGpSL9Cqgg"} />
+    <LaunchWaitlist product="coches" locale={locale} siteKey={launchSiteKey} />
   );
   return (
     <AkiConduzco
