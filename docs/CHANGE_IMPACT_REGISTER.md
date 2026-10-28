@@ -1,5 +1,13 @@
 # Product contract
 
+## 2026-10-28 | Consumer chooser and branded AkiHQ entry
+
+- Public AkiSelector and app menu show only Pasa/Duermo/Coches. Keep existing rentals/account/booking/Android/OAuth functionality and redirects intact.
+- `/hq-login` stays local to Coches, noindex, EN/ES, and directs to AkiHQ's existing host-local business login. AkiBusiness remains separate, no subscription or tenant migration.
+- Coming-soon/waitlist is a separate rollout gate; no data collected or promoted by this preparatory route.
+- CI and source-aligned production/browser/device acceptance required. Rollback the added navigation/route; no database, payment or Cloudflare changes.
+
+
 ## 2026-10-24 | Native shared account journey
 
 AkiCoches now serves its own shared profile/settings forms and retains local
