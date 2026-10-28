@@ -26,7 +26,41 @@ try {
           waitUntil: "domcontentloaded",
         });
         if (response?.status() !== 200)
-          throw new Error(`home ${response?.status()}`);
+          throw new Error(`coming soon ${response?.status()}`);
+        await page
+          .getByRole("heading", {
+            name: locale === "es"
+              ? "Más libertad. Menos complicaciones."
+              : "More freedom. Less hassle.",
+          })
+          .waitFor();
+        await expect(
+          page.getByRole("link", {
+            name: locale === "es"
+              ? "Tengo una empresa de alquiler"
+              : "I run a rental business",
+          }),
+        ).toHaveAttribute("href", `/hq-login?lang=${locale}`);
+        await expect(
+          page.getByRole("button", {
+            name: locale === "es"
+              ? "Avisadme del lanzamiento"
+              : "Notify me at launch",
+          }),
+        ).toBeDisabled(); // CI intentionally has no real Turnstile credentials.
+        await mkdir("test-results/coches", { recursive: true });
+        await page.screenshot({
+          path: `test-results/coches/coming-soon-${locale}-${width}-${theme}.png`,
+          fullPage: true,
+        });
+        // Preserve the legacy direct-search experience and its existing layout
+        // and account regression checks without pretending it is the homepage.
+        const deepLink = await page.goto(
+          `${base}/?lang=${locale}&q=Fuengirola`,
+          { waitUntil: "domcontentloaded" },
+        );
+        if (deepLink?.status() !== 200)
+          throw new Error(`legacy search ${deepLink?.status()}`);
         await page
           .getByRole("link", {
             name: locale === "es" ? "Inicio de AkiCoches" : "AkiCoches home",
