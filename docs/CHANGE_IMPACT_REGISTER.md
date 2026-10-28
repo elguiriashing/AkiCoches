@@ -7,7 +7,6 @@
 - Coming-soon/waitlist is a separate rollout gate; no data collected or promoted by this preparatory route.
 - CI and source-aligned production/browser/device acceptance required. Rollback the added navigation/route; no database, payment or Cloudflare changes.
 
-
 ## 2026-10-24 | Native shared account journey
 
 AkiCoches now serves its own shared profile/settings forms and retains local
