@@ -40,7 +40,7 @@ try {
               ? "Tengo una empresa de alquiler"
               : "I run a rental business",
           }),
-        ).toHaveAttribute("href", `/hq-login?lang=${locale}`);
+        ).toHaveAttribute("href", "#launch-form");
         await expect(
           page.getByRole("button", {
             name: locale === "es"
