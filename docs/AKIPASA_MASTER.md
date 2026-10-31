@@ -249,3 +249,37 @@ only loss on the scene cancels its gesture. Mouse movement with no primary
 button held clears a pending gesture after an uncaptured outside release.
 Acceptance now uses real Chromium touch input originating on a card descendant,
 and covers outside vertical release followed by ordinary mouse hover.
+
+## 2026-10-31 | Complete the open Coches source PRs together
+
+PR #62 integrates the independent analytics safeguards from #62 and the confirmed
+Coches measurement destination from #64, the bilingual privacy/access changes
+from #51, and the disabled review-policy foundation from #61 on current main
+`e6f89a0682aa14eedce736bd19d0b1bda4f335fa`. The existing coming-soon page, signup
+flag, launch-waitlist disclosure, public crawler/noindex gate and canonical
+metadata are preserved. The privacy merge must not erase the newer waitlist
+policy. These changes do not launch rentals, adult verification or reviews.
+
+Analytics defaults to the owner-confirmed Coches web stream `G-N208MPSFXW`.
+An optional build-time `NEXT_PUBLIC_GA4_MEASUREMENT_ID` override is supported;
+explicit blank/invalid/copied configuration, noncanonical hosts, denied consent and
+server-restricted visitors cannot load the tag. Ads, Signals and personalization
+remain denied; revocation and remount cleanup remain covered by the component
+suite. Google-side collection and production source readback are separate from
+these tests and must be recorded in the PR's completed release receipt.
+
+Both age-assurance flags remain unset/false. No provider signup, private
+attestation write, shared migration, verification claim, review UI or customer
+transaction is part of this source release. The provider/evidence/moderation and
+privacy-lifecycle work listed in VERIFIED_REVIEWS_20261026.md still gates future
+activation. Manual deletion instructions reflect the existing owner-approved
+policy; this release does not delete accounts or certify backup cleanup.
+
+Focused local checks at this source checkpoint: 21 analytics effect cases, 31
+age-policy/reader cases and 11 shared account/privacy rendering cases passed.
+The privacy cases assert the preserved bilingual launch-waitlist/Turnstile copy.
+Required hosted full lint/typecheck/tests/Next build, native-account browser,
+public crawler and Cloudflare package checks are required on the integrated
+head before merge; final IDs/results and live limits belong in the PR receipt.
+Rollback is a normal source revert; do not restore a cross-product GA stream,
+activate indexing, remove account restrictions or alter customer data.

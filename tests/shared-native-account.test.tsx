@@ -61,6 +61,44 @@ vi.mock("../src/components/SharedMembershipPanel", () => ({
   SharedMembershipPanel: () => null,
 }));
 import { SharedAccount } from "../src/components/SharedAccount";
+import { ProductPrivacy } from "../src/components/ProductPrivacy";
+
+it.each(["en", "es"] as const)(
+  "exposes public deletion steps and scoped retention in %s",
+  (locale) => {
+    const { container } = render(<ProductPrivacy locale={locale} />);
+    expect(container.textContent).toContain("AkiCoches");
+    expect(container.textContent).toContain("support@akipasa.com");
+    expect(container.textContent).toContain("AkiPasa Marketing S.L.");
+    expect(container.textContent).not.toContain("grant permission");
+    expect(container.textContent).not.toContain("das permiso");
+    expect(container.textContent).toContain("48");
+    expect(container.textContent).toContain("90");
+    expect(container.textContent).toContain("12");
+    expect(container.textContent).toContain("6");
+    expect(container.textContent).toContain(
+      locale === "es" ? "Lista de lanzamiento" : "Launch waitlist",
+    );
+    expect(container.textContent).toContain("Cloudflare Turnstile");
+    expect(container.textContent).toContain("30");
+    expect(
+      container.querySelector(
+        `a[href="https://akipasa.com/${locale}/account-deletion"]`,
+      ),
+    ).toBeTruthy();
+    expect(
+      container.querySelector(
+        `a[href="https://akipasa.com/${locale}/account/privacy"]`,
+      ),
+    ).toBeTruthy();
+    expect(container.textContent).toContain(
+      locale === "es" ? "manualmente" : "manually",
+    );
+    expect(container.textContent).toContain(
+      locale === "es" ? "Google Analytics" : "Google Analytics",
+    );
+  },
+);
 afterEach(() => {
   cleanup();
   state.failed = false;
