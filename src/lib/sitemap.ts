@@ -12,14 +12,19 @@ function escapeXml(value: string) {
     .replaceAll("'", "&apos;");
 }
 
-export function renderSitemap(rentals: RentalSitemapEntry[]) {
-  const staticUrls = ["/", "/map", "/membership"];
+export function renderSitemap(
+  rentals: RentalSitemapEntry[],
+  inventoryEnabled = false,
+) {
+  const staticUrls = inventoryEnabled
+    ? ["/", "/map", "/membership"]
+    : ["/", "/membership"];
   const urls = [
     ...staticUrls.map(
       (path) =>
         `<url><loc>${escapeXml(`https://akicoches.com${path}`)}</loc></url>`,
     ),
-    ...rentals.map(({ slug, updated_at: updatedAt }) => {
+    ...(inventoryEnabled ? rentals : []).map(({ slug, updated_at: updatedAt }) => {
       const lastModified = updatedAt
         ? `<lastmod>${escapeXml(updatedAt)}</lastmod>`
         : "";

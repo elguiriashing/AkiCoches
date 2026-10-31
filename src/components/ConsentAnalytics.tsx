@@ -2,8 +2,10 @@
 import { useEffect } from "react";
 import { readPrivacyChoices } from "../lib/privacy-consent";
 
-// Next inlines this public value at build time; no other product is a fallback.
-const measurementId = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID?.trim() || "";
+// Alex confirmed this product stream; explicit blank/invalid overrides fail closed.
+const measurementId = (
+  process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ?? "G-N208MPSFXW"
+).trim();
 const canonicalHost = "akicoches.com";
 const validMeasurementId =
   /^G-[A-Z0-9]{4,32}$/.test(measurementId) && measurementId !== "G-PW8547QDGD";
@@ -22,7 +24,7 @@ export function ConsentAnalytics({
   trackingAllowed?: boolean;
 }) {
   useEffect(() => {
-    // Preview hosts and missing/mistaken configuration must never collect data.
+    // Preview hosts and rejected configuration must never collect data.
     if (
       !validMeasurementId ||
       ![canonicalHost, `www.${canonicalHost}`].includes(location.hostname)

@@ -201,20 +201,6 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
                   icon: "/brand/v3/coches.svg",
                   tone: "#FF3047",
                 },
-                {
-                  id: "hq",
-                  name: "AkiHQ",
-                  url: suiteHref("hq", locale, { referralCode }),
-                  icon: "/brand/v3/hq.svg",
-                  tone: "#FFC533",
-                },
-                {
-                  id: "business",
-                  name: "AkiBusiness",
-                  url: suiteHref("business", locale, { referralCode }),
-                  icon: "/brand/v3/business.svg",
-                  tone: "#9A70FA",
-                },
               ].map((app) => (
                 <a
                   key={app.id}

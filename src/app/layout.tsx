@@ -1,3 +1,4 @@
+import { ageAssuranceEnforced } from "@/lib/age-assurance-server";
 import { optionalUser } from "@/lib/auth";
 import { accountTrackingAllowed } from "@/lib/account-eligibility";
 import "./globals.css";
@@ -24,7 +25,11 @@ export const metadata: Metadata = {
   applicationName: "AkiCoches",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/brand/v3/coches.svg",
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/brand/v3/coches.svg", sizes: "any", type: "image/svg+xml" },
+      { url: "/brand/v3/coches-192.png", sizes: "192x192", type: "image/png" },
+    ],
     apple: "/brand/v3/coches-180.png",
   },
   openGraph: {
@@ -42,7 +47,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let trackingAllowed = true;
+  let trackingAllowed = !ageAssuranceEnforced();
   try {
     const { supabase, user } = await optionalUser();
     if (user) trackingAllowed = await accountTrackingAllowed(supabase, user.id);

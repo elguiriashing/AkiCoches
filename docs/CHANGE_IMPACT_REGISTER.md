@@ -1,5 +1,12 @@
 # Product contract
 
+## 2026-10-28 | Consumer chooser and branded AkiHQ entry
+
+- Public AkiSelector and app menu show only Pasa/Duermo/Coches. Keep existing rentals/account/booking/Android/OAuth functionality and redirects intact.
+- `/hq-login` stays local to Coches, noindex, EN/ES, and directs to AkiHQ's existing host-local business login. AkiBusiness remains separate, no subscription or tenant migration.
+- Coming-soon/waitlist is a separate rollout gate; no data collected or promoted by this preparatory route.
+- CI and source-aligned production/browser/device acceptance required. Rollback the added navigation/route; no database, payment or Cloudflare changes.
+
 ## 2026-10-24 | Native shared account journey
 
 AkiCoches now serves its own shared profile/settings forms and retains local
@@ -269,3 +276,56 @@ only loss on the scene cancels its gesture. Mouse movement with no primary
 button held clears a pending gesture after an uncaptured outside release.
 Acceptance now uses real Chromium touch input originating on a card descendant,
 and covers outside vertical release followed by ordinary mouse hover.
+
+
+## 2026-10-28 | Product reset / launch waitlist staging (PR #66)
+
+Proposed public AkiCoches root becomes a branded bilingual under-development landing with a segmented launch waitlist (name, email, city, individual/business audience, optional interests, language); launch notification consent is required and marketing consent separate, optional, unchecked. Existing account/rental deep links and /hq-login remain reachable. AkiBusiness remains a separate product.
+
+Dependencies: shared secure AkiPasa endpoint from merged PR akipasa#318, Supabase launch_waitlist_private_optin_20261028 and service-only RLS, live Resend mail verification plus unsubscribe/delete, valid Cloudflare Turnstile hostname/action and key, bounded rate limits, strict origin/CSP/CORS, reviewed privacy/retention and an observed active cleanup job. Explicit Turnstile rendering on script readiness and cleanup on client-side navigation is required. Disable signup if missing site key or backend proof. No client secrets.
+
+Release blockers: reconcile preview-only PR #67 rather than merge two competing landing implementations; complete real browser form remount, double-opt-in inbox, duplicate/throttle/unsubscribe/deletion, ES/EN and Android login return tests; confirm crawler/canonical SEO, full exact-head CI and live Cloudflare deployment SHA. Roll back root landing via normal source deployment without altering existing customers or data. Do not activate public personal-data collection, send marketing, change payment flows or delete production data until gates are accepted.
+
+
+## 2026-10-28 | Launch-page header / theme / business CTA
+
+The coming-soon page adds a local light/dark toggle next to language, explicit high-contrast header text in both modes and a same-page business anchor that scrolls to the waitlist form while preselecting the business audience. Existing signed-in account and /hq-login routes stay available elsewhere, but the primary launch-business CTA no longer routes users away. UI state is local and transient; no tracking/storage, billing, schema, secrets, or backend changes. Validate ES/EN, 320px/mobile/desktop, contrast, keyboard and reduced-motion, and existing forms/turnstile plus all hosted CI. Release through current main only after green CI and exact Cloudflare source verification.
+
+
+## 2026-10-28 | Launch header dark/light contrast and signup trial readiness
+
+On both consumer coming-soon pages, scope headline and form-title contrast explicitly to the landing root `data-theme` to override global heading CSS (`#f8faff` in dark mode and `#141b2a` in light mode). Preserve header language, local theme switch, business CTA to the form, protected account/deep-link routes and the deliberate disabled-by-default waitlist flag. Add unit tests for theme toggling and business form preselection. Following backend PR akipasa#325 and exact-source full CI, activate `NEXT_PUBLIC_LAUNCH_WAITLIST_ENABLED=true` at the Cloudflare Workers Build trigger (build-time inline environment, not a server-only Worker secret), retaining the existing verified public Turnstile site key. Deploy source-matched build, then test a genuine controlled opt-in, confirmation, founder notice and unsubscribe/deletion path before opening general collection. Roll back the build flag to disabled if mail, verification, deletion or abuse checks fail. No new payment inventory or checkout.
+
+## 2026-10-31 | Complete the open Coches source PRs together
+
+PR #62 integrates the independent analytics safeguards from #62 and the confirmed
+Coches measurement destination from #64, the bilingual privacy/access changes
+from #51, and the disabled review-policy foundation from #61 on current main
+`e6f89a0682aa14eedce736bd19d0b1bda4f335fa`. The existing coming-soon page, signup
+flag, launch-waitlist disclosure, public crawler/noindex gate and canonical
+metadata are preserved. The privacy merge must not erase the newer waitlist
+policy. These changes do not launch rentals, adult verification or reviews.
+
+Analytics defaults to the owner-confirmed Coches web stream `G-N208MPSFXW`.
+An optional build-time `NEXT_PUBLIC_GA4_MEASUREMENT_ID` override is supported;
+explicit blank/invalid/copied configuration, noncanonical hosts, denied consent and
+server-restricted visitors cannot load the tag. Ads, Signals and personalization
+remain denied; revocation and remount cleanup remain covered by the component
+suite. Google-side collection and production source readback are separate from
+these tests and must be recorded in the PR's completed release receipt.
+
+Both age-assurance flags remain unset/false. No provider signup, private
+attestation write, shared migration, verification claim, review UI or customer
+transaction is part of this source release. The provider/evidence/moderation and
+privacy-lifecycle work listed in VERIFIED_REVIEWS_20261026.md still gates future
+activation. Manual deletion instructions reflect the existing owner-approved
+policy; this release does not delete accounts or certify backup cleanup.
+
+Focused local checks at this source checkpoint: 21 analytics effect cases, 31
+age-policy/reader cases and 11 shared account/privacy rendering cases passed.
+The privacy cases assert the preserved bilingual launch-waitlist/Turnstile copy.
+Required hosted full lint/typecheck/tests/Next build, native-account browser,
+public crawler and Cloudflare package checks are required on the integrated
+head before merge; final IDs/results and live limits belong in the PR receipt.
+Rollback is a normal source revert; do not restore a cross-product GA stream,
+activate indexing, remove account restrictions or alter customer data.

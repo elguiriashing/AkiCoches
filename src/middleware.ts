@@ -4,6 +4,11 @@ import { refreshSession } from "@/lib/supabase/middleware";
 import { stripCrossProductCredentials } from "@/lib/cross-product-query";
 import { config as productConfig } from "@/lib/config";
 import {
+  isCanonicalCrawlHost,
+  isCrawlerMetadata,
+  isPublicCrawlPage,
+} from "@/lib/public-crawl";
+import {
   conduzcoHostMethodAllowed,
   conduzcoHostRoute,
 } from "@/lib/akiconduzco-routing";
@@ -24,6 +29,15 @@ export async function middleware(request: NextRequest) {
   request.headers.delete("x-akipasa-membership-next");
   request.headers.set("x-akipasa-product", "akiconduzco");
   const pathname = request.nextUrl.pathname;
+  // Public crawler documents must not depend on an authentication refresh.
+  if (isCrawlerMetadata(pathname)) {
+    if (!["GET", "HEAD"].includes(request.method))
+      return new NextResponse(null, { status: 404 });
+    const response = NextResponse.next({ request: { headers: request.headers } });
+    if (!isCanonicalCrawlHost(host))
+      response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return response;
+  }
   if (
     /^\/(?:(en|es)\/)?account\/(?:profile|settings)\/?$/.test(
       request.nextUrl.pathname,
@@ -104,8 +118,8 @@ export async function middleware(request: NextRequest) {
       response.cookies.set(name, value, options),
     );
   if (
-    /^\/(account|settings|bookings|en|es)(?:\/|$)/.test(pathname) ||
-    process.env.AKICOCHES_INDEXING_ENABLED !== "true"
+    !isCanonicalCrawlHost(host) ||
+    !isPublicCrawlPage(pathname, process.env.AKICOCHES_INDEXING_ENABLED === "true")
   )
     response.headers.set("X-Robots-Tag", "noindex, nofollow");
   return response;

@@ -124,7 +124,7 @@ describe("AkiConduzco host and booking boundaries", () => {
 });
 
 describe("AkiSuite app switcher branding", () => {
-  it("serves all five icons from the AkiCoches origin without remote image dependencies", () => {
+  it("serves three consumer icons from the AkiCoches origin without remote image dependencies", () => {
     const root = process.cwd();
     const component = readFileSync(
       join(root, "src/components/AkiConduzco.tsx"),
@@ -134,8 +134,6 @@ describe("AkiSuite app switcher branding", () => {
       pasa: "pasa.svg",
       duermo: "duermo.svg",
       coches: "coches.svg",
-      hq: "hq.svg",
-      business: "business.svg",
     };
     for (const [product, filename] of Object.entries(icons)) {
       expect(component).toContain(`id: "${product}"`);
@@ -145,6 +143,8 @@ describe("AkiSuite app switcher branding", () => {
       expect(svg).toContain('rx="29"');
     }
     expect(component).not.toMatch(/icon:\s*["']https?:\/\//);
+    expect(component).not.toContain('id: "hq"');
+    expect(component).not.toContain('id: "business"');
     const car = readFileSync(
       join(root, "public/brand/v3/coches.svg"),
       "utf8",

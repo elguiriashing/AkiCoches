@@ -11,14 +11,12 @@ vi.mock("../src/components/PortalLogo", () => ({ PortalLogo: () => null }));
 vi.stubGlobal("React", React);
 describe("actual desktop/mobile suite selector destinations", () => {
   for (const locale of ["en", "es"] as const) {
-    it(`renders all five canonical ${locale} destinations`, () => {
+    it(`renders three consumer ${locale} destinations`, () => {
       const html = renderToStaticMarkup(<ConduzcoHeader locale={locale} />);
       for (const expected of [
         `https://akipasa.com/${locale}`,
         `https://akiduermo.com/?lang=${locale}`,
         `/?lang=${locale}`,
-        `https://akihq.app/${locale}/business`,
-        `https://akibusiness.com/?locale=${locale}`,
       ])
         expect(html).toContain(`href="${expected}"`);
     });

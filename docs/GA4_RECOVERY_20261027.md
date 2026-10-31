@@ -19,3 +19,15 @@ Before merge/release: recover the existing AkiCoches GA4 web-stream G- ID from t
 Search Console is separate: verify the already-linked property and published sitemap, retain private-route noindex policies, and respect the existing launch gate. Linking GA4 does not itself submit or index pages.
 
 Rollback: remove the measurement-ID build variable and rebuild to stop collection; do not restore the copied AkiPasa destination. No data rollback is required. This PR makes no production configuration changes and does not replace uncommitted Codex files on Alex-Laptop.
+
+## 31 October integration checkpoint
+
+The existing stream ID was subsequently confirmed in PR #64 as `G-N208MPSFXW`.
+The combined PR uses that independently owner-confirmed public product default
+when the build override is absent. Explicit blank, invalid or copied-AkiPasa
+overrides still fail closed, as do preview hosts, denied consent and restricted
+accounts. The stronger remount/revocation safeguards remain. The old copied ID
+and array queue are removed. Genuine GA receipt is tracked separately from
+source/component CI. See the 31 October contract entry
+and the PR release receipt for current deployment state; the earlier missing-ID
+observation above is historical.
