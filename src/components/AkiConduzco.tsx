@@ -184,7 +184,7 @@ export function ConduzcoHeader({ locale }: { locale: Locale }) {
                   id: "pasa",
                   name: "AkiPasa",
                   url: suiteHref("pasa", locale, { referralCode }),
-                  icon: "/brand/v3/pasa.svg",
+                  icon: "/brand/v3/pasa-2026.svg",
                   tone: "#F26B1D",
                 },
                 {

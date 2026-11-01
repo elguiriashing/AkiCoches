@@ -283,3 +283,14 @@ public crawler and Cloudflare package checks are required on the integrated
 head before merge; final IDs/results and live limits belong in the PR receipt.
 Rollback is a normal source revert; do not restore a cross-product GA stream,
 activate indexing, remove account restrictions or alter customer data.
+
+## 2026-11-01 | Shared AkiPasa logo refresh
+
+Replace this product's local AkiPasa selector/membership/return-page artwork with
+the founder-approved movement mark from elguiriashing/akipasa. Versioned
+`brand/v3/pasa-2026.svg` and refreshed historical Pasa SVG/PNG aliases preserve
+existing links and cached manifests. Current product logos and native icons are
+unchanged. No auth, locale/navigation destination, API, RLS, database, customer
+record, billing, consent or provider configuration change. Shared asset hashes
+are compared with AkiPasa; product-specific checks and CI are recorded in the PR.
+Rollback reverts only these asset/reference sources.
