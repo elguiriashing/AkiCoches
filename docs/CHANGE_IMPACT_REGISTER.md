@@ -277,7 +277,6 @@ button held clears a pending gesture after an uncaptured outside release.
 Acceptance now uses real Chromium touch input originating on a card descendant,
 and covers outside vertical release followed by ordinary mouse hover.
 
-
 ## 2026-10-28 | Product reset / launch waitlist staging (PR #66)
 
 Proposed public AkiCoches root becomes a branded bilingual under-development landing with a segmented launch waitlist (name, email, city, individual/business audience, optional interests, language); launch notification consent is required and marketing consent separate, optional, unchecked. Existing account/rental deep links and /hq-login remain reachable. AkiBusiness remains a separate product.
@@ -286,11 +285,9 @@ Dependencies: shared secure AkiPasa endpoint from merged PR akipasa#318, Supabas
 
 Release blockers: reconcile preview-only PR #67 rather than merge two competing landing implementations; complete real browser form remount, double-opt-in inbox, duplicate/throttle/unsubscribe/deletion, ES/EN and Android login return tests; confirm crawler/canonical SEO, full exact-head CI and live Cloudflare deployment SHA. Roll back root landing via normal source deployment without altering existing customers or data. Do not activate public personal-data collection, send marketing, change payment flows or delete production data until gates are accepted.
 
-
 ## 2026-10-28 | Launch-page header / theme / business CTA
 
 The coming-soon page adds a local light/dark toggle next to language, explicit high-contrast header text in both modes and a same-page business anchor that scrolls to the waitlist form while preselecting the business audience. Existing signed-in account and /hq-login routes stay available elsewhere, but the primary launch-business CTA no longer routes users away. UI state is local and transient; no tracking/storage, billing, schema, secrets, or backend changes. Validate ES/EN, 320px/mobile/desktop, contrast, keyboard and reduced-motion, and existing forms/turnstile plus all hosted CI. Release through current main only after green CI and exact Cloudflare source verification.
-
 
 ## 2026-10-28 | Launch header dark/light contrast and signup trial readiness
 
@@ -329,3 +326,14 @@ public crawler and Cloudflare package checks are required on the integrated
 head before merge; final IDs/results and live limits belong in the PR receipt.
 Rollback is a normal source revert; do not restore a cross-product GA stream,
 activate indexing, remove account restrictions or alter customer data.
+
+## 2026-11-01 | Shared AkiPasa logo refresh
+
+Replace this product's local AkiPasa selector/membership/return-page artwork with
+the founder-approved movement mark from elguiriashing/akipasa. Versioned
+`brand/v3/pasa-2026.svg` and refreshed historical Pasa SVG/PNG aliases preserve
+existing links and cached manifests. Current product logos and native icons are
+unchanged. No auth, locale/navigation destination, API, RLS, database, customer
+record, billing, consent or provider configuration change. Shared asset hashes
+are compared with AkiPasa; product-specific checks and CI are recorded in the PR.
+Rollback reverts only these asset/reference sources.

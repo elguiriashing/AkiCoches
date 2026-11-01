@@ -131,7 +131,7 @@ describe("AkiSuite app switcher branding", () => {
       "utf8",
     );
     const icons = {
-      pasa: "pasa.svg",
+      pasa: "pasa-2026.svg",
       duermo: "duermo.svg",
       coches: "coches.svg",
     };
@@ -145,10 +145,7 @@ describe("AkiSuite app switcher branding", () => {
     expect(component).not.toMatch(/icon:\s*["']https?:\/\//);
     expect(component).not.toContain('id: "hq"');
     expect(component).not.toContain('id: "business"');
-    const car = readFileSync(
-      join(root, "public/brand/v3/coches.svg"),
-      "utf8",
-    );
+    const car = readFileSync(join(root, "public/brand/v3/coches.svg"), "utf8");
     expect(car).toContain("#FF3047");
     expect(car).toContain("#111111");
     const hq = readFileSync(join(root, "public/brand/v3/hq.svg"), "utf8");

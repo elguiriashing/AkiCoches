@@ -170,7 +170,7 @@ export function DiscoveryNavigation({
                   onClick={() => menu.current?.removeAttribute("open")}
                 >
                   <Image
-                    src={`/brand/v3/${id}.svg`}
+                    src={`/brand/v3/${id === "pasa" ? "pasa-2026" : id}.svg`}
                     width={36}
                     height={36}
                     alt=""
