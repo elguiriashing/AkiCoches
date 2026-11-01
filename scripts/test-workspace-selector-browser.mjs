@@ -57,7 +57,9 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (
-      /^\/brand\/v3\/(pasa|duermo|coches|hq|business)\.svg$/.test(url.pathname)
+      /^\/brand\/v3\/(pasa(?:-2026)?|duermo|coches|hq|business)\.svg$/.test(
+        url.pathname,
+      )
     ) {
       res.setHeader("Content-Type", "image/svg+xml");
       res.end(await readFile(path.join(process.cwd(), "public", url.pathname)));
@@ -213,11 +215,7 @@ try {
         );
         await current.focus();
         await page.keyboard.press("Home");
-        for (const name of [
-          "AkiPasa",
-          "AkiDuermo",
-          "AkiCoches",
-        ]) {
+        for (const name of ["AkiPasa", "AkiDuermo", "AkiCoches"]) {
           await expect(
             page.getByRole("link", { name, exact: true }),
           ).toHaveAttribute("data-selected", "true");
@@ -270,11 +268,7 @@ try {
             .evaluate((node) => node.scrollLeft),
         ).toBe(0);
         expect(errors).toEqual([]);
-        for (
-          let i = 0;
-          i < ["pasa", "duermo", "coches"].indexOf(product);
-          i++
-        )
+        for (let i = 0; i < ["pasa", "duermo", "coches"].indexOf(product); i++)
           await page.keyboard.press("ArrowRight");
         await page.screenshot({
           path: path.join(output, `${product}-${locale}-${theme}-${width}.png`),
